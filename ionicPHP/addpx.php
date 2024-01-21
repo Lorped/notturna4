@@ -22,7 +22,7 @@
 	}
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');
 
  	$idutente=$_GET['id'];
  	$px=$_GET['px'];
@@ -31,7 +31,11 @@
 
 	if (is_numeric($px) && $px > 0 ) {
 		$Mysql="UPDATE personaggio SET xp = xp + $px WHERE idutente=$idutente";
-		$Result=mysql_query ($Mysql);
+		$Result=mysqli_query ($db, $Mysql);
+
+		$Azione = 'ADD' ;
+		$MySql = "INSERT INTO logpx (idutente, px, Azione ) VALUES ( $idutente, $px , '$Azione' ) ";
+	 	$Result = mysqli_query($db, $MySql);
 
 
 	}
