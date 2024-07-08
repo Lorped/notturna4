@@ -35,7 +35,7 @@
           WHERE idutente = '$idutente'  AND livello >0
       ORDER BY nomedisc ASC";
 
-    $Result = mysqli_query($DB, $MySql);
+    $Result = mysqli_query($db, $MySql);
     while ( $res = mysqli_fetch_array($Result)   ) {
 
       $curdisc= $res['iddisciplina'];
