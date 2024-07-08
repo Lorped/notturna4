@@ -26,15 +26,15 @@
 
 
 
-  include ('db.inc.php');
+  include ('db2.inc.php');  // NEW MYSQL //
 
   $out = [];
 
   $MySql = "SELECT * FROM oggetti
       ORDER BY idoggetto";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result, MYSQL_ASSOC)  ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result, MYSQLI_ASSOC)  ) {
 
       $out[] = $res;
     }

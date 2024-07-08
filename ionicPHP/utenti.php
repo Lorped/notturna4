@@ -26,7 +26,7 @@
 	$incl=$_GET['incl'];
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 
  	$out1 = [];
 	$out2 = [];
@@ -37,21 +37,21 @@
 		} else {
 			$MySql = "SELECT idutente, nomepg FROM personaggio WHERE idutente != $excl ORDER BY nomepg";
 		}
-		$Result = mysql_query($MySql);
-		while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+		$Result = mysqli_query($db, $MySql);
+		while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 			$out1 [] =$res;
 		}
 		$output = json_encode ($out1, JSON_UNESCAPED_UNICODE);
 
 	} else  {
 		$MySql = "SELECT idutente, nomepg FROM personaggio  ORDER BY nomepg";
-		$Result = mysql_query($MySql);
-		while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+		$Result = mysqli_query($db, $MySql);
+		while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 			$out1 [] =$res;
 		}
 		$MySql = "SELECT idutente, nomepg FROM HUNTERpersonaggio ORDER BY nomepg";
-		$Result = mysql_query($MySql);
-		while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+		$Result = mysqli_query($db, $MySql);
+		while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 			$out2 [] =$res;
 		}
 		$out = [

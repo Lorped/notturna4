@@ -34,24 +34,24 @@ $version = $request->version;
 
 if (isset($postdata) && $username != "" && $password !="" ) {
 
-  include ('db.inc.php');
+  include ('db2.inc.php');  // NEW MYSQL //
 
 	// pulizia periodica
 	$MM="DELETE FROM dadi WHERE DATE_ADD( Ora , INTERVAL 24 HOUR )<NOW()";
-	mysql_query($MM);
+	mysqli_query($db, $MM);
 
 
   $MySql = "SELECT idutente FROM utente WHERE nome = '".addslashes($username)."' AND password = '".addslashes($password)."'";
-  $Result = mysql_query($MySql);
-  if ( $res = mysql_fetch_array($Result)   ) {
+  $Result = mysqli_query($db, $MySql);
+  if ( $res = mysqli_fetch_array($Result)   ) {
     $idutente = $res['idutente'];
 
     if ( $version == "") {   // OLD - NO VERSION -> Vampire
 
-      controlla_ps ( $idutente) ;
-      controlla_fdv ( $idutente) ;
-      controlla_legami ($idutente) ;
-      controlla_maesta ($idutente) ;
+      controlla_ps ( $idutente, $db) ;
+      controlla_fdv ( $idutente, $db ) ;
+      controlla_legami ($idutente, $db ) ;
+      controlla_maesta ($idutente, $db ) ;
 
       $MySql = "SELECT *  FROM personaggio
             LEFT JOIN clan ON personaggio.idclan=clan.idclan
@@ -61,8 +61,8 @@ if (isset($postdata) && $username != "" && $password !="" ) {
             LEFT JOIN blood ON personaggio.bloodp=blood.bloodp
             WHERE idutente = '$idutente' ";
 
-      $Result = mysql_query($MySql);
-      if ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+      $Result = mysqli_query($db, $MySql);
+      if ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
         $output = json_encode($res);
         echo $output;
       } else {
@@ -73,19 +73,19 @@ if (isset($postdata) && $username != "" && $password !="" ) {
       // NEW VERSION -> VAMP OR HUNTER
 
       $MySql = "SELECT COUNT(*) as c FROM personaggio WHERE idutente = '$idutente'";
-      $Result = mysql_query($MySql);
-      $res = mysql_fetch_array($Result) ;
+      $Result = mysqli_query($db, $MySql);
+      $res = mysqli_fetch_array($Result) ;
       $vamp = $res['c'];
       $MySql = "SELECT COUNT(*) as c FROM HUNTERpersonaggio WHERE idutente = '$idutente'";
-      $Result = mysql_query($MySql);
-      $res = mysql_fetch_array($Result) ;
+      $Result = mysqli_query($db, $MySql);
+      $res = mysqli_fetch_array($Result) ;
       $hunt = $res['c'];
 
       if ( $vamp == '1' ) { //VAMPIRO
-        controlla_ps ( $idutente) ;
-        controlla_fdv ( $idutente) ;
-        controlla_legami ($idutente) ;
-        controlla_maesta ($idutente) ;
+        controlla_ps ( $idutente, $db ) ;
+        controlla_fdv ( $idutente, $db ) ;
+        controlla_legami ($idutente, $db ) ;
+        controlla_maesta ($idutente, $db ) ;
 
         $MySql = "SELECT *  FROM personaggio
           LEFT JOIN clan ON personaggio.idclan=clan.idclan
@@ -95,8 +95,8 @@ if (isset($postdata) && $username != "" && $password !="" ) {
           LEFT JOIN blood ON personaggio.bloodp=blood.bloodp
           WHERE idutente = '$idutente' ";
 
-        $Result = mysql_query($MySql);
-        $res = mysql_fetch_array($Result,MYSQL_ASSOC);
+        $Result = mysqli_query($db, $MySql);
+        $res = mysqli_fetch_array($Result,MYSQLI_ASSOC);
         $out = array (
           'tipo' => "V" ,
           'res' => $res
@@ -104,12 +104,12 @@ if (isset($postdata) && $username != "" && $password !="" ) {
         $output = json_encode($out);
         echo $output;
       } elseif ( $hunt == '1') { //HUNTER
-        controlla_fdv ( $idutente) ;
+        controlla_fdv ( $idutente, $db ) ;
         $MySql = "SELECT *  FROM HUNTERpersonaggio
           LEFT JOIN HUNconspiracy ON HUNTERpersonaggio.idclan=HUNconspiracy.idconspiracy
           WHERE idutente = '$idutente' ";
-        $Result = mysql_query($MySql);
-        $res = mysql_fetch_array($Result,MYSQL_ASSOC);
+        $Result = mysqli_query($db, $MySql);
+        $res = mysqli_fetch_array($Result,MYSQLI_ASSOC);
         $out = array (
           'tipo' => "H" ,
           'res' => $res
@@ -133,11 +133,11 @@ if (isset($postdata) && $username != "" && $password !="" ) {
 
 //  ================================  //
 
-function controlla_fdv ( $idutente ) {    //controllo-aggiorno fdv
+function controlla_fdv ( $idutente , $db ) {    //controllo-aggiorno fdv
 
   $Mysql="SELECT fdv,fdvmax,lastfdv FROM personaggio WHERE idutente=$idutente";
-  $Result=mysql_query ($Mysql);
-  $res=mysql_fetch_array($Result);
+  $Result=mysqli_query ($db, $Mysql);
+  $res=mysqli_fetch_array($Result);
 
   $fdv=$res['fdv'];
   $fdvmax=$res['fdvmax'];
@@ -145,7 +145,7 @@ function controlla_fdv ( $idutente ) {    //controllo-aggiorno fdv
 
   if ( $fdv == $fdvmax ) {  // tutto ok
     $Mysql="UPDATE personaggio SET lastfdv=NOW()  WHERE idutente=$idutente";
-    $Result=mysql_query ($Mysql);
+    $Result=mysqli_query ($db, $Mysql);
 
   } else {
     $base=strtotime("2017-01-01 18:00:00");
@@ -166,7 +166,7 @@ function controlla_fdv ( $idutente ) {    //controllo-aggiorno fdv
       $newlastfdvstring=date("Y-m-d H:i:s",$newlastfdv );
 
       $Mysql="UPDATE personaggio SET fdv = $newfdv , lastfdv = '$newlastfdvstring' WHERE idutente=$idutente";
-      $Result=mysql_query ($Mysql);
+      $Result=mysqli_query ($db, $Mysql);
 
     } else {
       // echo "<br>da quando ho controlato fdv non è passato un tramonto";
@@ -176,14 +176,14 @@ function controlla_fdv ( $idutente ) {    //controllo-aggiorno fdv
 
 
 
-function controlla_ps ( $idutente) {  //inizio test su ps
+function controlla_ps ( $idutente, $db ) {  //inizio test su ps
 
   $Mysql="SELECT PScorrenti, sete, addsete, lastps FROM personaggio
     LEFT JOIN statuscama ON personaggio.idstatus = statuscama.idstatus
     LEFT JOIN blood ON personaggio.bloodp = blood.bloodp
   WHERE idutente=$idutente";
-  $Result=mysql_query ($Mysql);
-  $res=mysql_fetch_array($Result);
+  $Result=mysqli_query ($db, $Mysql);
+  $res=mysqli_fetch_array($Result);
 
   $PScorrenti=$res['PScorrenti'];
   $setetot=$res['sete']+$res['addsete'];
@@ -200,27 +200,27 @@ function controlla_ps ( $idutente) {  //inizio test su ps
     if ( $diff > 1 ) {
       $newlastps=date("Y-m-d H:i:s",$now );
       $Mysql="UPDATE personaggio SET PScorrenti = $setetot , lastps = '$newlastps' WHERE idutente=$idutente";
-      $Result=mysql_query ($Mysql);
+      $Result=mysqli_query ($db, $Mysql);
     }
   }
 }  //fine test su ps
 
-function controlla_legami ($idutente) {
+function controlla_legami ($idutente, $db) {
   // legami
   $Mysql="DELETE FROM legami WHERE target = $idutente and livello = 1 and (DATE_ADD(dataultima, INTERVAL 75 DAY) < NOW())";
-  $Result = mysql_query($Mysql);
+  $Result = mysqli_query($db, $Mysql);
   $Mysql="UPDATE legami SET livello=1 , dataultima=NOW() WHERE target = $idutente and livello = 2 and (DATE_ADD(dataultima, INTERVAL 165 DAY) < NOW())";
-  $Result = mysql_query($Mysql);
+  $Result = mysqli_query($db, $Mysql);
   $Mysql="UPDATE legami SET livello=2 , dataultima=NOW() WHERE target = $idutente and livello = 3 and (DATE_ADD(dataultima, INTERVAL 315 DAY) < NOW())";
-  $Result = mysql_query($Mysql);
+  $Result = mysqli_query($db, $Mysql);
 }
 
-function controlla_maesta ( $idutente) {  //inizio test su ps
+function controlla_maesta ( $idutente, $db) {  //inizio test su ps
 
   $Mysql="SELECT nummaesta, lastmaesta, fdv FROM personaggio
   WHERE idutente=$idutente";
-  $Result=mysql_query ($Mysql);
-  $res=mysql_fetch_array($Result);
+  $Result=mysqli_query ($db, $Mysql);
+  $res=mysqli_fetch_array($Result);
 
   $nummaesta=$res['nummaesta'];
   $lastmaesta=$res['lastmaesta'];
@@ -237,7 +237,7 @@ function controlla_maesta ( $idutente) {  //inizio test su ps
     if ( $diff > 1 ) {
       $newlastps=date("Y-m-d H:i:s",$now );
       $Mysql="UPDATE personaggio SET nummaesta =$fdv , lastmaesta = NOW() WHERE idutente=$idutente";
-      $Result=mysql_query ($Mysql);
+      $Result=mysqli_query ($db, $Mysql);
     }
   }
 }  //fine test su ps

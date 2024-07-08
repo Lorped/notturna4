@@ -25,18 +25,18 @@
 
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 
  	$idutente=$_GET['id'];
 
  	$Mysql="SELECT nomepg, livello, DATE_FORMAT(dataultima,'%d-%m-%Y') as dataultima from legami  LEFT JOIN personaggio ON idutente=domitor WHERE target=$idutente";
-	$Result=mysql_query ($Mysql);
-	while ( $res=mysql_fetch_array($Result,MYSQL_ASSOC)  ) {
+	$Result=mysqli_query ($db, $Mysql);
+	while ( $res=mysqli_fetch_array($Result,MYSQLI_ASSOC)  ) {
 		$out_t[] = $res;
 	}
 	$Mysql="SELECT nomepg, livello, DATE_FORMAT(dataultima,'%d-%m-%Y') as dataultima from legami LEFT JOIN personaggio ON idutente=target  WHERE domitor=$idutente";
-	$Result=mysql_query ($Mysql);
-	while ( $res=mysql_fetch_array($Result,MYSQL_ASSOC)  ) {
+	$Result=mysqli_query ($db, $Mysql);
+	while ( $res=mysqli_fetch_array($Result,MYSQLI_ASSOC)  ) {
 		$out_d[] = $res;
 	}
 

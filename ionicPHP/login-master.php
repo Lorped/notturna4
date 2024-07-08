@@ -35,16 +35,16 @@ $password = $request->password;
 
 if (isset($postdata) && $username != "" && $password !="" ) {
     
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 	
 	// pulizia periodica
 	$MM="DELETE FROM dadi WHERE DATE_ADD( Ora , INTERVAL 24 HOUR )<NOW()";
-	mysql_query($MM);	
+	mysqli_query($db, $MM);	
 	//
  
 	$MySql = "SELECT idutente FROM utente WHERE nome = '".addslashes($username)."' AND password = '".addslashes($password)."' AND admin = 1 ";
-	$Result = mysql_query($MySql);
-	if ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+	$Result = mysqli_query($db, $MySql);
+	if ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 		$output = json_encode($res);
 		echo $output;
 	} else {    

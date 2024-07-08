@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // header('Content-type: text/xml; charset="utf-8"');
 // header('Content-Type: text/html; charset=utf-8');
 	
-include ('db.inc.php');
+include ('db2.inc.php');  //NEW MYSQL //
 
 
 $id=$_GET['id'];
@@ -31,7 +31,7 @@ $id=$_GET['id'];
 $userid=$_GET['userid'];
 	
 $MySql = "UPDATE utente SET registrationID='$id' WHERE idutente=$userid" ;
-$Result = mysql_query($MySql);
+$Result = mysqli_query($db, $MySql);
 	
 
 

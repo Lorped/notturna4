@@ -24,7 +24,7 @@ header("Access-Control-Allow-Origin: *");
 // header('Content-type: text/xml; charset="utf-8"');
 
 	
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 
 
 
@@ -34,7 +34,7 @@ $request = json_decode($postdata);
 
 
 $idutente = $request->idutente;
-$note = mysql_real_escape_string($request->note);
+$note = mysqli_real_escape_string($db, $request->note);
 
 
 
@@ -44,7 +44,7 @@ $note = mysql_real_escape_string($request->note);
 	
 	
 	$MySql = "UPDATE personaggio SET note='$note' WHERE idutente=$idutente  ";
-	$Result = mysql_query($MySql);
+	$Result = mysqli_query($db, $MySql);
 
 
 ?>

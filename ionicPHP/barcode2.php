@@ -23,20 +23,20 @@
 
 	header('Content-Type: text/html; charset=utf-8');
 
-	include ('db.inc.php');
+	include ('db2.inc.php');   // NEW MYSQL //
 
 	$barcode=$_GET['barcode'];
 
 	$Mysql="SELECT * FROM oggetti LEFT JOIN cond_oggetti ON oggetti.idoggetto = cond_oggetti.idoggetto WHERE barcode='$barcode' ORDER BY descrX ASC ,cond_oggetti.valcond ASC ";
-	$Result=mysql_query($Mysql);
-	if (mysql_errno()) die ( mysql_errno().": ".mysql_error() ."+".$Mysql);
+	$Result=mysqli_query($db, $Mysql);
+	if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db) ."+".$Mysql);
 
 
 	$esito=[];
 
 
 	$ok = 0;
-	while ( $res=mysql_fetch_array($Result)) {
+	while ( $res=mysqli_fetch_array($Result)) {
 
 		if ($ok==0) {
 			$esito[] = array ( "tipo" => 0 , "desc"=> $res['nomeoggetto']);
@@ -69,8 +69,8 @@
 
 			$ids=$res['tabcond'];
 			$Mysql4="SELECT nomeskill FROM skill_main WHERE idskill = $ids";
-			$Result4=mysql_query($Mysql4);
-			$res4=mysql_fetch_array($Result4);
+			$Result4=mysqli_query($db, $Mysql4);
+			$res4=mysqli_fetch_array($Result4);
 
 			if ($res['descrX'] != "" ) {
 				$esito[] = array ( "tipo"=> 2  , "desc" => $res4['nomeskill']." ".$res['valcond']  , "descX" => $res['descrX'] );
@@ -82,9 +82,9 @@
 		if ($res['tipocond'] == 'D' ){
 			$ids=$res['tabcond'];
 			$Mysql4="SELECT nomedisc FROM discipline_main WHERE iddisciplina = $ids";
-			$Result4=mysql_query($Mysql4);
-			if (mysql_errno()) die ( mysql_errno().": ".mysql_error() ."+".$Mysql4);
-			$res4=mysql_fetch_array($Result4);
+			$Result4=mysqli_query($db, $Mysql4);
+			if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db) ."+".$Mysql4);
+			$res4=mysqli_fetch_array($Result4);
 
 			if ($res['descrX'] != "" ) {
 				$esito[] = array ( "tipo"=> 2  , "desc" => $res4['nomedisc']." ".$res['valcond'] , "descX" => $res['descrX']  );
@@ -100,9 +100,9 @@
 			$Mysql4="SELECT * FROM poteri_main
 			LEFT JOIN discipline_main on discipline_main.iddisciplina=poteri_main.iddisciplina
 			WHERE idpotere = $ids";
-			$Result4=mysql_query($Mysql4);
-			if (mysql_errno()) die ( mysql_errno().": ".mysql_error() ."+".$Mysql4);
-			$res4=mysql_fetch_array($Result4);
+			$Result4=mysqli_query($db,$Mysql4);
+			if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db) ."+".$Mysql4);
+			$res4=mysqli_fetch_array($Result4);
 
 			if ($res['descrX'] != "" ) {
 				$esito[] = array ( "tipo"=> 2  , "desc" => $res4['nomedisc'].'.'.$res4['livellopot'].' '.$res4['nomepotere'] , "descX" => $res['descrX']  );

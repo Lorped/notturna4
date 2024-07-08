@@ -23,13 +23,13 @@
 
 	header('Content-Type: text/html; charset=utf-8');
 
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 
 	$idcondizione=$_GET['idcondizione'];
 
 	$Mysql="DELETE FROM cond_oggetti WHERE idcondizione=$idcondizione ";
-	$Result=mysql_query($Mysql);
-	if (mysql_errno()) die ( mysql_errno().": ".mysql_error() ."+".$Mysql);
+	$Result=mysqli_query($db,$Mysql);
+	if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db) ."+".$Mysql);
 
 
 

@@ -23,25 +23,25 @@
 
 	header('Content-Type: text/html; charset=utf-8');
 
-	include ('db.inc.php');
+	include ('db2.inc.php');   // NEW MYSQLI //
 
 	$barcode=$_GET['barcode'];
 
 	$Mysql="SELECT * FROM oggetti  WHERE barcode='$barcode'  ";
-	$Result=mysql_query($Mysql);
-	if (mysql_errno()) die ( mysql_errno().": ".mysql_error() ."+".$Mysql);
+	$Result=mysqli_query($db,$Mysql);
+	if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db) ."+".$Mysql);
 
 
 	$out=[];
 
-	$res=mysql_fetch_array($Result,MYSQL_ASSOC);
+	$res=mysqli_fetch_array($Result,MYSQLI_ASSOC);
 	$idx=$res['idoggetto'];
 
 
 
 	$Mysql2="SELECT * FROM cond_oggetti WHERE idoggetto=$idx ORDER BY valcond ASC";
-	$Result2=mysql_query($Mysql2);
-	while ( $res2=mysql_fetch_array($Result2,MYSQL_ASSOC)) {
+	$Result2=mysqli_query($db,$Mysql2);
+	while ( $res2=mysqli_fetch_array($Result2,MYSQLI_ASSOC)) {
 		if ($res2['tipocond'] == 'A' ){
 			switch ( $res2['tabcond'] ) {
 				case 1: $cc="Forza" ; break;
@@ -58,22 +58,22 @@
 		if ($res2['tipocond'] == 'S' ){
 			$ids=$res2['tabcond'];
 			$Mysql4="SELECT nomeskill FROM skill_main WHERE idskill = $ids";
-			$Result4=mysql_query($Mysql4);
-			$res4=mysql_fetch_array($Result4);
+			$Result4=mysqli_query($db,$Mysql4);
+			$res4=mysqli_fetch_array($Result4);
 			$cc = $res4['nomeskill'];
 		}
 		if ($res2['tipocond'] == 'D' ){
 			$ids=$res2['tabcond'];
 			$Mysql4="SELECT nomedisc FROM discipline_main WHERE iddisciplina = $ids";
-			$Result4=mysql_query($Mysql4);
-			$res4=mysql_fetch_array($Result4);
+			$Result4=mysqli_query($db,$Mysql4);
+			$res4=mysqli_fetch_array($Result4);
 			$cc = $res4['nomedisc'];
 		}
 		if ($res2['tipocond'] == 'P' ){
 			$ids=$res2['tabcond'];
 			$Mysql4="SELECT nomepotere FROM poteri_main WHERE idpotere = $ids";
-			$Result4=mysql_query($Mysql4);
-			$res4=mysql_fetch_array($Result4);
+			$Result4=mysqli_query($db,$Mysql4);
+			$res4=mysqli_fetch_array($Result4);
 			$cc = $res4['nomepotere'];
 		}
 

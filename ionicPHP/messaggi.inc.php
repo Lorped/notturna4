@@ -5,6 +5,13 @@ function pushmsg ($fields) {
 	$api_key = "AAAAxERgxJ4:APA91bGb0CqFmwPOIV1tN9BSOG7yucKmCpymJf0Pp1YRXlX3wIn8RlbYqMYjnDavyLP4-j9uSzVAlLwB0e7oYzwsaJa2H_yTE3LjzXL1UoOaf-EO00MewK9VyHbOeyvezg-2CTyRulba";
 	$ch = curl_init('https://fcm.googleapis.com/fcm/send');
 
+	// MODIFICA
+	// $ch = curl_init('https://fcm.googleapis.com/v1/projects/notturna-93b8/messages:send') ;
+
+	// Authorization: Bearer ya29.ElqKBGN2Ri_Uz...HnS_uNreA , 
+
+
+
 	$headers = array (
 		'Authorization: key=' . $api_key,
 		'Content-Type: application/json'
@@ -32,16 +39,16 @@ function pushmsg ($fields) {
 }
 
 
-function user2master ( $idutente , $testo ) {
+function user2master ( $idutente , $testo, $db ) {
 
 	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$idutente";
-	$Result=mysql_query($Mysql);
-	if ( $res=mysql_fetch_array($Result) ) {
+	$Result=mysqli_query($db, $Mysql);
+	if ( $res=mysqli_fetch_array($Result) ) {
 		$nomepg=$res['nomepg'];
 	} else {
 		$Mysql="SELECT nomepg FROM HUNTERpersonaggio WHERE idutente=$idutente";
-		$Result=mysql_query($Mysql);
-		$res=mysql_fetch_array($Result);
+		$Result=mysqli_query($db, $Mysql);
+		$res=mysqli_fetch_array($Result);
 		$nomepg=$res['nomepg'];
 	}
 
@@ -76,11 +83,11 @@ function master2master ( $testo ) {
 	pushmsg ($fields);
 }
 
-function master2user ( $idutente , $testo ) {
+function master2user ( $idutente , $testo , $db) {
 
 	$Mysql="SELECT registrationID FROM utente WHERE idutente=$idutente";
-	$Result=mysql_query($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result=mysqli_query($db, $Mysql);
+	$res=mysqli_fetch_array($Result);
 
 	if ($res['registrationID'] != "" ) {
 

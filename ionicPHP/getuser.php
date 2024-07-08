@@ -24,14 +24,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 $idutente=$_GET['id'];
 
 
-  include ('db.inc.php');
+  include ('db2.inc.php');  //NEW MYSQL //
 
 
 		//controllo-aggiorno fdv
 
 		$Mysql="SELECT fdv,fdvmax,lastfdv FROM personaggio WHERE idutente=$idutente";
-		$Result=mysql_query ($Mysql);
-		$res=mysql_fetch_array($Result);
+		$Result=mysqli_query ($db, $Mysql);
+		$res=mysqli_fetch_array($Result);
 
 		$fdv=$res['fdv'];
 		$fdvmax=$res['fdvmax'];
@@ -40,7 +40,7 @@ $idutente=$_GET['id'];
 		if ( $fdv == $fdvmax ) {  // tutto ok
 
 			$Mysql="UPDATE personaggio SET lastfdv=NOW()  WHERE idutente=$idutente";
-			$Result=mysql_query ($Mysql);
+			$Result=mysqli_query ($db, $Mysql);
 		} else {
 
 			$base=strtotime("2017-01-01 18:00:00");
@@ -63,7 +63,7 @@ $idutente=$_GET['id'];
 				$newlastfdvstring=date("Y-m-d H:i:s",$newlastfdv );
 
 				$Mysql="UPDATE personaggio SET fdv = $newfdv , lastfdv = '$newlastfdvstring' WHERE idutente=$idutente";
-				$Result=mysql_query ($Mysql);
+				$Result=mysqli_query ($db, $Mysql);
 
 			} else {
 				// echo "<br>da quando ho controlato fdv non è passato un tramonto";
@@ -77,8 +77,8 @@ $idutente=$_GET['id'];
       LEFT JOIN statuscama ON personaggio.idstatus = statuscama.idstatus
       LEFT JOIN blood ON personaggio.bloodp = blood.bloodp
     WHERE idutente=$idutente";
-    $Result=mysql_query ($Mysql);
-    $res=mysql_fetch_array($Result);
+    $Result=mysqli_query ($db, $Mysql);
+    $res=mysqli_fetch_array($Result);
 
     $PScorrenti=$res['PScorrenti'];
     $setetot=$res['sete']+$res['addsete'];
@@ -95,7 +95,7 @@ $idutente=$_GET['id'];
       if ( $diff > 1 ) {
         $newlastps=date("Y-m-d H:i:s",$now );
         $Mysql="UPDATE personaggio SET PScorrenti = $setetot , lastps = '$newlastps' WHERE idutente=$idutente";
-        $Result=mysql_query ($Mysql);
+        $Result=mysqli_query ($db, $Mysql);
       }
 
     }
@@ -110,8 +110,8 @@ $idutente=$_GET['id'];
           LEFT JOIN blood ON personaggio.bloodp=blood.bloodp
           WHERE idutente = '$idutente' ";
 
-    $Result = mysql_query($MySql);
-    if ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    if ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
       $output = json_encode($res);
       echo $output;
     } else {

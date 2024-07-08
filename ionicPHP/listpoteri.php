@@ -26,7 +26,7 @@
   $idutente=$_GET['id'];
 
 
-    include ('db.inc.php');
+    include ('db2.inc.php');  // NEW MYSQL //
 
     $out1 = [];
 
@@ -35,8 +35,8 @@
           WHERE idutente = '$idutente'  AND livello >0
       ORDER BY nomedisc ASC";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result)   ) {
+    $Result = mysqli_query($DB, $MySql);
+    while ( $res = mysqli_fetch_array($Result)   ) {
 
       $curdisc= $res['iddisciplina'];
       $nomedisc= $res['nomedisc'];
@@ -46,8 +46,8 @@
         LEFT JOIN poteri_main ON poteri.idpotere=poteri_main.idpotere
         WHERE idutente=$idutente and iddisciplina = $curdisc";
 
-      $Result2 = mysql_query($MySql2);
-      while ($res2=mysql_fetch_array($Result2, MYSQL_ASSOC)) {
+      $Result2 = mysqli_query($db, $MySql2);
+      while ($res2=mysqli_fetch_array($Result2, MYSQLI_ASSOC)) {
         $out2 [] = $res2;
       }
 

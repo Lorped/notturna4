@@ -25,34 +25,34 @@
 
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 
 
  	$idutente = $_GET['id'];
 
 
 	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$idutente";
-	$Result=mysql_query($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result=mysqli_query($db, $Mysql);
+	$res=mysqli_fetch_array($Result);
 	$nomepg=$res['nomepg'];
 
-	$xnomepg=mysql_real_escape_string($nomepg);
+	$xnomepg=mysqli_real_escape_string($db, $nomepg);
 
 
 	$Mysql="SELECT target FROM legami WHERE domitor=$idutente";
-	$Result=mysql_query($Mysql);
+	$Result=mysqli_query($db, $Mysql);
 
 	$messaggio ="ha raggiunto la Morte Ultima";
 
-	while ( $res=mysql_fetch_array($Result)) {
+	while ( $res=mysqli_fetch_array($Result)) {
 		$target=$res['target'];
 
 		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$messaggio' , $target ) ";
-		mysql_query($Mysql);
+		mysqli_query($db, $Mysql);
 
 		$Mysql="SELECT registrationID FROM utente WHERE idutente=$target";
-		$Result=mysql_query($Mysql);
-		$res=mysql_fetch_array($Result);
+		$Result=mysqli_query($db, $Mysql);
+		$res=mysqli_fetch_array($Result);
 
 		if ($res['registrationID'] != "" ) {
 
@@ -101,17 +101,17 @@
 
 	/* mando lo stesso messaggio ai master */
 
-	user2master($idutente,$messaggio);
+	user2master($idutente,$messaggio, $db);
 
 
 
 
 /* do other stuff */
 $Mysql="UPDATE personaggio set PScorrenti = 0 , fdv=0 WHERE idutente=$idutente";
-$Result=mysql_query($Mysql);
+$Result=mysqli_query($db, $Mysql);
 
 $Mysql="DELETE from legami WHERE target=$idutente  or domitor=$idutente";
-$Result=mysql_query($Mysql);
+$Result=mysqli_query($db, $Mysql);
 
 
 ?>

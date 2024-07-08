@@ -24,7 +24,7 @@ header("Access-Control-Allow-Origin: *");
 // header('Content-type: text/xml; charset="utf-8"');
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');   //NEW MYSQL //
 
 
 
@@ -36,7 +36,7 @@ $request = json_decode($postdata);
 $idcondizione = $request->idcondizione;
 $tabcond = $request->tabcond;
 $valcond = $request->valcond;
-$descrX = mysql_real_escape_string($request->descrX);
+$descrX = mysqli_real_escape_string($db, $request->descrX);
 
 
 
@@ -47,8 +47,8 @@ $descrX = mysql_real_escape_string($request->descrX);
 
 
 	$MySql = "UPDATE cond_oggetti SET tabcond=$tabcond , valcond=$valcond , descrX='$descrX' WHERE idcondizione=$idcondizione  ";
-	$Result = mysql_query($MySql);
-	if (mysql_errno()) die ( mysql_errno().": ".mysql_error()."+". $Mysql );
+	$Result = mysqli_query($db, $MySql);
+	if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db)."+". $Mysql );
 
 
 ?>

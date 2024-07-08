@@ -26,7 +26,7 @@
 
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');    // NEW MSQLI //
 
  	$idutente=$_GET['id'];
 	$recuperati=$_GET['recuperati'];
@@ -42,14 +42,14 @@
 		LEFT JOIN statuscama ON personaggio.idstatus = statuscama.idstatus
 		LEFT JOIN blood ON personaggio.bloodp = blood.bloodp
 		WHERE idutente=$idutente";
-	$Result=mysql_query ($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result=mysqli_query ($db, $Mysql);
+	$res=mysqli_fetch_array($Result);
 
 	$PScorrenti=$res['PScorrenti'];
 	$setetot=$res['sete']+$res['addsete'];
 	$lastps=$res['lastps'];
 	$nomepg=$res['nomepg'];
-	$xnomepg=mysql_real_escape_string($nomepg);
+	$xnomepg=mysqli_real_escape_string($db,$nomepg);
 
 
 
@@ -67,29 +67,29 @@
 	}
 
 
-	$Result=mysql_query ($Mysql);
+	$Result=mysqli_query ($db, $Mysql);
 
 
 
 
 	if ( $vitae == 1) {
 		$testo=$nomepg." ha usato Rigenerazione della Vitae  (".$recuperati ." livelli di sete recuperati)";
-		$xtesto=mysql_real_escape_string($testo);
+		$xtesto=mysqli_real_escape_string($db, $testo);
 		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , $idutente ) ";
-		mysql_query($Mysql);
+		mysqli_query($db, $Mysql);
 
 	} else {
 		$testo=$nomepg." ha saziato la sua sete (".$recuperati ." livelli recuperati)";
-		$xtesto=mysql_real_escape_string($testo);
+		$xtesto=mysqli_real_escape_string($db, $testo);
 		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , $idutente ) ";
-		mysql_query($Mysql);
+		mysqli_query($db, $Mysql);
 	}
 
 
 
 		// set post fields
 
-	master2user($idutente,$testo);
+	master2user($idutente,$testo, $db);
 
 
 
@@ -99,8 +99,8 @@
 	//die(print_r($response));
 
 	$Mysql="SELECT chance from chanceviolazione";
-	$Result=mysql_query($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result=mysqli_query($db,$Mysql);
+	$res=mysqli_fetch_array($Result);
 	$chance=$res['chance'];
 
 	if ( $BS == 1) {
@@ -112,9 +112,9 @@
 	if ($tiro < $chance)  {
 
 		$testo="VIOLAZIONE della MASQUERADE per ".$nomepg;
-		$xtesto=mysql_real_escape_string($testo);
+		$xtesto=mysqli_real_escape_string($db, $testo);
 		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , 0 ) ";
-		mysql_query($Mysql);
+		mysqli_query($db, $Mysql);
 
 		//die ("here tiro =" . $tiro. ' mysql = '.$Mysql);
 		sleep(1);
@@ -125,9 +125,9 @@
 	if ( $toxic == 1) {
 
 		$testo="Caccia sfortunata (Tossicodipendenza) per ".$nomepg;
-		$xtesto=mysql_real_escape_string($testo);
+		$xtesto=mysqli_real_escape_string($db, $testo);
 		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , 0 ) ";
-		mysql_query($Mysql);
+		mysqli_query($db, $Mysql);
 
 		sleep(1);
 		master2master($testo);

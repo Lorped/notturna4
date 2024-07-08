@@ -23,28 +23,28 @@
 	}
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php'); // NEW MYSQL //
 
 	$postdata = file_get_contents("php://input");
-  $request = json_decode($postdata);
+	$request = json_decode($postdata);
 
-  $idutente = $request->idutente;
+	$idutente = $request->idutente;
 	$pot = $request->potere;
 	$livellopot = $request->livello;
 	$aDisciplina = $request->aDisciplina;
 	$aTAUMNECRO = $request->aTAUMNECRO;
 
  	$Mysql="SELECT  nomepg FROM personaggio WHERE idutente=$idutente";
-	$Result=mysql_query ($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result=mysqli_query ($db, $Mysql);
+	$res=mysqli_fetch_array($Result);
 
 	$nomepg=$res['nomepg'];
-	$xnomepg=mysql_real_escape_string($nomepg);
+	$xnomepg=mysqli_real_escape_string($db, $nomepg);
 
 	if ($aDisciplina != "") {
 	$Mysql="SELECT  nomedisc FROM discipline_main WHERE iddisciplina=$aDisciplina";
-	$Result=mysql_query ($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result=mysqli_query ($db, $Mysql);
+	$res=mysqli_fetch_array($Result);
 	$nomedisc=$res['nomedisc'];
 	} else {
 		$nomedisc=$aTAUMNECRO;
@@ -58,34 +58,34 @@
 	} else {
 		$Mysql="UPDATE personaggio SET PScorrenti = PScorrenti-1 , lastps=NOW() WHERE idutente=$idutente";
 	}
-	$Result=mysql_query ($Mysql);
+	$Result=mysqli_query ($db, $Mysql);
 
 	if ( $livellopot == 5 && $aDisciplina==2 ) { //maesta
 		$Mysql="UPDATE personaggio SET nummaesta = nummaesta-1 , lastmaesta=NOW() WHERE idutente=$idutente";
-		$Result=mysql_query ($Mysql);
+		$Result=mysqli_query ($db, $Mysql);
 	}
 
 
 	
 
 	$testo="ha utilizzato ".$nomedisc.".".$livellopot." ".$pot;
-	$xtesto=mysql_real_escape_string($testo);
+	$xtesto=mysqli_real_escape_string($db, $testo);
 	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xtesto' , $idutente ) ";
-	mysql_query($Mysql);
+	mysqli_query($db, $Mysql);
 
 
-	user2master($idutente, $testo);
+	user2master($idutente, $testo, $db);
 
 	$Mysql="SELECT * FROM personaggio  WHERE idutente=$idutente";
-	$Result = mysql_query($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result = mysqli_query($db, $Mysql);
+	$res=mysqli_fetch_array($Result);
 
 	if ( $res['PScorrenti'] == 0  ) {
 		$testo=$nomepg." è a rischio Frenesia";
 		master2master( $testo);
-		$xtesto=mysql_real_escape_string($testo);
+		$xtesto=mysqli_real_escape_string($db, $testo);
 		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), 'è a rischio Frenesia' , 0 ) ";
-		mysql_query($Mysql);
+		mysqli_query($db, $Mysql);
 	}
 
 

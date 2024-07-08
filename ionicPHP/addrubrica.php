@@ -24,7 +24,7 @@ header("Access-Control-Allow-Origin: *");
 // header('Content-type: text/xml; charset="utf-8"');
 
 	
-	include ('db.inc.php');
+	include ('db2.inc.php');   //// NEW MYSQL ///
 
 
 
@@ -33,11 +33,11 @@ $request = json_decode($postdata);
 
 
 $idutente = $request->idutente;
-$contatto = mysql_real_escape_string($request->contatto);
+$contatto = mysqli_real_escape_string($db, $request->contatto);
 $email = $request->email;
 $cell = $request->cell;
 $home = $request->home;
-$note = mysql_real_escape_string($request->note);
+$note = mysqli_real_escape_string($db, $request->note);
 
 
 // inizio output XML
@@ -49,8 +49,8 @@ $note = mysql_real_escape_string($request->note);
 	
 	
 	$MySql = "INSERT INTO rubrica ( owner , contatto, cell, email, home, note ) VALUES ( $idutente, '$contatto', $cell, $email, $home,'$note')  ";
-	$Result = mysql_query($MySql);
-	if (mysql_errno())  die ( mysql_errno().": ".mysql_error()."+". $MySql );
+	$Result = mysqli_query($db, $MySql);
+	if (mysqli_errno($db))  die ( mysqli_errno($db).": ".mysqli_error($db)."+". $MySql );
 
 
 ?>

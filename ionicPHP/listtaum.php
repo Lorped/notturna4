@@ -26,7 +26,7 @@
   $idutente=$_GET['id'];
 
 
-  include ('db.inc.php');
+  include ('db2.inc.php');  // NEW MYSQL //
 
   $outtaum = [];
 
@@ -35,8 +35,8 @@
     WHERE idutente = '$idutente'
     ORDER BY principale ASC";
 
-  $Result = mysql_query($MySql);
-  while ( $res = mysql_fetch_array($Result)   ) {
+  $Result = mysqli_query($db, $MySql);
+  while ( $res = mysqli_fetch_array($Result)   ) {
 
     $curtaum= $res['idtaum'];
     $nometaum= $res['nometaum'];
@@ -45,15 +45,15 @@
 
     $MySql2 = "SELECT * from taumaturgie2
       WHERE idtaum=$curtaum and livello=0";
-    $Result2 = mysql_query($MySql2);
+    $Result2 = mysqli_query($db, $MySql2);
 
-    if ( ! $res2=mysql_fetch_array($Result2) ) {
+    if ( ! $res2=mysqli_fetch_array($Result2) ) {
 
       $MySql3 = "SELECT * from taumaturgie2
         WHERE idtaum=$curtaum and livello <= $livello";
 
-      $Result3 = mysql_query($MySql3);
-      while ($res3=mysql_fetch_array($Result3, MYSQL_ASSOC)) {
+      $Result3 = mysqli_query($db, $MySql3);
+      while ($res3=mysqli_fetch_array($Result3, MYSQLI_ASSOC)) {
         $out2 [] = $res3;
       }
 
@@ -98,8 +98,8 @@
     WHERE idutente = '$idutente'
     ORDER BY principale ASC";
 
-  $Result = mysql_query($MySql);
-  while ( $res = mysql_fetch_array($Result)   ) {
+  $Result = mysqli_query($db, $MySql);
+  while ( $res = mysqli_fetch_array($Result)   ) {
 
     $curnecro= $res['idnecro'];
     $nomenecro= $res['nomenecro'];
@@ -110,8 +110,8 @@
     $MySql3 = "SELECT * from necromanzie2
         WHERE idnecro=$curnecro and livello <= $livello";
 
-    $Result3 = mysql_query($MySql3);
-    while ($res3=mysql_fetch_array($Result3, MYSQL_ASSOC)) {
+    $Result3 = mysqli_query($db, $MySql3);
+    while ($res3=mysqli_fetch_array($Result3, MYSQLI_ASSOC)) {
       $out2 [] = $res3;
     }
 

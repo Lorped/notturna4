@@ -26,7 +26,7 @@
 
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 
 
 	$postdata = file_get_contents("php://input");
@@ -36,15 +36,15 @@
  	$destinatario=$request->destinatario;
 	$messaggio=$request->messaggio;
 
-	$xmessaggio=mysql_real_escape_string( $messaggio );
+	$xmessaggio=mysqli_real_escape_string($db, $messaggio );
 
 
 	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xmessaggio' , $destinatario ) ";
-	mysql_query($Mysql);
+	mysqli_query($db, $Mysql);
 
 	// set post fields
 
-	master2user($destinatario,$messaggio);
+	master2user($destinatario,$messaggio, $db);
 
 
 

@@ -25,27 +25,27 @@
 
 
 
-    include ('db.inc.php');
+    include ('db2.inc.php');  // NEW MYSQL //
 
     $out = [];
     $out1 = [];
     $out2 = [];
 
     $MySql = "SELECT iddisciplina, nomedisc FROM discipline_main ORDER BY nomedisc";
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result, MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result, MYSQLI_ASSOC)   ) {
       $out1[] = $res;
     }
 
     $MySql = "SELECT idpotere, nomepotere, livellopot FROM poteri_main ORDER BY livellopot, nomepotere";
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result, MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result, MYSQLI_ASSOC)   ) {
       $out2[] = $res;
     }
 
     $MySql = "SELECT idskill, nomeskill FROM skill_main ORDER BY nomeskill";
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result, MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result, MYSQLI_ASSOC)   ) {
       $out3[] = $res;
     }
 

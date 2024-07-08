@@ -26,7 +26,7 @@
 
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 
 
 	$postdata = file_get_contents("php://input");
@@ -38,7 +38,7 @@
 
 
 	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$idutente";
-	if ( $res=mysql_fetch_array(mysql_query($Mysql)) ) {
+	if ( $res=mysqli_fetch_array(mysqli_query($db, $Mysql)) ) {
 	$nomepg=$res['nomepg'];
 	} else {
 		$nomepg="NARRAZIONE";
@@ -46,13 +46,13 @@
 
 
 
-	$xnomepg=mysql_real_escape_string($nomepg);
-	$xmessaggio=mysql_real_escape_string( $messaggio );
+	$xnomepg=mysqli_real_escape_string($db, $nomepg);
+	$xmessaggio=mysqli_real_escape_string($db, $messaggio );
 
 	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xmessaggio' , $idutente) ";
-	mysql_query($Mysql);
+	mysqli_query($db, $Mysql);
 
-	user2master($idutente,$messaggio );
+	user2master($idutente,$messaggio, $db );
 
 
 

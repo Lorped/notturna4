@@ -25,13 +25,13 @@
 
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');   // NEW MYSQL //
 
  	$idutente=$_GET['id'];
 
  	$Mysql="SELECT fdv, fdvmax FROM personaggio  WHERE idutente=$idutente";
-	$Result=mysql_query ($Mysql);
-	$res=mysql_fetch_array($Result,MYSQL_ASSOC);
+	$Result=mysqli_query ($db, $Mysql);
+	$res=mysqli_fetch_array($Result,MYSQLI_ASSOC);
 	$output = json_encode($res);
     echo $output;
 

@@ -25,7 +25,7 @@
 
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 
 	$postdata = file_get_contents("php://input");
 	$request = json_decode($postdata);
@@ -35,12 +35,12 @@
 
 	/***  mando messaggio di accettazione */
 	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$target";
-	if ( $res=mysql_fetch_array(mysql_query($Mysql)) ) {
+	if ( $res=mysqli_fetch_array(mysqli_query($db, $Mysql)) ) {
 		$nomepg=$res['nomepg'];
 	}
 
 	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$domitor";
-	if ( $res=mysql_fetch_array(mysql_query($Mysql)) ) {
+	if ( $res=mysqli_fetch_array(mysqli_query($db, $Mysql)) ) {
 		$nomepgdest=$res['nomepg'];
 	}
 
@@ -48,8 +48,8 @@
 
 
 	$Mysql="SELECT registrationID FROM utente WHERE idutente=$domitor";
-	$Result=mysql_query($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result=mysqli_query($db, $Mysql);
+	$res=mysqli_fetch_array($Result);
 
 
 	if ($res['registrationID'] != "" ) {
@@ -95,35 +95,35 @@
 	curl_close($ch);
 
 
-	$xnomepg=mysql_real_escape_string($nomepg);
-	$xmessaggio=mysql_real_escape_string($messaggio);
+	$xnomepg=mysqli_real_escape_string($db, $nomepg);
+	$xmessaggio=mysqli_real_escape_string($db, $messaggio);
 	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $target, '$xnomepg', NOW(), '$xmessaggio' , $domitor ) ";
-	mysql_query($Mysql);
+	mysqli_query($db , $Mysql);
 /**********/
 
 
 	$Mysql="UPDATE personaggio SET fdv=fdv-1 WHERE idutente= $domitor ";
-	mysql_query($Mysql);
+	mysqli_query($db, $Mysql);
 
 	$Mysql="SELECT * from personaggio  WHERE idutente=$domitor ";
-	$Result=mysql_query ($Mysql);
-	$res = mysql_fetch_array($Result);
+	$Result=mysqli_query ($db, $Mysql);
+	$res = mysqli_fetch_array($Result);
 	if ($res['idclan'] == 7) {
 		/* domitor tremere:  non faccio nulla*/
-		die();
+		// die();
 	}
 
 	$Mysql="SELECT * from pregidifetti  WHERE idutente=$target and idpregio=121";
-	$Result=mysql_query ($Mysql);
-	if ( $res = mysql_fetch_array($Result) ) {
+	$Result=mysqli_query ($db, $Mysql);
+	if ( $res = mysqli_fetch_array( $Result) ) {
 		/* invincolabile non faccio nulla*/
 		die();
 	}
 
 
 	$Mysql="SELECT max(livello) as m from legami  WHERE domitor!=$domitor AND target=$target";
-	$Result=mysql_query ($Mysql);
-	if ( $res = mysql_fetch_array($Result) ) {
+	$Result=mysqli_query ($db, $Mysql);
+	if ( $res = mysqli_fetch_array($Result) ) {
 		if ( $res['m'] == 3 ) {
 		/* già un legame di livello 3 con qualcuno.. non faccio nulla*/
 			die();
@@ -133,8 +133,8 @@
 
 
 	$Mysql="SELECT * from legami  WHERE domitor=$domitor AND target=$target";
-	$Result=mysql_query ($Mysql);
-	if ($res = mysql_fetch_array($Result)) {
+	$Result=mysqli_query ($db, $Mysql);
+	if ($res = mysqli_fetch_array($Result)) {
 
 		$dataultima=$res['dataultima'];
 
@@ -152,22 +152,22 @@
 		if ($oldlivello==1) {
 			/* porto a 2 */
 			$Mysql="UPDATE legami SET livello=2, dataultima=NOW() WHERE domitor=$domitor AND target=$target";
-			$Result=mysql_query ($Mysql);
+			$Result=mysqli_query ($db, $Mysql);
 		} elseif ($oldlivello==2)  {
 			/* porto a 3 e cancello gli altri */
 			$Mysql="UPDATE legami SET livello=3, dataultima=NOW() WHERE domitor=$domitor AND target=$target";
-			$Result=mysql_query ($Mysql);
+			$Result=mysqli_query ($db, $Mysql);
 			$Mysql="DELETE FROM legami  WHERE domitor!=$domitor AND target=$target";
-			$Result=mysql_query ($Mysql);
+			$Result=mysqli_query ($db, $Mysql);
 		} else {
 			/* già a 3: aggiorno la data */
 			$Mysql="UPDATE legami SET  dataultima=NOW() WHERE domitor=$domitor AND target=$target";
-			$Result=mysql_query ($Mysql);
+			$Result=mysqli_query ($db, $Mysql);
 		}
 	} else {
 		/* inserisco a 1  */
 		$Mysql="INSERT INTO legami ( domitor, target, dataultima, livello) VALUES ($domitor, $target, NOW(), 1 )";
-		$Result=mysql_query ($Mysql);
+		$Result=mysqli_query ($db, $Mysql);
 	}
 
 

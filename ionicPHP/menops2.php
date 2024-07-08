@@ -25,7 +25,7 @@
 
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 
  	$idutente=$_GET['id'];
 
@@ -33,23 +33,23 @@
 		LEFT JOIN generazione ON personaggio.generazione = generazione.generazione
 		LEFT JOIN blood ON personaggio.bloodp = blood.bloodp
 		WHERE idutente=$idutente";
-	$Result=mysql_query ($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result=mysqli_query ($db, $Mysql);
+	$res=mysqli_fetch_array($Result);
 
 	$PScorrenti=$res['PScorrenti'];
 	$ps=$res['ps'];
 	$lastps=$res['lastps'];
 	$nomepg=$res['nomepg'];
-	$xnomepg=mysql_real_escape_string($nomepg);
+	$xnomepg=mysqli_real_escape_string($db, $nomepg);
 
 	if ($PScorrenti > 0 ) {
 		$Mysql="UPDATE personaggio SET PScorrenti = $PScorrenti-1, lastps=NOW()  WHERE idutente=$idutente";
-		$Result=mysql_query ($Mysql);
+		$Result=mysqli_query ($db, $Mysql);
 
 		$testo="consuma un livello di sete per rigenerare ".$res['rigen']." danni";
-		$xtesto=mysql_real_escape_string($testo);
+		$xtesto=mysqli_real_escape_string($db, $testo);
 		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xtesto' , 0) ";
-		mysql_query($Mysql);
+		mysqli_query($db, $Mysql);
 	}
 
 

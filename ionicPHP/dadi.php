@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // header('Content-type: text/xml; charset="utf-8"');
 header('Content-Type: text/html; charset=utf-8');
 
-include ('db.inc.php');
+include ('db2.inc.php');  // NEW MYSQL //
 
 
 $last=$_GET['last'];
@@ -41,8 +41,8 @@ if ($userid==-1) { //Narrazione
 } else {  // BAH!
 	$MySql = "SELECT count(*) FROM dadi WHERE destinatario=-1";
 }
-$Result = mysql_query($MySql);
-$rs=mysql_fetch_row($Result);
+$Result = mysqli_query($db, $MySql);
+$rs=mysqli_fetch_row($Result);
 $count=$rs['0'];
 
 
@@ -69,10 +69,10 @@ if ( $count == 0 ) {
 		$MySql = "SELECT * FROM dadi WHERE destinatario=-1 OR destinatario=$userid OR idutente=$userid ORDER BY ID DESC  ";
 	}
 
-	$Result = mysql_query($MySql);
+	$Result = mysqli_query($db, $MySql);
 
 
-	while ($rs=mysql_fetch_array($Result) ) {
+	while ($rs=mysqli_fetch_array($Result) ) {
 
 		$output.= '<post>';
 		$output.= '<pg>'.$rs['nomepg'].'</pg>';

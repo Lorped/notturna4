@@ -26,7 +26,7 @@
 
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');   // NEW MYSQL //
 
  	$idutente=$_GET['id'];
 
@@ -34,8 +34,8 @@
 		LEFT JOIN statuscama ON personaggio.idstatus = statuscama.idstatus
 		LEFT JOIN blood ON personaggio.bloodp = blood.bloodp
 		WHERE idutente=$idutente";
-	$Result=mysql_query ($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result=mysqli_query ($db,$Mysql);
+	$res=mysqli_fetch_array($Result);
 
 	$PScorrenti=$res['PScorrenti'];
 	$setetot=$res['sete']+$res['addsete'];
@@ -44,17 +44,17 @@
 
 	if ($setetot > $PScorrenti ) {
 		$Mysql="UPDATE personaggio SET PScorrenti = $PScorrenti+1  WHERE idutente=$idutente";
-		$Result=mysql_query ($Mysql);
+		$Result=mysqli_query ($db, $Mysql);
 
 
 		$testo=$nomepg." ha saziato 1 livello di sete";
-		$xtesto=mysql_real_escape_string($testo);
+		$xtesto=mysqli_real_escape_string($db, $testo);
 		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , $idutente ) ";
-		mysql_query($Mysql);
+		mysqli_query($db, $Mysql);
 
 		// set post fields
 
-		master2user($idutente, $testo);
+		master2user($idutente, $testo, $db);
 
 
 

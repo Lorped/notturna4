@@ -24,7 +24,7 @@ header("Access-Control-Allow-Origin: *");
 // header('Content-type: text/xml; charset="utf-8"');
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php');  // NEW MYSQL //
 
 
 
@@ -34,8 +34,8 @@ $request = json_decode($postdata);
 
 
 $idoggetto = $request->idoggetto;
-$nomeoggetto = mysql_real_escape_string($request->nomeoggetto);
-$descrizione = mysql_real_escape_string($request->descrizione);
+$nomeoggetto = mysqli_real_escape_string($db, $request->nomeoggetto);
+$descrizione = mysqli_real_escape_string($db, $request->descrizione);
 
 
 
@@ -47,8 +47,8 @@ $descrizione = mysql_real_escape_string($request->descrizione);
 
 
 	$MySql = "UPDATE oggetti SET  nomeoggetto='$nomeoggetto' , descrizione='$descrizione' WHERE idoggetto=$idoggetto  ";
-	$Result = mysql_query($MySql);
-	if (mysql_errno()) die ( mysql_errno().": ".mysql_error()."+". $Mysql );
+	$Result = mysqli_query($db, $MySql);
+	if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db)."+". $Mysql );
 
 
 ?>

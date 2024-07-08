@@ -23,7 +23,7 @@
 
 	header('Content-Type: text/html; charset=utf-8');
 	
-	include ('db.inc.php');
+	include ('db2.inc.php');   // NEW MYSQL //
 
 	
 	$idutente=$_GET['id'];
@@ -31,10 +31,10 @@
 	
 
 	$Mysql="SELECT * FROM rubrica WHERE owner = $idutente ORDER BY idrubrica";
-	$Result=mysql_query($Mysql);
+	$Result=mysqli_query($db, $Mysql);
 
 	$out1 = [];
-	while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+	while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
     
 		$out1[] =  $res;
     }     

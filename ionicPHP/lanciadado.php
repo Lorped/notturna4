@@ -23,7 +23,7 @@
  header('Content-Type: text/html; charset=utf-8');
 
 
-include ("db.inc.php");
+include ("db2.inc.php"); // NEW MYSQL //
 
   $postdata = file_get_contents("php://input");
   $request = json_decode($postdata);
@@ -33,12 +33,12 @@ include ("db.inc.php");
 
 
   $Mysql="SELECT nomepg FROM personaggio WHERE idutente=$idutente";
-  if ( $res=mysql_fetch_array(mysql_query($Mysql)) ) {
-    $nomepg= mysql_real_escape_string( $res['nomepg'] );
+  if ( $res=mysqli_fetch_array(mysqli_query($db, $Mysql)) ) {
+    $nomepg= mysqli_real_escape_string( $db, $res['nomepg'] );
   } else {
     $Mysql="SELECT nomepg FROM HUNTERpersonaggio WHERE idutente=$idutente";
-    if ( $res=mysql_fetch_array(mysql_query($Mysql)) ) {
-      $nomepg= mysql_real_escape_string( $res['nomepg'] );
+    if ( $res=mysqli_fetch_array(mysqli_query($db, $Mysql)) ) {
+      $nomepg= mysqli_real_escape_string($db,  $res['nomepg'] );
     } else {
       $nomepg="NARRAZIONE";
     }
@@ -55,7 +55,7 @@ include ("db.inc.php");
     }
 		$testo="tira ".$tiro;
 		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo) VALUES ( $idutente, '$nomepg', NOW(), '$testo' ) ";
-		mysql_query($Mysql);
+		mysqli_query($db, $Mysql);
 
 
 

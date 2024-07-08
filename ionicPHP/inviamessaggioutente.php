@@ -25,7 +25,7 @@
 
 
 
-	include ('db.inc.php');
+	include ('db2.inc.php'); // NEW MYSQL //
 
 
 	$postdata = file_get_contents("php://input");
@@ -38,36 +38,36 @@
 
 
 	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$idutente";
-	if ( $res=mysql_fetch_array(mysql_query($Mysql)) ) {
+	if ( $res=mysqli_fetch_array(mysqli_query($db, $Mysql)) ) {
 		$nomepg=$res['nomepg'];
 	} else {
 		$nomepg="NARRAZIONE";
 	}
 
 	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$destinatario";
-	if ( $res=mysql_fetch_array(mysql_query($Mysql)) ) {
+	if ( $res=mysqli_fetch_array(mysqli_query($db, $Mysql)) ) {
 		$nomepgdest=$res['nomepg'];
 	} else {
 		$nomepgdest="NARRAZIONE";
 	}
 
 	$xmessaggio =' a '.$nomepgdest.' (Telepatia): '.$messaggio;
-	$xmessaggio=mysql_real_escape_string($xmessaggio);
+	$xmessaggio=mysqli_real_escape_string($db, $xmessaggio);
 
-	$xnomepg=mysql_real_escape_string($nomepg);
+	$xnomepg=mysqli_real_escape_string($db, $nomepg);
 
 	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xmessaggio' , $destinatario ) ";
-	mysql_query($Mysql);
-if (mysql_errno())  die ( mysql_errno().": ".mysql_error()."+". $Mysql );
+	mysqli_query($db, $Mysql);
+	if (mysqli_errno($db))  die ( mysqli_errno($db).": ".mysqli_error($db)."+". $Mysql );
 
 	$Mysql="UPDATE personaggio SET PScorrenti = PScorrenti-1 , lastps=NOW() WHERE idutente=$idutente";
-	$Result=mysql_query ($Mysql);
+	$Result=mysqli_query ($db,$Mysql);
 
 
 
 	$Mysql="SELECT registrationID FROM utente WHERE idutente=$destinatario";
-	$Result=mysql_query($Mysql);
-	$res=mysql_fetch_array($Result);
+	$Result=mysqli_query($db,$Mysql);
+	$res=mysqli_fetch_array($Result);
 
 	if ($res['registrationID'] != "" ) {
 

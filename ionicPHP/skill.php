@@ -33,7 +33,7 @@ header('Content-Type: text/html; charset=utf-8');
 
   if (isset($postdata)  ) {
 
-    include ('db.inc.php');
+    include ('db2.inc.php');  // NEW MYSQL //
 
     $out1 = [];
 
@@ -43,8 +43,8 @@ header('Content-Type: text/html; charset=utf-8');
 
 
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
       //print_r ($res);
 
       $out1[] =  $res;
@@ -56,8 +56,8 @@ header('Content-Type: text/html; charset=utf-8');
           WHERE idutente = '$userid'
           ORDER BY discipline.iddisciplina";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
       $out1[] =  $res;
     }
@@ -67,8 +67,8 @@ header('Content-Type: text/html; charset=utf-8');
           WHERE idutente = '$userid'
           ORDER BY HUNdiscipline.iddisciplina";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
       $out1[] =  $res;
     }
@@ -80,8 +80,8 @@ header('Content-Type: text/html; charset=utf-8');
           LEFT JOIN taumaturgie_main ON taumaturgie_main.idtaum=taumaturgie.idtaum
           WHERE idutente = '$userid' ORDER BY livello DESC";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
       $out1[] =  $res;
     }
@@ -90,8 +90,8 @@ header('Content-Type: text/html; charset=utf-8');
           LEFT JOIN necromanzie_main ON necromanzie_main.idnecro=necromanzie.idnecro
           WHERE idutente = '$userid' ORDER BY livello DESC ";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
       $out1[] =  $res;
     }
@@ -101,8 +101,8 @@ header('Content-Type: text/html; charset=utf-8');
           WHERE idutente = '$userid'
           ORDER BY background.idback";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
       $out1[] =  $res;
     }
@@ -111,8 +111,8 @@ header('Content-Type: text/html; charset=utf-8');
           WHERE idutente = '$userid'
           ORDER BY livello DESC";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
       $out1[] =  $res;
     }
@@ -121,8 +121,8 @@ header('Content-Type: text/html; charset=utf-8');
       LEFT JOIN pregidifetti_main ON pregidifetti_main.idpregio=pregidifetti.idpregio
           WHERE idutente = '$userid' ";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
       $out1[] =  $res;
     }
@@ -131,8 +131,8 @@ header('Content-Type: text/html; charset=utf-8');
       LEFT JOIN rituali_t_main ON rituali_t_main.idrituale=rituali_t.idrituale
                WHERE idutente = '$userid' ";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
       $out1[] =  $res;
     }
@@ -140,8 +140,8 @@ header('Content-Type: text/html; charset=utf-8');
       LEFT JOIN rituali_n_main ON rituali_n_main.idrituale=rituali_n.idrituale
                WHERE idutente = '$userid' ";
 
-    $Result = mysql_query($MySql);
-    while ( $res = mysql_fetch_array($Result,MYSQL_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+    while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
       $out1[] =  $res;
     }
