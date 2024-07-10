@@ -30,6 +30,97 @@
 
 	$barcode=$_GET['barcode'];
 
+	if ( $barcode = "999999999999" ) {
+
+		$Mysql = "SELECT * FROM personaggio WHERE idutente ='$idutente' ";
+
+		$Result = mysqli_query($db, $Mysql);
+
+		$res= mysqli_fetch_array($Result);
+
+		$nome = $res['nomeplayer'];
+		$xp = $res['xp'];
+
+
+		$Mysql = "SELECT * FROM segreteria WHERE idutente ='$idutente'  ";
+		$Result = mysqli_query($db,$Mysql);
+		if ( $res=mysqli_fetch_array($Result) ) {
+			// esiste un record 
+
+			$Mysql2 = "SELECT idutente, DATE_FORMAT( eventodata , '%d-%m-%Y alle  %H:%i' ) AS Ora  FROM segreteria WHERE idutente ='$idutente' AND date_add(eventodata, interval 12 HOUR) > now() ";
+			$Result2 = mysqli_query($db,$Mysql2);
+
+			if ($res2 = mysqli_fetch_array($Result2)) {
+				$testo= $nome . " hai già effettuato la segreteria il " . $res2['Ora'];
+				$esito[] = 'SEGRETERIA';
+				
+
+				$esito[] = $testo.'. '.$extra;
+				$output = json_encode ($esito, JSON_UNESCAPED_UNICODE);
+    			echo $output;
+				die();
+			}
+		}
+
+
+		$esito[] = 'SEGRETERIA';
+
+		$testo=' Segreteria effettuata, lunga notte!';
+		$extra="";
+
+		
+		
+
+		
+
+		$extra = "Benvenuto a Notturna, ". $nome ;
+
+		$Mysql = "SELECT * FROM segreteria WHERE idutente ='$idutente' ";
+		$Result = mysqli_query($db, $Mysql);
+		if ( $res= mysqli_fetch_array($Result) ) {
+			$num = $res ['eventi'];
+
+			$num = $num + 1 ;
+
+			$extra = $extra . ". Questo è il tuo evento numero ".$num . '.';
+
+			// AGGIORNO TABELLA !!! //
+			$Mysql = "UPDATE segreteria set  eventi = eventi +1 , eventodata = NOW() WHERE idutente = '$idutente' ";
+			mysqli_query($db, $Mysql);
+
+			$Mysql = "UPDATE personaggio SET xp = xp +2 WHERE idutente = '$idutente'";
+			mysqli_query($db, $Mysql);
+			$Mysql = "INSERT INTO logpx (idutente, px, Azione ) VALUES ('$idutente', 2 , 'Segreteria ADD' ) ";
+			mysqli_query($db, $Mysql);
+			
+
+		} else {
+			// Primo LIVE //
+			$extra = $extra . ". Questo è il tuo primo evento! ";
+
+			// AGGIORNO TABELLA !!! //
+			$Mysql = "INSERT INTO segreteria ( idutente, eventi, eventodata) VALUES ( '$idutente' , 1 , NOW() )";
+			mysqli_query($db, $Mysql);
+
+			$Mysql = "UPDATE personaggio SET xp = xp +2 WHERE idutente = '$idutente'";
+			mysqli_query($db, $Mysql);
+			$Mysql = "INSERT INTO logpx (idutente, px, Azione ) VALUES ('$idutente', 2 , 'Segreteria ADD' ) ";
+			mysqli_query($db, $Mysql);
+		}
+
+		$extra = $extra . " Hai ". ($xp+2) . " punti esperienza in totale.";
+		// AGGIORNO TABELLA !!! //
+
+
+
+
+		$esito[] =  $extra . $testo;
+		$output = json_encode ($esito, JSON_UNESCAPED_UNICODE);
+    	echo $output;
+		die();
+
+	}
+
 
 	$Mysql="SELECT * FROM oggetti LEFT JOIN cond_oggetti ON oggetti.idoggetto = cond_oggetti.idoggetto WHERE barcode='$barcode' ORDER BY cond_oggetti.valcond ASC ";
 	$Result=mysqli_query($db, $Mysql);
