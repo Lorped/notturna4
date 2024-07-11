@@ -30,7 +30,7 @@
 
 	$barcode=$_GET['barcode'];
 
-	if ( $barcode = "999999999999" ) {
+	if ( $barcode == "999999999999" ) {
 
 		$Mysql = "SELECT * FROM personaggio WHERE idutente ='$idutente' ";
 
