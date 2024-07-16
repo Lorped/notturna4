@@ -32,7 +32,7 @@
 
 	if ( $barcode == "999999999999" ) {
 
-		$Mysql = "SELECT * FROM personaggio WHERE idutente ='$idutente' ";
+		$Mysql = "SELECT nomeplayer, xp  FROM personaggio WHERE idutente ='$idutente' ";
 
 		$Result = mysqli_query($db, $Mysql);
 
@@ -59,44 +59,50 @@
 				$output = json_encode ($esito, JSON_UNESCAPED_UNICODE);
     			echo $output;
 				die();
+			} else {
+
+				$esito[] = 'SEGRETERIA';
+				$testo=' ';		
+				$extra = "Benvenuto a Notturna, ". $nome ;
+
+				$saldo = $res['saldo'];
+
+				if ( $saldo  == '0' ) {
+	
+					$extra = $extra . ". Verifica la tua situazione con la Narrazione e riprova.";
+	
+				} else {
+					$num = $res ['eventi'];
+	
+					$num = $num + 1 ;
+		
+					$extra = $extra . ". Questo è il tuo evento numero ".$num . '.';
+		
+					// AGGIORNO TABELLA !!! //
+					$Mysql = "UPDATE segreteria set  eventi = eventi +1 , eventodata = NOW() WHERE idutente = '$idutente' ";
+					mysqli_query($db, $Mysql);
+		
+					$Mysql = "UPDATE personaggio SET xp = xp +2 WHERE idutente = '$idutente'";
+					mysqli_query($db, $Mysql);
+					$Mysql = "INSERT INTO logpx (idutente, px, Azione ) VALUES ('$idutente', 2 , 'Segreteria ADD' ) ";
+					mysqli_query($db, $Mysql);
+					
+					$extra = $extra . " Hai ". ($xp+2) . " punti esperienza in totale.";
+					$testo=' Segreteria effettuata, lunga notte!';
+				}
+
 			}
-		}
-
-
-		$esito[] = 'SEGRETERIA';
-
-		$testo=' Segreteria effettuata, lunga notte!';
-		$extra="";
-
-		
-		
-
-		
-
-		$extra = "Benvenuto a Notturna, ". $nome ;
-
-		$Mysql = "SELECT * FROM segreteria WHERE idutente ='$idutente' ";
-		$Result = mysqli_query($db, $Mysql);
-		if ( $res= mysqli_fetch_array($Result) ) {
-			$num = $res ['eventi'];
-
-			$num = $num + 1 ;
-
-			$extra = $extra . ". Questo è il tuo evento numero ".$num . '.';
-
-			// AGGIORNO TABELLA !!! //
-			$Mysql = "UPDATE segreteria set  eventi = eventi +1 , eventodata = NOW() WHERE idutente = '$idutente' ";
-			mysqli_query($db, $Mysql);
-
-			$Mysql = "UPDATE personaggio SET xp = xp +2 WHERE idutente = '$idutente'";
-			mysqli_query($db, $Mysql);
-			$Mysql = "INSERT INTO logpx (idutente, px, Azione ) VALUES ('$idutente', 2 , 'Segreteria ADD' ) ";
-			mysqli_query($db, $Mysql);
-			
-
 		} else {
+
+			$esito[] = 'SEGRETERIA';
+			$testo=' ';		
+			$extra = "Benvenuto a Notturna, ". $nome ;
+		
+
 			// Primo LIVE //
 			$extra = $extra . ". Questo è il tuo primo evento! ";
+
+			
 
 			// AGGIORNO TABELLA !!! //
 			$Mysql = "INSERT INTO segreteria ( idutente, eventi, eventodata) VALUES ( '$idutente' , 1 , NOW() )";
@@ -106,12 +112,12 @@
 			mysqli_query($db, $Mysql);
 			$Mysql = "INSERT INTO logpx (idutente, px, Azione ) VALUES ('$idutente', 2 , 'Segreteria ADD' ) ";
 			mysqli_query($db, $Mysql);
+
+			$extra = $extra . " Hai ". ($xp+2) . " punti esperienza in totale.";
+			$testo=' Segreteria effettuata, lunga notte!';
 		}
 
-		$extra = $extra . " Hai ". ($xp+2) . " punti esperienza in totale.";
-		// AGGIORNO TABELLA !!! //
-
-
+		
 
 
 		$esito[] =  $extra . $testo;
