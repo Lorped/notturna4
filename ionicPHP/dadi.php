@@ -80,7 +80,7 @@ if ( $count == 0 ) {
 		$output.= '<testo>'.htmlspecialchars($rs['Testo'],ENT_QUOTES).'</testo>';
 
 		if ( $rs['Nomedest'] != "" ) {
-			// $output.= '<dest> a '.htmlspecialchars($rs['Nomedest'],ENT_QUOTES).'</dest>';
+			 $output.= '<dest> a '.htmlspecialchars($rs['Nomedest'],ENT_QUOTES).'</dest>';
 		} else {
 			$output.= '<dest>+</dest>';
 		}
