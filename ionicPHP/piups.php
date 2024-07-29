@@ -30,7 +30,7 @@
 
  	$idutente=$_GET['id'];
 
- 	$Mysql="SELECT PScorrenti, sete, lastps, nomepg FROM personaggio
+ 	$Mysql="SELECT PScorrenti, sete, lastps, nomepg, addsete FROM personaggio
 		LEFT JOIN statuscama ON personaggio.idstatus = statuscama.idstatus
 		LEFT JOIN blood ON personaggio.bloodp = blood.bloodp
 		WHERE idutente=$idutente";
