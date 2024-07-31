@@ -8,19 +8,24 @@ function sendFCMNotification($access_token, $token) {
     $url = "https://fcm.googleapis.com/v1/projects/notturna-93b8f/messages:send";
     $data = [
         'message' => [
-            "data"=> [
-                "title" => "Title",
-                "body" => "This is message body.",
+            "notification"=> [
+                "title" => "NOTTURNA",
+                "body" => "This is message body number 5.",
                     //  "icon" => "https://www.clipscutter.com/image/brand/brand-256.png",
                     //  "image" => "https://images.unsplash.com/photo-1514473776127-61e2dc1dded3?w=871&q=80",
                     //  "click_action" => "https://example.com"
-                "channelId" => "PushPluginChannel",
-                'sound' => 'default',
-				'notification_priority' => '2'
+                
+                // 'sound' => 'default',
+				// 'notification_priority' => '2'
             ],
-            
-            'token' => $token
-            // 'topic' => 'master' 
+            "android" => [
+                "notification" => [
+                    "channel_id" => "PushPluginChannel"
+                ]
+            ],
+            // 'channelId' => "PushPluginChannel",
+            'token' => $token,
+            //'topic' => 'master' 
         ]
     ];
     $options = array(
@@ -45,6 +50,7 @@ $access_token = get_access_token("notturna-93b8f-firebase-adminsdk-lsd7l-b077c17
 echo "acc => " . $access_token . '<p>';
 
 $token = "fwSijUYfQIK2w4DnKjqyPv:APA91bG3-0-pKnALLNLAdbqjKMyyoM9O4w-tKQ4lrCUPASqK3tYxVtwQV_UfhtKElfmpe2A6qiOUhtRb5185SpCZi41xgnuDOtF9ZhvOgPfTRwxEkqqoqewG89JdNOMjO0VLAq3UllbZ";
+//$token= "e0WC4NV7Rhuyp5vlnLWDe-:APA91bEVu1owEGPb6tl7qANdH78VtLnYz2xpZsmvABNgTZlA2GaEhhVCRl8qT_qblNUl5KMqTctsdlGqn_UVIr_NBYgcXzYKSLN5N_jbc00QpFEOn2PlG26pF8V3NoGPIWImziXITpD0";
 
 $response = sendFCMNotification($access_token, $token);
 
