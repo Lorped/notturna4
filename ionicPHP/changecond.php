@@ -1,4 +1,4 @@
-<?
+<?php
 header("Access-Control-Allow-Origin: *");
 
   //http://stackoverflow.com/questions/18382740/cors-not-working-php

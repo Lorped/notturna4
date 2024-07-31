@@ -1,4 +1,4 @@
-<?
+<?php
 
   //http://stackoverflow.com/questions/18382740/cors-not-working-php
   if (isset($_SERVER['HTTP_ORIGIN'])) {
