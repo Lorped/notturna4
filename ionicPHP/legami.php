@@ -23,7 +23,7 @@
 
 
 
-
+	include ('messaggi.inc.php');
 
 	include ('db2.inc.php');  // NEW MYSQL //
 
@@ -47,52 +47,8 @@
 	$messaggio ='ha accettato la vitae di '.$nomepgdest;
 
 
-	$Mysql="SELECT registrationID FROM utente WHERE idutente=$domitor";
-	$Result=mysqli_query($db, $Mysql);
-	$res=mysqli_fetch_array($Result);
-
-
-	if ($res['registrationID'] != "" ) {
-
-		$fields= array(
-			'to'=>$res['registrationID'],
-			'data'=> [
-				'message'=> $messaggio ,
-				'title'=> $nomepg,
-				'image'=> 'icon'
-			]
-		);
-
-	} else {
-
-		$fields= array(
-			'to'=>'/topics/userid'.$domitor,
-			'data'=> [
-				'message'=> $messaggio ,
-				'title'=> $nomepg,
-				'image'=> 'icon'
-			]
-		);
-
-	}
-
-
-	$api_key = "AAAAxERgxJ4:APA91bGb0CqFmwPOIV1tN9BSOG7yucKmCpymJf0Pp1YRXlX3wIn8RlbYqMYjnDavyLP4-j9uSzVAlLwB0e7oYzwsaJa2H_yTE3LjzXL1UoOaf-EO00MewK9VyHbOeyvezg-2CTyRulba";
-	$ch = curl_init('https://fcm.googleapis.com/fcm/send');
-
-	$headers = array (
-		'Authorization: key=' . $api_key,
-		'Content-Type: application/json'
-	);
-
-	$post=json_encode($fields, JSON_UNESCAPED_SLASHES);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $post );
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	$response = curl_exec($ch);
-	curl_close($ch);
+	
+	user2user ($nomepg, $domitor , $messaggio, $db);
 
 
 	$xnomepg=mysqli_real_escape_string($db, $nomepg);

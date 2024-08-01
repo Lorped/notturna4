@@ -22,7 +22,7 @@
 	}
 
 
-
+	include ('messaggi.inc.php');
 
 
 	include ('db2.inc.php'); // NEW MYSQL //
@@ -35,6 +35,10 @@
  	$destinatario=$request->destinatario;
 	$messaggio=$request->messaggio;
  	//$messaggio=mysql_real_escape_string( $request->messaggio );
+
+	//$idutente = 133;
+	//$destinatario = 1 ;
+	//$messaggio = "utima prova";
 
 
 	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$idutente";
@@ -51,7 +55,8 @@
 		$nomepgdest="NARRAZIONE";
 	}
 
-	$xmessaggio =' a '.$nomepgdest.' (Telepatia): '.$messaggio;
+	//$xmessaggio =' a '.$nomepgdest.' (Telepatia): '.$messaggio;
+	$xmessaggio =' (Telepatia): '.$messaggio;
 	$xmessaggio=mysqli_real_escape_string($db, $xmessaggio);
 
 	$xnomepg=mysqli_real_escape_string($db, $nomepg);
@@ -65,70 +70,7 @@
 
 
 
-	$Mysql="SELECT registrationID FROM utente WHERE idutente=$destinatario";
-	$Result=mysqli_query($db,$Mysql);
-	$res=mysqli_fetch_array($Result);
-
-	if ($res['registrationID'] != "" ) {
-
-		$fields= array(
-			'to'=>$res['registrationID'],
-			'data'=> [
-				'message'=> 'TELEPATIA: '.$messaggio ,
-				'title'=> $nomepg,
-				'image'=> 'icon'
-			]
-		);
-
-
-	} else {
-
-		$fields= array(
-			'to'=>'/topics/userid'.$destinatario,
-			'data'=> [
-				'message'=> 'TELEPATIA: '.$messaggio  ,
-				'title'=> $nomepg,
-				'image'=> 'icon'
-			]
-		);
-
-	}
-
-
-	$api_key="AAAAxERgxJ4:APA91bGb0CqFmwPOIV1tN9BSOG7yucKmCpymJf0Pp1YRXlX3wIn8RlbYqMYjnDavyLP4-j9uSzVAlLwB0e7oYzwsaJa2H_yTE3LjzXL1UoOaf-EO00MewK9VyHbOeyvezg-2CTyRulba";
-	$ch = curl_init('https://fcm.googleapis.com/fcm/send');
-
-	$headers = array (
-		'Authorization: key=' . $api_key,
-		'Content-Type: application/json'
-	);
-
-	//die( print_r($headers));
-
-	$post=json_encode($fields, JSON_UNESCAPED_SLASHES);
-
-	//die (print_r($post));
-
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $post );
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-	// Disabling SSL Certificate support temporarly
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-
-	// execute!
-	$response = curl_exec($ch);
-
-	// close the connection, release resources used
-	curl_close($ch);
-
-	// do anything you want with your response
-
-	//die(print_r($response));
-
+	user2user ($nomepg, $destinatario , $messaggio, $db);
 
 
 

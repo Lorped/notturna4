@@ -47,11 +47,10 @@ include ("db2.inc.php");  // NEW MYSQL //
 
 
 		$testo="usa Forza di Volontà";
-		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo) VALUES ( $idutente, '$nomepg', NOW(), '$testo' ) ";
+		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$nomepg', NOW(), '$testo' , -1) ";
 		mysqli_query($db, $Mysql);
 		$Mysql="UPDATE personaggio SET fdv=fdv-1 WHERE idutente= $idutente ";
 		mysqli_query($db, $Mysql);
-
 
 
 

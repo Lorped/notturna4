@@ -24,8 +24,8 @@ function sendFCMNotification($access_token, $token) {
                 ]
             ],
             // 'channelId' => "PushPluginChannel",
-            'token' => $token,
-            //'topic' => 'master' 
+            //'token' => $token,
+            'topic' => 'master' 
         ]
     ];
     $options = array(

@@ -1,5 +1,5 @@
 <?php
-	include ('messaggi.inc.php');
+
 
 	header("Access-Control-Allow-Origin: *");
 
@@ -25,7 +25,7 @@
 
 
 
-
+	include ('messaggi.inc.php');
 	include ('db2.inc.php');  // NEW MYSQL //
 
  	$idutente=$_GET['id'];

@@ -1,5 +1,5 @@
 <?php
-	include ('messaggi.inc.php');
+
 
 	header("Access-Control-Allow-Origin: *");
 
@@ -23,6 +23,7 @@
 	}
 
 
+	include ('messaggi.inc.php');
 	include ('db2.inc.php'); // NEW MYSQL //
 
 	$postdata = file_get_contents("php://input");
@@ -70,7 +71,8 @@
 
 	$testo="ha utilizzato ".$nomedisc.".".$livellopot." ".$pot;
 	$xtesto=mysqli_real_escape_string($db, $testo);
-	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xtesto' , $idutente ) ";
+	//$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xtesto' , $idutente ) ";
+	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xtesto' , 0 ) ";
 	mysqli_query($db, $Mysql);
 
 
@@ -80,7 +82,7 @@
 	$Result = mysqli_query($db, $Mysql);
 	$res=mysqli_fetch_array($Result);
 
-	if ( $res['PScorrenti'] == 0  ) {
+	if ( $res['PScorrenti'] == 1  ) {
 		$testo=$nomepg." è a rischio Frenesia";
 		master2master( $testo);
 		$xtesto=mysqli_real_escape_string($db, $testo);

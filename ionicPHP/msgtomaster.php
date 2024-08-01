@@ -1,5 +1,5 @@
 <?php
-	include ('messaggi.inc.php');
+
 
 	header("Access-Control-Allow-Origin: *");
 
@@ -24,7 +24,7 @@
 
 
 
-
+	include ('messaggi.inc.php');
 
 	include ('db2.inc.php');  // NEW MYSQL //
 
@@ -49,7 +49,7 @@
 	$xnomepg=mysqli_real_escape_string($db, $nomepg);
 	$xmessaggio=mysqli_real_escape_string($db, $messaggio );
 
-	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xmessaggio' , $idutente) ";
+	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xmessaggio' , 0) ";
 	mysqli_query($db, $Mysql);
 
 	user2master($idutente,$messaggio, $db );

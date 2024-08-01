@@ -54,9 +54,9 @@ include ("db2.inc.php"); // NEW MYSQL //
       $tiro=rand(1,5);
     }
 		$testo="tira ".$tiro;
-		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo) VALUES ( $idutente, '$nomepg', NOW(), '$testo' ) ";
+		//$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo) VALUES ( $idutente, '$nomepg', NOW(), '$testo' ) ";
+    $Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$nomepg', NOW(), '$testo' , -1) ";
 		mysqli_query($db, $Mysql);
-
 
 
 

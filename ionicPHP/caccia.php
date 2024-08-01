@@ -75,13 +75,15 @@
 	if ( $vitae == 1) {
 		$testo=$nomepg." ha usato Rigenerazione della Vitae  (".$recuperati ." livelli di sete recuperati)";
 		$xtesto=mysqli_real_escape_string($db, $testo);
-		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , $idutente ) ";
+		//$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , $idutente ) ";
+		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , 0 ) ";
 		mysqli_query($db, $Mysql);
 
 	} else {
 		$testo=$nomepg." ha saziato la sua sete (".$recuperati ." livelli recuperati)";
 		$xtesto=mysqli_real_escape_string($db, $testo);
-		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , $idutente ) ";
+		//$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , $idutente ) ";
+		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( 0, 'NARRAZIONE', NOW(), '$xtesto' , 0 ) ";
 		mysqli_query($db, $Mysql);
 	}
 
@@ -90,7 +92,6 @@
 		// set post fields
 
 	master2user($idutente,$testo, $db);
-
 
 
 
