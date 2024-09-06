@@ -140,6 +140,17 @@ export class anecro  {
     }
 }
 
+export class Amalgama {
+    idamalgama: number = 0;
+    nomeamalgama: string = '';
+    disc1: string = '';
+    lvldisc1: number = 0;
+    disc2: string = '';
+    lvldisc2: number = 0;
+    ps: number = 0;
+    fdv: number = 0;
+}
+
 @Injectable()
 export class User {
     public type: string;
@@ -151,6 +162,7 @@ export class User {
     public taum: Array<ataum>;
     public necro: Array<anecro>;
     public incaccia: Number;
+    public amalgame: Array<Amalgama>;
   
     constructor () {
         this.type = 'V';
@@ -162,6 +174,7 @@ export class User {
         this.taum = [];
         this.necro = [];
         this.incaccia = 0 ;
+        this.amalgame = [];
     }
   }
   
@@ -224,3 +237,4 @@ export class Utente {
 	}
 
 }
+

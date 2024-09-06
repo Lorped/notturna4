@@ -68,6 +68,12 @@
       <ion-button color="danger" (click)="godisciplina(pot.iddisciplina,pot.nomedisc )"  class="submit-btn2" expand="full" shape="round" type="submit" [disabled]="this.user.fulldata.PScorrenti==0" >{{pot.nomedisc}}</ion-button>
     </ion-col>
   </ion-row>
+
+  <ion-row class="master" color="dark">
+    <ion-col size="6" *ngIf="this.user.amalgame.length>0">
+      <ion-button color="danger" (click)="goamalgame()"  class="submit-btn2" expand="full" shape="round" type="submit" [disabled]="this.user.fulldata.PScorrenti==0" >Amalgame</ion-button>
+    </ion-col>
+  </ion-row>
   
 
 

@@ -169,6 +169,19 @@ export class LoginPage implements OnInit {
                     }
                     this.user.fulldata.rigen = cura;
 
+                    this.authentication.listamalgame(this.user.userid).subscribe(
+                      (data: any) => {
+                        this.user.amalgame = data.amalgame;
+                        //console.log(this.user.amalgame);
+                        this.user.amalgame.forEach(element => {
+                          element.fdv = Number (element.fdv);
+                          element.ps = Number (element.ps);
+                        });
+                        //console.log(this.user.amalgame);
+
+                      }
+                    );
+
                     // console.log ('user finale: ', this.user);
 
 

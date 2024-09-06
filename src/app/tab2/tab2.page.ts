@@ -16,6 +16,7 @@ export class Tab2Page {
   public isPermissionGranted = false;
 
   rituali: number = 0;
+  amalgame: number = 0;
 
   forza:	number = 0; //??
   rissa:	number = 0;
@@ -92,6 +93,12 @@ export class Tab2Page {
     for (var j = 0; j < this.user.skill.length; j++) {
       if ( this.user.skill[j].tipologia==11)  {
         this.rituali=1;
+        break;
+      }
+    }
+    for (var j = 0; j < this.user.skill.length; j++) {
+      if ( this.user.skill[j].tipologia==12)  {
+        this.amalgame=1;
         break;
       }
     }

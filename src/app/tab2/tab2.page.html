@@ -37,6 +37,17 @@
     </ion-col>
   </ion-row>
 
+	<ion-row style="align-items: center;" *ngIf="amalgame == 1">
+    <ion-col ><hr/></ion-col>
+    <ion-col size="6" style="text-align: center; font-size: 1em;">Amalgame</ion-col>
+    <ion-col ><hr/></ion-col>
+  </ion-row>
+
+	<ion-row *ngFor="let desc of this.user.skill">
+    <ion-col *ngIf="desc.tipologia == 12 "><span stype="color:#FF0000;"></span> {{ desc.nomeskill }}</ion-col>
+	</ion-row>
+
+
 	<ion-row style="align-items: center;" *ngIf="rituali == 1">
     <ion-col ><hr/></ion-col>
     <ion-col size="6" style="text-align: center; font-size: 1em;">Rituali</ion-col>

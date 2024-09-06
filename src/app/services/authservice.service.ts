@@ -60,4 +60,15 @@ export class AuthserviceService {
 
   }
 
+  listamalgame(userid: number){
+
+		return this.http.get<any>('https://www.roma-by-night.it/ionicPHP/listamalgame.php?id='+userid
+		).pipe(
+      map(data => {
+        // console.log ('PS :' , data);
+        return data;
+      }));
+
+  }
+
 }

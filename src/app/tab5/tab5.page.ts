@@ -120,6 +120,10 @@ export class Tab5Page implements OnInit {
     this.router.navigate(['/tabs/addpx']);
   }
 
+  goamalgame(){
+    console.log("amalgame");
+  }
+
   ionViewWillEnter () {
     this.tiridado = [];
     this.loadDadi();
