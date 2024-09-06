@@ -79,7 +79,7 @@
 					$extra = $extra . ". Questo è il tuo evento numero ".$num . '.';
 		
 					// AGGIORNO TABELLA !!! //
-					$Mysql = "UPDATE segreteria set  eventi = eventi +1 , eventodata = NOW() WHERE idutente = '$idutente' ";
+					$Mysql = "UPDATE segreteria set  eventi = eventi +1 , eventodata = NOW() , saldo = 0 WHERE idutente = '$idutente' ";
 					mysqli_query($db, $Mysql);
 		
 					$Mysql = "UPDATE personaggio SET xp = xp +2 WHERE idutente = '$idutente'";
