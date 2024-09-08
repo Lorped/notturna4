@@ -121,7 +121,9 @@ export class Tab5Page implements OnInit {
   }
 
   goamalgame(){
-    console.log("amalgame");
+    //console.log("amalgame");
+    // go NECRO
+    this.router.navigate(['/tabs/amalgame']);
   }
 
   ionViewWillEnter () {

@@ -76,6 +76,10 @@ const routes: Routes = [
         path: 'telepatia',
         loadChildren: () => import('../telepatia/telepatia.module').then( m => m.TelepatiaPageModule)
       },
+      {
+        path: 'amalgame',
+        loadChildren: () => import('../amalgame/amalgame.module').then( m => m.AmalgamePageModule)
+      },
     
         
       {

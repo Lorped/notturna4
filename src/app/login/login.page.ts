@@ -217,11 +217,12 @@ export class LoginPage implements OnInit {
       },
       error => {
         this.loadingCtrl.dismiss();
-        switch ( error['statusText'] ) {
-          case "Unauthorized":
+        //console.log(error);
+        switch ( error['status'] ) {
+          case 401:
             alert("Non autorizzato");
           break;
-          case "Not Found":
+          case 404:
             alert("Scheda non trovata");
           break;
           default:

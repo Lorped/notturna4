@@ -1,0 +1,25 @@
+<ion-header>
+  
+  <ion-toolbar color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab5"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Poteri di Amalgama</ion-title>
+  </ion-toolbar>
+
+</ion-header>
+<ion-content class="master" color="dark" padding>
+
+  <ion-row *ngFor="let a of myamalgame">
+    <ion-col *ngIf="a.ps !== 0  && a.fdv !== 0  " >
+      <ion-button  (click)="gopotere(a.nomeamalgama,a.idamalgama, a.ps, a.fdv)"  color="danger" class="submit-btn2" shape="round" size="full" type="submit" [disabled]="user.fulldata.PScorrenti < a.ps || user.fulldata.fdv < a.fdv" > {{a.nomeamalgama}} </ion-button>
+    </ion-col>
+    <ion-col *ngIf="a.ps !== 0  && a.fdv === 0  " >
+      <ion-button  (click)="gopotere(a.nomeamalgama,a.idamalgama , a.ps, a.fdv)"  color="danger" class="submit-btn2" shape="round" size="full" type="submit" [disabled]="user.fulldata.PScorrenti < a.ps " > {{a.nomeamalgama}} </ion-button>
+    </ion-col>
+    <ion-col *ngIf="a.ps === 0  && a.fdv !== 0  " >
+      <ion-button  (click)="gopotere(a.nomeamalgama,a.idamalgama, a.ps, a.fdv)"  color="danger" class="submit-btn2" shape="round" size="full" type="submit" [disabled]=" user.fulldata.fdv < a.fdv" > {{a.nomeamalgama}} </ion-button>
+    </ion-col>
+
+  </ion-row>
+</ion-content>
