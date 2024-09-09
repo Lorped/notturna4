@@ -8,6 +8,9 @@ import { AuthserviceService } from '../services/authservice.service';
 import { LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
+import { CapacitorConfig } from '@capacitor/cli';
+import { FCM } from "@capacitor-community/fcm";
+
 import {
   ActionPerformed,
   PushNotificationSchema,
@@ -258,6 +261,25 @@ export class LoginPage implements OnInit {
       }
     });
 
+    PushNotifications.createChannel(
+      {
+        name: 'Notturna Channel',
+        id: 'PushPluginChannel',
+        description: 'Notturna Channel',
+        importance: 5,
+        sound: 'notturna_sound'
+      }
+    );
+
+    const config: CapacitorConfig = {
+      plugins: {
+        PushNotifications: {
+          presentationOptions: ["badge", "sound", "alert"],
+        },
+      },
+    };
+
+
     PushNotifications.addListener('registration', (token: Token) => {
       //alert('Push registration success, token: ' + token.value);
 
@@ -287,6 +309,21 @@ export class LoginPage implements OnInit {
         //alert('Push action performed: ' + JSON.stringify(notification));
       },
     );
+
+    
+    FCM.subscribeTo({ topic: 'user' })
+    .then(r => console.log(`subscribed to topic`))
+    .catch(err => console.log(err));
+
+    var atopic = 'userid' + this.user.userid;
+    FCM.subscribeTo({ topic: atopic })
+    .then(r => console.log(`subscribed to topic`))
+    .catch(err => console.log(err));
+
+    var atopic2 =  this.user.fulldata.nomeclan;
+    FCM.subscribeTo({ topic: atopic2 })
+    .then(r => console.log(`subscribed to topic`))
+    .catch(err => console.log(err));
 
     this.router.navigate(['tabs']);
 

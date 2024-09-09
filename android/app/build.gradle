@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     namespace "notturna.gdr.larp"
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "notturna.gdr.larp"
         minSdkVersion rootProject.ext.minSdkVersion
