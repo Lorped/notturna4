@@ -56,7 +56,7 @@ export class PoteriPage implements OnInit {
 
 
   gopotere(pot: string,livellopot: number) {
-    console.log(pot);
+    // console.log(pot);
     if (pot == "Telepatia") {
       this.router.navigate(['/tabs/telepatia']);
     } else if (pot =="Richiamo" && livellopot==3)  {  //non è il richiamo di Ascendente 4

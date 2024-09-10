@@ -312,17 +312,17 @@ export class LoginPage implements OnInit {
 
     
     FCM.subscribeTo({ topic: 'user' })
-    .then(r => console.log(`subscribed to topic`))
+    .then(r => console.log(`subscribed to topic: user `))
     .catch(err => console.log(err));
 
     var atopic = 'userid' + this.user.userid;
     FCM.subscribeTo({ topic: atopic })
-    .then(r => console.log(`subscribed to topic`))
+    .then(r => console.log(`subscribed to topic: `, atopic))
     .catch(err => console.log(err));
 
     var atopic2 =  this.user.fulldata.nomeclan;
     FCM.subscribeTo({ topic: atopic2 })
-    .then(r => console.log(`subscribed to topic`))
+    .then(r => console.log(`subscribed to topic: `, atopic2))
     .catch(err => console.log(err));
 
     this.router.navigate(['tabs']);

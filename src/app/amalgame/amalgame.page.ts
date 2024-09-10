@@ -28,10 +28,10 @@ export class AmalgamePage implements OnInit {
   }
 
   gopotere(nome: string,idamalgama: number, ps: number, fdv: number) {
-    console.log ( "nome = " , nome);
-    console.log ( "id = " , idamalgama);
-    console.log ( "ps = " , ps);
-    console.log ( "fdv = " , fdv);
+    // console.log ( "nome = " , nome);
+    // console.log ( "id = " , idamalgama);
+    // console.log ( "ps = " , ps);
+    // console.log ( "fdv = " , fdv);
 
     
 
