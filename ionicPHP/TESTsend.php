@@ -10,7 +10,7 @@ function sendFCMNotification($access_token, $token) {
         'message' => [
             "notification"=> [
                 "title" => "NOTTURNA",
-                "body" => "This is message body number 12.",
+                "body" => "Messaggio per clan Toreador.",
 
 
                 // image sembra non funzionare!! 
@@ -26,24 +26,25 @@ function sendFCMNotification($access_token, $token) {
             ],
             "android" => [
                 "notification" => [
-                    "channel_id" => "NotturnaChannel",
+                    "channel_id" => "PushPluginChannel",
 
-                    // 'sound' => 'default',
+                     'sound' => 'notturna_sound',
 				    // 'notification_priority' => '2'
                      
                     //eventuali valori specifici per android
                     //
                     //  "icon" => "https://www.clipscutter.com/image/brand/brand-256.png",
 
-                    'image' => "https://www.roma-by-night.it/imgs/toreador.png",
+                    //'image' => "https://www.roma-by-night.it/imgs/toreador.png",
+                    'image' => "https://www.roma-by-night.it/imgs/lasombra.png",
 
                 ]
             ],
 
             // inserire "token" o "topic"
 
-            'token' => $token,
-            //'topic' => 'Lasombra' 
+            //'token' => $token,
+            'topic' => 'Toreador' 
         ]
     ];
     $options = array(
