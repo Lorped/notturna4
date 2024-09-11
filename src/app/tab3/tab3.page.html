@@ -92,6 +92,24 @@
     <ion-col style="text-align: center;"><ion-button color="tertiary" shape="round" fill="outline" (click)="openUrlDT()" [disabled]="this.user.fulldata.urldt==''">Open</ion-button></ion-col>
   </ion-row>
 
+  <ion-row style="align-items: center;" >
+    <ion-col ><hr/></ion-col>
+    <ion-col size="6" style="color:#FFFFFF; text-align: center; font-size: 1.1em;">Status XPT/XPS</ion-col>
+    <ion-col ><hr/></ion-col>
+  </ion-row>
+  <ion-row >
+        <ion-col size="3" style="color:#FF0000;text-align: center" >XPT</ion-col>
+        <ion-col size = "3" style="color:#FFFFFF; text-align: center; ">{{this.user.fulldata.xp}}</ion-col>
+        <ion-col size="3" style="color:#FF0000; text-align: center;" > XPS</ion-col>
+        <ion-col size = "3" style="color:#FFFFFF; text-align: center; ">{{xpspendibili}}</ion-col>
+  </ion-row>
+  <ion-row >
+    <ion-col size="3" style="color:#FF0000;text-align: center;" >Spesi</ion-col>
+    <ion-col size = "3" style="color:#FFFFFF; text-align: center; ">{{this.user.fulldata.xpspesi}}</ion-col>
+    <ion-col size="3" style="color:#FF0000;text-align: center;" >Disponibili</ion-col>
+    <ion-col size = "3" style="color:#FFFFFF; text-align: center; ">{{xpdisponibili}}</ion-col>
+</ion-row>
+
   <ion-row style="align-items: center;" *ngIf="this.user.fulldata.notemaster != ''">
     <ion-col ><hr/></ion-col>
     <ion-col size="6" style="color:#FFFFFF; text-align: center; font-size: 1.1em;">Annotazioni oggetti</ion-col>
@@ -99,7 +117,7 @@
   </ion-row>
   <ion-row >
           <ion-col style="color:#FFFFFF; text-align: justify; font-size: 1.1em;"><span [innerHTML]="this.notemaster"></span></ion-col>
-        </ion-row>
+  </ion-row>
 	<ion-row style="align-items: center;" *ngIf="this.user.fulldata.note != ''">
       <ion-col ><hr/></ion-col>
       <ion-col size="6" style="color:#FFFFFF; text-align: center; font-size: 1.1em;">Annotazioni</ion-col>

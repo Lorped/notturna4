@@ -14,9 +14,11 @@ export class Tab3Page {
   notemaster: string = '';
   link: string = '';
 
+  xpspendibili = 0 ;
+  xpdisponibili = 0;
+
   constructor(public user: User, private iab: InAppBrowser, private router: Router) {
 
-    
 
 	}
 
@@ -119,5 +121,18 @@ export class Tab3Page {
 
 		this.note=this.nl2br(this.user.fulldata['note']);
     	this.notemaster=this.nl2br(this.user.fulldata['notemaster']);
+
+		if ( this.user.fulldata.xp > 113 ) {
+			this.xpspendibili = 86 + ( this.user.fulldata.xp - 113)/2 ;  
+		} else if ( this.user.fulldata.xp > 32 ) {
+			this.xpspendibili = 32 + ( this.user.fulldata.xp - 32)/3*2;
+		} else {
+			this.xpspendibili = this.user.fulldata.xp;
+		}
+	
+		this.xpdisponibili = this.xpspendibili - this.user.fulldata.xpspesi;
+			
+		this.xpspendibili = Math.round(this.xpspendibili*10)/10;
+		this.xpdisponibili = Math.round(this.xpdisponibili*10)/10;
 	}
 }
