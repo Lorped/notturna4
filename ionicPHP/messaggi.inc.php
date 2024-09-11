@@ -174,6 +174,32 @@ function user2user ( $nomepg, $destinatario , $testo , $db) {
 }
 
 
+function master2clan ( $idclan , $nomeclan, $clanimg, $testo , $db) {
+
+	// idclan non è usato, il topic è il nome del clan
+
+	$data = [
+        'message' => [
+            "notification"=> [
+                "title" => "NOTTURNA",
+                "body" => "Messaggio per clan ".$nomeclan . ". ". $testo,
+            ],
+            "android" => [
+                "notification" => [
+                    "channel_id" => "PushPluginChannel",
+                    'image' => "https://www.roma-by-night.it/imgs/".$clanimg,
+
+                ]
+            ],
+
+            'topic' => $nomeclan 
+        ]
+    ];
+	pushmsg ($data);
+
+	
+
+}
 
 
 

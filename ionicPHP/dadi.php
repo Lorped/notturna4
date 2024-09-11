@@ -30,6 +30,15 @@ $last=$_GET['last'];
 
 $userid=$_GET['userid'];
 
+$idclan = -99;
+if ($userid != -1){//utente normale
+	$mysql="SELECT idclan from personaggio where idutente='$userid'";
+	$Result = mysqli_query($db, $mysql);
+	$res=mysqli_fetch_array($Result);
+
+	$idclan = $res['idclan'];
+}
+
 
 if ($last=="") $last=0;
 if ($userid=="") $userid=0;
@@ -37,9 +46,9 @@ if ($userid=="") $userid=0;
 if ($userid==-1) { //Narrazione
 	$MySql = "SELECT count(*) FROM dadi";
 } elseif ($userid!=0) { //utente normale
-	$MySql = "SELECT count(*) FROM dadi WHERE destinatario=-1 OR destinatario=$userid OR idutente=$userid"  ;
+	$MySql = "SELECT count(*) FROM dadi WHERE Destinatario=-1 OR Destinatario=$userid OR idutente=$userid or clan=$idclan"   ;
 } else {  // BAH!
-	$MySql = "SELECT count(*) FROM dadi WHERE destinatario=-1";
+	$MySql = "SELECT count(*) FROM dadi WHERE Destinatario=-1";
 }
 $Result = mysqli_query($db, $MySql);
 $rs=mysqli_fetch_row($Result);
@@ -64,9 +73,9 @@ if ( $count == 0 ) {
 	$MySql = "SELECT * FROM dadi  WHERE destinatario=-1 ORDER BY ID DESC  ";
 
 	if ( $userid ==  -1 ) {
-		$MySql = "SELECT dadi.ID, dadi.nomepg, Ora, Testo, Destinatario, personaggio.nomepg AS Nomedest FROM dadi LEFT JOIN personaggio ON dadi.destinatario = personaggio.idutente ORDER BY ID DESC ";
+		$MySql = "SELECT dadi.ID, dadi.nomepg, Ora, Testo, Destinatario, personaggio.nomepg AS Nomedest FROM dadi LEFT JOIN personaggio ON dadi.Destinatario = personaggio.idutente ORDER BY ID DESC ";
 	} elseif ( $userid != 0 ) {
-		$MySql = "SELECT * FROM dadi WHERE destinatario=-1 OR destinatario=$userid OR idutente=$userid ORDER BY ID DESC  ";
+		$MySql = "SELECT * FROM dadi WHERE Destinatario=-1 OR Destinatario=$userid OR idutente=$userid or clan=$idclan ORDER BY ID DESC  ";
 	}
 
 	$Result = mysqli_query($db, $MySql);
@@ -79,11 +88,15 @@ if ( $count == 0 ) {
 
 		$output.= '<testo>'.htmlspecialchars($rs['Testo'],ENT_QUOTES).'</testo>';
 
+		$output.= '<dest>+</dest>';
+
+		/**
 		if ( $rs['Nomedest'] != "" ) {
 			 $output.= '<dest> a '.htmlspecialchars($rs['Nomedest'],ENT_QUOTES).'</dest>';
 		} else {
 			$output.= '<dest>+</dest>';
 		}
+		**/
 
 		$output.= '<ora>'.strftime("%H:%M", strtotime($rs['Ora'])).'</ora>';
 		$output.= '<data>'.strftime("%d/%m/%Y", strtotime($rs['Ora'])).'</data>';
