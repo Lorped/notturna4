@@ -29,6 +29,9 @@
 
  	$idutente=$_GET['id'];
 
+	$out_d = [];
+	$out_t = [];
+
  	$Mysql="SELECT nomepg, livello, DATE_FORMAT(dataultima,'%d-%m-%Y') as dataultima from legami  LEFT JOIN personaggio ON idutente=domitor WHERE target=$idutente";
 	$Result=mysqli_query ($db, $Mysql);
 	while ( $res=mysqli_fetch_array($Result,MYSQLI_ASSOC)  ) {

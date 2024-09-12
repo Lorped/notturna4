@@ -22,8 +22,11 @@
 	}
 
 
-	$excl=$_GET['excl'];
-	$incl=$_GET['incl'];
+	$excl = isset($_GET['excl']) ?$_GET['excl'] :"";
+	//$incl = isset($_GET['incl']) ?$_GET['incl'] :"";
+
+	//$excl=$_GET['excl'];
+	//$incl=$_GET['incl'];
 
 
 	include ('db2.inc.php');  // NEW MYSQL //
@@ -31,7 +34,7 @@
  	$out1 = [];
 	$out2 = [];
 
-	if ( $incl != 'H') {
+	// if ( $incl != 'H') {
 		if ($excl == '') {
 			$MySql = "SELECT idutente, nomepg FROM personaggio ORDER BY nomepg ";
 		} else {
@@ -43,6 +46,7 @@
 		}
 		$output = json_encode ($out1, JSON_UNESCAPED_UNICODE);
 
+	/*
 	} else  {
 		$MySql = "SELECT idutente, nomepg FROM personaggio  ORDER BY nomepg";
 		$Result = mysqli_query($db, $MySql);
@@ -60,6 +64,7 @@
 		];
 		$output = json_encode ($out, JSON_UNESCAPED_UNICODE);
 	}
+	*/
 
 
   echo $output;

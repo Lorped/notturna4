@@ -33,6 +33,7 @@
 
 
 	$out=[];
+	$esito = [];
 
 	$res=mysqli_fetch_array($Result,MYSQLI_ASSOC);
 	$idx=$res['idoggetto'];

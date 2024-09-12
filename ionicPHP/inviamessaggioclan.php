@@ -42,7 +42,7 @@
 	
 
 	// set post fields
-	$Mysql="SELECT * FROM clan WHERE idclan=$destinatario";
+	$Mysql="SELECT * FROM clan WHERE idclan='$destinatario'";
 	$Result=mysqli_query($db, $Mysql);
 	$res=mysqli_fetch_array($Result);
 
