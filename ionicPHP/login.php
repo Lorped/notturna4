@@ -46,6 +46,10 @@ if (isset($postdata) && $username != "" && $password !="" ) {
   if ( $res = mysqli_fetch_array($Result)   ) {
     $idutente = $res['idutente'];
 
+
+    $MySql = "UPDATE utente set lastlogin=NOW() where idutente='$idutente'";
+    mysqli_query($db, $MySql);
+
     
 
       controlla_ps ( $idutente, $db) ;
