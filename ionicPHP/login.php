@@ -30,7 +30,7 @@ $password = $request->password;
 //$username = "user";
 //$password = "secret";
 
-$version = $request->version;
+//$version = $request->version;
 
 if (isset($postdata) && $username != "" && $password !="" ) {
 
@@ -46,7 +46,7 @@ if (isset($postdata) && $username != "" && $password !="" ) {
   if ( $res = mysqli_fetch_array($Result)   ) {
     $idutente = $res['idutente'];
 
-    if ( $version == "") {   // OLD - NO VERSION -> Vampire
+    
 
       controlla_ps ( $idutente, $db) ;
       controlla_fdv ( $idutente, $db ) ;
@@ -69,58 +69,7 @@ if (isset($postdata) && $username != "" && $password !="" ) {
           header("HTTP/1.1 404 Not Found");
       }
 
-    } else {
-      // NEW VERSION -> VAMP OR HUNTER
-
-      $MySql = "SELECT COUNT(*) as c FROM personaggio WHERE idutente = '$idutente'";
-      $Result = mysqli_query($db, $MySql);
-      $res = mysqli_fetch_array($Result) ;
-      $vamp = $res['c'];
-      $MySql = "SELECT COUNT(*) as c FROM HUNTERpersonaggio WHERE idutente = '$idutente'";
-      $Result = mysqli_query($db, $MySql);
-      $res = mysqli_fetch_array($Result) ;
-      $hunt = $res['c'];
-
-      if ( $vamp == '1' ) { //VAMPIRO
-        controlla_ps ( $idutente, $db ) ;
-        controlla_fdv ( $idutente, $db ) ;
-        controlla_legami ($idutente, $db ) ;
-        controlla_maesta ($idutente, $db ) ;
-
-        $MySql = "SELECT *  FROM personaggio
-          LEFT JOIN clan ON personaggio.idclan=clan.idclan
-          LEFT JOIN statuscama ON personaggio.idstatus=statuscama.idstatus
-          LEFT JOIN sentieri ON personaggio.idsentiero=sentieri.idsentiero
-          LEFT JOIN generazione ON personaggio.generazione=generazione.generazione
-          LEFT JOIN blood ON personaggio.bloodp=blood.bloodp
-          WHERE idutente = '$idutente' ";
-
-        $Result = mysqli_query($db, $MySql);
-        $res = mysqli_fetch_array($Result,MYSQLI_ASSOC);
-        $out = array (
-          'tipo' => "V" ,
-          'res' => $res
-        );
-        $output = json_encode($out);
-        echo $output;
-      } elseif ( $hunt == '1') { //HUNTER
-        controlla_fdv ( $idutente, $db ) ;
-        $MySql = "SELECT *  FROM HUNTERpersonaggio
-          LEFT JOIN HUNconspiracy ON HUNTERpersonaggio.idclan=HUNconspiracy.idconspiracy
-          WHERE idutente = '$idutente' ";
-        $Result = mysqli_query($db, $MySql);
-        $res = mysqli_fetch_array($Result,MYSQLI_ASSOC);
-        $out = array (
-          'tipo' => "H" ,
-          'res' => $res
-        );
-        $output = json_encode($out);
-        echo $output;
-      } else {
-        header("HTTP/1.1 404 Not Found");
-      }
-
-    }
+    
 
   } else {  // WRONG PWD
     header("HTTP/1.1 401 Unauthorized");
