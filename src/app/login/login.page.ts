@@ -18,6 +18,12 @@ import {
   Token,
 } from '@capacitor/push-notifications';
 
+
+export class Clan {
+  idclan = 0;
+  nomeclan = '';
+}
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -27,6 +33,8 @@ export class LoginPage implements OnInit {
 
   username = '' ;
 	userid = 0 ;
+
+  listaclan: Array<Clan>=[];
 
 	saveme= {
 		checked: false
@@ -315,10 +323,16 @@ export class LoginPage implements OnInit {
     .then(r => console.log(`subscribed to topic: user `))
     .catch(err => console.log(err));
 
-    var atopic = 'userid' + this.user.userid;
-    FCM.subscribeTo({ topic: atopic })
-    .then(r => console.log(`subscribed to topic: `, atopic))
-    .catch(err => console.log(err));
+    this.http.get('https://www.roma-by-night.it/Notturna2/wsPHP/getregistra.php' ).subscribe( (data:any) => {
+      this.listaclan = data.clan;
+
+      this.listaclan.forEach(element => {
+        if ( element.idclan != Number(this.user.fulldata.idclan)){
+          FCM.unsubscribeFrom({ topic: element.nomeclan });
+          //console.log(`unsubscribed from topic: `, element.nomeclan);
+        }
+      });
+    });
 
     var atopic2 =  this.user.fulldata.nomeclan;
     FCM.subscribeTo({ topic: atopic2 })
