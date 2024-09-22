@@ -26,7 +26,15 @@
 	include ('db2.inc.php');    // NEW MYSQL //
 
 	$idutente=$_GET['id'];
-	if ($idutente=="") $idutente=0;
+	if ($idutente=="") {
+		$esito=[];
+		$esito[] = 'Attenzione';
+		$esito[] = ' No userid definita!';
+		$output = json_encode ($esito, JSON_UNESCAPED_UNICODE);
+    	echo $output;
+		die();
+	}
+	
 
 	$barcode=$_GET['barcode'];
 
