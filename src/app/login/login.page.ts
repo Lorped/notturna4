@@ -96,6 +96,7 @@ export class LoginPage implements OnInit {
         this.user.fulldata['fama3'] = Number( this.user.fulldata['fama3'] );
 
         this.user.fulldata['xp'] = Number( this.user.fulldata['xp'] );
+        this.user.fulldata['contanti'] = Number( this.user.fulldata['contanti'] );
 
         // this.user.fulldata['note']=this.nl2br(this.user.fulldata['note']);
         // this.user.fulldata['notemaster']=this.nl2br(this.user.fulldata['notemaster']);

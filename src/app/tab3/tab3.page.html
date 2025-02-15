@@ -15,11 +15,25 @@
     <ion-col ><hr/></ion-col>
   </ion-row>
 
+  <ion-row *ngIf="user.fulldata.contanti !=0">
+    <ion-col size="7">Contanti</ion-col>
+    <ion-col>
+      {{user.fulldata.contanti}}
+    </ion-col>
+  </ion-row>
   <ion-row *ngFor="let desc of this.user.skill">
     <ion-col size="7" *ngIf="desc.tipologia == 5 ">{{ desc.nomeskill }}</ion-col>
-    <ion-col *ngIf="desc.tipologia == 5 && desc.nomeskill != 'Contatti' ">
+    <ion-col *ngIf="desc.tipologia == 5 && desc.nomeskill != 'Contatti' && desc.nomeskill != 'Risorse' && desc.nomeskill != 'Risorse effettive'">
       <!-- <img src="assets/img/5/{{ desc.livello }}.png"> -->
       <i *ngFor="let item of 5|times ; let ix = index" class="fa fa-circle mysmallicon myred2" [ngClass]="{'mywhite': ix >= desc.livello}"></i>
+    </ion-col>
+    <ion-col *ngIf="desc.tipologia == 5 && desc.nomeskill != 'Contatti' && desc.nomeskill == 'Risorse' ">
+      <!-- <img src="assets/img/5/{{ desc.livello }}.png"> -->
+      <i *ngFor="let item of 10|times ; let ix = index" class="fa fa-circle mysmallicon myred2" [ngClass]="{'mywhite': ix >= desc.livello}"></i>
+    </ion-col>
+    <ion-col *ngIf="desc.tipologia == 5 && desc.nomeskill != 'Contatti' && desc.nomeskill == 'Risorse effettive' ">
+      <!-- <img src="assets/img/5/{{ desc.livello }}.png"> -->
+      <i *ngFor="let item of 10|times ; let ix = index" class="fa fa-circle mysmallicon myred2" [ngClass]="{'mywhite': ix >= desc.livello}"></i>
     </ion-col>
     <!-- <ion-col *ngIf="desc.tipologia == 5 && desc.nomeskill == 'Contatti' " stype="text-align:left;">{{ desc.livello }}/20</ion-col>  -->
   </ion-row>

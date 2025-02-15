@@ -108,7 +108,7 @@ header('Content-Type: text/html; charset=utf-8');
     while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
       if ( $res['nomeskill'] == "Risorse" ) {
-        $res['nomeskill'] = "Risorse base";
+        //$res['nomeskill'] = "Risorse base";//
 
         $out1[] =  $res;
 
@@ -136,6 +136,22 @@ header('Content-Type: text/html; charset=utf-8');
         if ($saldo != $res['livello']) {
           $out1[]  = $risorseeff;
         }
+
+        /*
+        $MySqlX = "SELECT contanti FROM personaggio WHERE idutente = '$userid' ";
+        $ResultX = mysqli_query($db, $MySqlX);
+        $resX = mysqli_fetch_array ($ResultX);
+        if ($resX['contanti'] != 0) {
+
+          $contanti= [
+            'nomeskill' => 'Contanti: '.$resX['contanti'] ,
+            'livello' => 0,
+            'tipologia' => 5
+          ];
+          $out1[]  = $contanti;
+
+        }
+          */
 
       } else {
         $out1[] =  $res;

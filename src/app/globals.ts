@@ -96,6 +96,7 @@ export class afulldata  {
     public note = '';
     public nummaesta = 0;
     public lastmaesta = ''; //non usato
+    public contanti = 0 ;
 }
 
 @Injectable()
