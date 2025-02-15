@@ -62,6 +62,7 @@ header('Content-Type: text/html; charset=utf-8');
       $out1[] =  $res;
     }
 
+    /***
     $MySql = "SELECT  nomedisc as nomeskill  ,livello,tipologia  FROM HUNdiscipline
           LEFT JOIN HUNdiscipline_main ON HUNdiscipline_main.iddisciplina=HUNdiscipline.iddisciplina  
           WHERE idutente = '$userid'
@@ -72,6 +73,8 @@ header('Content-Type: text/html; charset=utf-8');
 
       $out1[] =  $res;
     }
+
+    */
 
 
 
@@ -104,7 +107,40 @@ header('Content-Type: text/html; charset=utf-8');
     $Result = mysqli_query($db, $MySql);
     while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
-      $out1[] =  $res;
+      if ( $res['nomeskill'] == "Risorse" ) {
+        $res['nomeskill'] = "Risorse base";
+
+        $out1[] =  $res;
+
+        $saldo = $res['livello'];
+        $now = time();
+        $MySqlX = "SELECT * FROM risorse WHERE idutente = '$userid' order by dataspesa desc";
+        $ResultX = mysqli_query($db, $MySqlX);
+        while ( $resX = mysqli_fetch_array ($ResultX) ) {
+          $spesa = $resX['spesa'];
+          $dataspesa = strtotime ( $resX['dataspesa'] );
+          $cadenza = $resX['cadenzarecupero'];
+          $datediff = $now - $dataspesa;
+          $giorni = floor($datediff / (60 * 60 * 24));
+          $recuperati = floor ( $giorni / $cadenza);
+          if ( $recuperati > $spesa ) {
+            $recuperati = $spesa;
+          }
+          $saldo = $saldo - $spesa + $recuperati;
+        }
+        $risorseeff= [
+          'nomeskill' => 'Risorse effettive' ,
+          'livello' => $saldo,
+          'tipologia' => 5
+        ];
+        if ($saldo != $res['livello']) {
+          $out1[]  = $risorseeff;
+        }
+
+      } else {
+        $out1[] =  $res;
+      }
+
     }
 
     $MySql = "SELECT  nomecontatto as nomeskill  ,livello,tipologia  FROM contatti
