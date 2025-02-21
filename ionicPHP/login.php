@@ -148,7 +148,7 @@ function controlla_ps ( $idutente, $db ) {  //inizio test su ps
     $now=time();
     $qlastps=strtotime($lastps);
 
-    $diff =  ($now - $qlastps) / (24*60*60);
+    $diff =  ($now - $qlastps) / (12*60*60);
 
     if ( $diff > 1 ) {
       $newlastps=date("Y-m-d H:i:s",$now );
