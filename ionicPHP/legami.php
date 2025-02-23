@@ -97,7 +97,7 @@
 		$tdataultima=strtotime($dataultima);
 		$now=time();
 
-		if ( $now-$tdataultima < 60*60*24 ) {
+		if ( $now-$tdataultima < 60*60*18 ) {   /** Sarebbero 24 ore ma conto "un tramonto" */
 			/*troppo presto.. */
 			die();
 		}

@@ -158,13 +158,13 @@ function controlla_ps ( $idutente, $db ) {  //inizio test su ps
   }
 }  //fine test su ps
 
-function controlla_legami ($idutente, $db) {
+function controlla_legami ($idutente, $db) {   /** 2 - 5 - 10 mesi + 5gg di sfrido */
   // legami
-  $Mysql="DELETE FROM legami WHERE target = $idutente and livello = 1 and (DATE_ADD(dataultima, INTERVAL 75 DAY) < NOW())";
+  $Mysql="DELETE FROM legami WHERE target = $idutente and livello = 1 and (DATE_ADD(dataultima, INTERVAL 65 DAY) < NOW())";
   $Result = mysqli_query($db, $Mysql);
-  $Mysql="UPDATE legami SET livello=1 , dataultima=NOW() WHERE target = $idutente and livello = 2 and (DATE_ADD(dataultima, INTERVAL 165 DAY) < NOW())";
+  $Mysql="UPDATE legami SET livello=1 , dataultima=NOW() WHERE target = $idutente and livello = 2 and (DATE_ADD(dataultima, INTERVAL 155 DAY) < NOW())";
   $Result = mysqli_query($db, $Mysql);
-  $Mysql="UPDATE legami SET livello=2 , dataultima=NOW() WHERE target = $idutente and livello = 3 and (DATE_ADD(dataultima, INTERVAL 315 DAY) < NOW())";
+  $Mysql="UPDATE legami SET livello=2 , dataultima=NOW() WHERE target = $idutente and livello = 3 and (DATE_ADD(dataultima, INTERVAL 305 DAY) < NOW())";
   $Result = mysqli_query($db, $Mysql);
 }
 
