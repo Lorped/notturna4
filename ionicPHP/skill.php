@@ -198,15 +198,29 @@ header('Content-Type: text/html; charset=utf-8');
       $out1[] =  $res;
     }
 
+    // amalgame
+
     $MySql = "SELECT  nomeamalgama as nomeskill  , '0' as livello, '12' as tipologia  FROM amalgame
     LEFT JOIN amalgame_main ON amalgame_main.idamalgama=amalgame.idamalgama
              WHERE idutente = '$userid' ";
 
-  $Result = mysqli_query($db, $MySql);
-  while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
+    $Result = mysqli_query($db, $MySql);
+      while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
 
-    $out1[] =  $res;
-  }
+      $out1[] =  $res;
+    }
+
+    // influenze
+
+    $MySql = "SELECT  nomeinfluenza as nomeskill  ,  livello, '13' as tipologia  FROM influenze
+    LEFT JOIN influenze_main ON influenze_main.idinfluenza=influenze.idinfluenza
+             WHERE idutente = '$userid' ";
+
+    $Result = mysqli_query($db, $MySql);
+      while ( $res = mysqli_fetch_array($Result,MYSQLI_ASSOC)   ) {
+
+      $out1[] =  $res;
+    }
 
 
     $output = json_encode ($out1, JSON_UNESCAPED_UNICODE);
