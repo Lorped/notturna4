@@ -46,6 +46,20 @@
     </ion-col>
   </ion-row>
 
+  		<ion-row style="align-items: center;">
+			<ion-col ><hr/></ion-col>
+			<ion-col size="6" style="color:#FFFFFF; text-align: center; font-size: 1.1em;">Influenze</ion-col>
+			<ion-col ><hr/></ion-col>
+		</ion-row>
+
+		<ion-row *ngFor="let desc of this.user.skill">
+			<ion-col size="7" *ngIf="desc.tipologia == 13 ">{{ desc.nomeskill }}</ion-col>
+			<ion-col *ngIf="desc.tipologia == 13 ">
+        		<i *ngFor="let item of 5|times ; let ix = index" class="fa fa-circle mysmallicon myred2" [ngClass]="{'mywhite': ix >= desc.livello}"></i>
+      		</ion-col>
+			<!-- <ion-col *ngIf="desc.tipologia == 5 && desc.nomeskill == 'Contatti' " stype="text-align:left;">{{ desc.livello }}/20</ion-col>  -->
+		</ion-row>
+
   <ion-row style="align-items: center;" >
     <ion-col ><hr/></ion-col>
     <ion-col size="6" style="color:#FFFFFF; text-align: center; font-size: 1.1em;">Pregi</ion-col>
