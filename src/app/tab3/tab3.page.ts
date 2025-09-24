@@ -110,11 +110,14 @@ export class Tab3Page {
 			case "13":	// Setiti
 				this.link = "https://drive.google.com/file/d/0BwbyMyT-GT-UOUo0dll2NjRDOHc/view";
 			break;
-		case "14":		// Cappadoci
+			case "14":		// Cappadoci
 			this.link = "https://drive.google.com/file/d/1WqSxecMNGQ0ayh6MLGM-FHCP1LaL0khZ/view";
-		break;
+			break;
 			case "20":	// vili
 				this.link = "https://drive.google.com/file/d/0BwbyMyT-GT-UOWhsMExKd2YzTVU/view";
+			break;
+			case "21":		// Gangrel - city
+				this.link = "https://drive.google.com/file/d/0BwbyMyT-GT-UcFRxVFRkNnRLb28/view";
 			break;
 		}
 
