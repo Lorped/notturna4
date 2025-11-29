@@ -16,7 +16,7 @@
 		<ion-row >
 			<ion-col >
 				<ion-item class="master" color="black" >		
-			  		<ion-input style="color:#ff0000; font-size:1.3em;"  type="text" placeholder="Nome del Contatto" name="contatto" [(ngModel)]="nuovoContatto.contatto" autofocus required></ion-input>
+			  		<ion-input style="color:#ff0000; font-size:1.3em;"  type="text" placeholder="Nome del Contatto" name="contatto" [(ngModel)]="nuovoContatto.contatto" autofocus required style="--highlight-color-valid: #ffffff;"></ion-input>
 				</ion-item>
 			</ion-col>
 		</ion-row>			
@@ -44,7 +44,7 @@
 		<ion-row >
 			<ion-col >
 				<ion-item class="master" color="black">
-					<ion-input name="note" type="text" placeholder="Altre annotazioni" [(ngModel)]="nuovoContatto.note" ></ion-input>
+					<ion-input name="note" type="text" placeholder="Altre annotazioni" [(ngModel)]="nuovoContatto.note" style="--highlight-color-valid: #ffffff;"></ion-input>
 				</ion-item>
 			</ion-col>
 		</ion-row>
