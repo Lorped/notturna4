@@ -54,7 +54,7 @@
 
 
 
-	if ( $livellopot == 5) {
+	if ( $livellopot >= 5) {
 		$Mysql="UPDATE personaggio SET PScorrenti = PScorrenti-2 , lastps=NOW() WHERE idutente=$idutente";
 	} else {
 		$Mysql="UPDATE personaggio SET PScorrenti = PScorrenti-1 , lastps=NOW() WHERE idutente=$idutente";
