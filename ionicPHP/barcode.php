@@ -23,7 +23,9 @@
 
 	header('Content-Type: text/html; charset=utf-8');
 
+	include ('messaggi.inc.php');
 	include ('db2.inc.php');    // NEW MYSQL //
+
 
 	$idutente=$_GET['id'];
 	if ($idutente=="" || $idutente == 0 ) {
@@ -137,6 +139,64 @@
 
 	}
 
+	$descpaired = "";
+	$Mysql8="SELECT * FROM oggetti WHERE barcode='$barcode' ";
+	$Result8=mysqli_query($db, $Mysql8);
+	if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db) ."+".$Mysql8);
+	$res8=mysqli_fetch_array($Result8);
+	$idx=$res8['idoggetto'];
+	$Mysql9="SELECT * FROM paired WHERE idoggetto1 = '$idx' or idoggetto2 = '$idx' ";
+	$Result9=mysqli_query($db, $Mysql9);
+	if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db) ."+".$Mysql9);
+	if ( $res9=mysqli_fetch_array($Result9) ) { // esiste un oggetto gemello
+
+		$descpaired = "";
+
+		//inserisco il log di questo oggetto
+      	$MySql3 = "INSERT INTO logscan (IDoggetto, IDutente ) VALUES ($idx, $idutente ) ";
+      	$Result3 = mysqli_query($db, $MySql3);
+
+
+		if ($res9['IDoggetto1'] == $idx ) {	
+			$newoggetto=$res9['IDoggetto2'];
+		} else {
+			$newoggetto=$res9['IDoggetto1'];
+		}
+		// newoggetto è stato scansionato da poco ?
+		$MySql6 = "SELECT * FROM logscan WHERE
+        	IDoggetto = $newoggetto AND IDutente = $idutente AND DATE_ADD(logscan.data, INTERVAL 3 MINUTE) > NOW() ";
+      	$Result6 = mysqli_query($db, $MySql6);
+      	if ( $res6 = mysqli_fetch_array($Result6) ) {
+        	// ok paired
+			$descpaired = $res9['Paired'];
+
+
+
+			$Mysql10="SELECT * FROM oggetti WHERE idoggetto='$newoggetto' ";
+			$Result10=mysqli_query($db, $Mysql10);
+			$res10=mysqli_fetch_array($Result10);
+			$messaggio = "ha scansionato oggetto ". $res8['nomeoggetto'] ." e il suo gemello ". $res10['nomeoggetto'] .".";
+		
+
+			user2master($idutente,$messaggio, $db );
+
+			$Mysql11="SELECT nomepg FROM personaggio WHERE idutente=$idutente";
+				if ( $res11=mysqli_fetch_array(mysqli_query($db, $Mysql11)) ) {
+					$nomepg=$res11['nomepg'];
+				} else {
+					$nomepg="NARRAZIONE";
+			}
+			$xnomepg=mysqli_real_escape_string($db, $nomepg);
+			$xmessaggio=mysqli_real_escape_string($db, $messaggio );
+
+			$Mysql12="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xmessaggio' , 0) ";
+			mysqli_query($db, $Mysql12);
+
+
+		}
+	}
+
+
 
 	$Mysql="SELECT * FROM oggetti LEFT JOIN cond_oggetti ON oggetti.idoggetto = cond_oggetti.idoggetto WHERE barcode='$barcode' ORDER BY cond_oggetti.valcond ASC ";
 	$Result=mysqli_query($db, $Mysql);
@@ -171,11 +231,15 @@
 			$Result2=mysqli_query($db,$Mysql2);
 			if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db) ."+".$Mysql2);
 			$res2=mysqli_fetch_array($Result2);
+			
+			/*
 			if ( $res2[$cc]=='' ) {
 				$Mysql2 = "SELECT ".$cc." FROM HUNTERpersonaggio WHERE idutente ='$idutente' ";
 				$Result2=mysqli_query($db, $Mysql2);
 				$res2=mysqli_fetch_array($Result2);
 			}
+			*/
+			
 			if ($res2[$cc] >= $res['valcond'] ) {
 				$ok=1;
 				if ($res['risp'] == '') {
@@ -275,7 +339,7 @@
 		if ( $ok == 0 ) {
 			if ( $res['descrizione']!="") {
 				$esito[] = $res['nomeoggetto'];
-				$esito[] = $res['descrizione'] ;
+				$esito[] = $res['descrizione'] .'. '.$descpaired;
 				
 				if ( $res['ifdomanda'] == 1 ) {
 				    $esito[] = $domanda;
@@ -283,14 +347,14 @@
 				
 			} else {
 				$esito[] = $res['nomeoggetto'];
-				$esito[] = "- Nulla di speciale -";
+				$esito[] = "- Nulla di speciale -" .'. '.$descpaired;
 				if ( $res['ifdomanda'] == 1 ) {
 				    $esito[] = $domanda;
 				}
 			}
 		} else {
 			$esito[] = $res['nomeoggetto'];
-			$esito[] = $res['descrizione'].'. '.$extra;
+			$esito[] = $res['descrizione'].'. '.$extra .'. '.$descpaired;
 			
 			if ( $res['ifdomanda'] == 1 ) {
 				    $esito[] = $domanda;
