@@ -165,6 +165,22 @@ if (isset($postdata) && $username != "" && $password !="" ) {
 	$MM="DELETE FROM dadi WHERE DATE_ADD( Ora , INTERVAL 24 HOUR )<NOW()";
 	mysqli_query($db, $MM);
 
+  
+  $SCA="SELECT * from logscanogg where DATE_ADD( datascan , INTERVAL 7 DAY )<NOW()";
+  $Result = mysqli_query($db, $SCA);
+  while ( $res = mysqli_fetch_array($Result)   ) {
+    $idoggetto=$res['idoggetto'];
+    $idxutente=$res['idutente'];
+    $SCA2="DELETE FROM logscanfull WHERE idoggetto = '$idoggetto' and idutente = '$idxutente'";
+    mysqli_query($db, $SCA2);
+  }
+  $SCA3="DELETE FROM logscanogg where DATE_ADD( datascan , INTERVAL 7 DAY )<NOW()";
+  mysqli_query($db, $SCA3);
+
+  $SCA4="DELETE FROM logscan where DATE_ADD( data , INTERVAL 7 DAY )<NOW()";
+  mysqli_query($db, $SCA4);
+
+
 
   $MySql = "SELECT idutente FROM utente WHERE nome = '$username' AND password = '$password'";
   $Result = mysqli_query($db, $MySql);

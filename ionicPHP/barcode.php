@@ -501,7 +501,17 @@
 		}
 	} else {
 		// Cancello i logscanfull esistenti per questo oggetto e li reinserisco
-		$mysql4 = "DELETE FROM logscanfull WHERE idutente = '$idutente' AND idoggetto = '$idx' ";
+		$newaccoppiamento = false;
+		foreach ($esito as $riga) {
+			if ( str_starts_with($riga['motivo'], 'Accoppiamento') ) {
+				$newaccoppiamento = true;
+			}	
+		}
+		if ( $newaccoppiamento ) { // cancello anche l'accoppiamento precedente se esiste
+			$mysql4 = "DELETE FROM logscanfull WHERE idutente = '$idutente' AND idoggetto = '$idx'  ";
+		} else {
+			$mysql4 = "DELETE FROM logscanfull WHERE idutente = '$idutente' AND idoggetto = '$idx' and motivo not like 'Accoppiamento%' ";
+		}
 		mysqli_query($db, $mysql4);
 		foreach ($esito as $riga) {
 			$mot = mysqli_real_escape_string($db, $riga['motivo']);

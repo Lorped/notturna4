@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 import { User , Userskill} from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
@@ -7,17 +6,11 @@ import { AuthserviceService } from '../services/authservice.service';
 import { LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
-import { CapacitorConfig } from '@capacitor/cli';
 import { FCM } from '@capacitor-community/fcm';
 
 
 
-import {
-  ActionPerformed,
-  PushNotificationSchema,
-  PushNotifications,
-  Token,
-} from '@capacitor/push-notifications';
+import { PushNotifications, Token } from '@capacitor/push-notifications';
 
 export class Clan {
   idclan = 0;
@@ -229,84 +222,82 @@ export class LoginPage implements OnInit {
   }
 
 
-  pushsetup() {
-    // Request permission to use push notifications
+  async pushsetup() {
+    try {
+      const permission = await PushNotifications.requestPermissions();
+      if (permission.receive !== 'granted') {
+        console.warn('Push permission not granted');
+        this.router.navigate(['tabs']);
+        return;
+      }
 
-    PushNotifications.requestPermissions().then((result) => {
-      if (result.receive === 'granted') {
-        // Register with Apple / Google to receive push via APNS/FCM
+      PushNotifications.createChannel({
+        name: 'Notturna Channel',
+        id: 'PushPluginChannel',
+        description: 'Notturna Channel',
+        importance: 5,
+        sound: 'notturna_sound',
+      });
+
+      let registrationListener: { remove: () => void } | undefined;
+      let registrationErrorListener: { remove: () => void } | undefined;
+
+      const token = await new Promise<Token>((resolve, reject) => {
+        PushNotifications.addListener('registration', (t: Token) => {
+          registrationListener?.remove();
+          registrationErrorListener?.remove();
+          resolve(t);
+        }).then((listener) => {
+          registrationListener = listener;
+        });
+
+        PushNotifications.addListener('registrationError', (error) => {
+          registrationListener?.remove();
+          registrationErrorListener?.remove();
+          reject(error);
+        }).then((listener) => {
+          registrationErrorListener = listener;
+        });
+
         PushNotifications.register();
-      } else {
-        // Show some error
-      }
-    });
-
-    PushNotifications.createChannel({
-      name: 'Notturna Channel',
-      id: 'PushPluginChannel',
-      description: 'Notturna Channel',
-      importance: 5,
-      sound: 'notturna_sound',
-    });
-
-    const config: CapacitorConfig = {
-      plugins: {
-        PushNotifications: {
-          presentationOptions: ['badge', 'sound', 'alert'],
-        },
-      },
-    };
-
-    PushNotifications.addListener('registration', (token: Token) => {
-      //alert('Push registration success, token: ' + token.value);
-
-      this.authentication.updateid(this.user.idutente, token.value).subscribe(() => {
-        // updated
-        //alert('Device registered '+token.value);
       });
 
-    });
+      await this.authentication.updateid(this.user.idutente, token.value).toPromise();
 
-    PushNotifications.addListener('registrationError', (error) => {
+      await FCM.subscribeTo({ topic: 'user' })
+        .then(() => console.log('subscribed to topic: user'))
+        .catch((err) => console.error('Error subscribing to user topic', err));
+
+      const data = await this.authentication.getregistra().toPromise();
+      this.listaclan = data?.clan ?? [];
+
+      await Promise.all(
+        this.listaclan
+          .filter((element) => Number(element.idclan) !== Number(this.user.idclan))
+          .map((element) =>
+            FCM.unsubscribeFrom({ topic: element.nomeclan }).catch(() => undefined)
+          )
+      );
+
+      const clanTopic = this.user.nomeclan;
+      await FCM.subscribeTo({ topic: clanTopic })
+        .then(() => console.log('subscribed to topic:', clanTopic))
+        .catch((err) => console.error('Error subscribing to clan topic', err));
+
+      PushNotifications.addListener('pushNotificationReceived', () => {
+        //alert('Push received');
+      });
+
+      PushNotifications.addListener('pushNotificationActionPerformed', () => {
+        //alert('Push action performed');
+      });
+
+      this.router.navigate(['tabs']);
+    } catch (error) {
+      console.error('Push registration failed', error);
       alert('Error on registration: ' + JSON.stringify(error));
-    });
-
-    PushNotifications.addListener(
-      'pushNotificationReceived',
-      (notification: PushNotificationSchema) => {
-        //alert('Push received: ' + JSON.stringify(notification));
-      }
-    );
-
-    PushNotifications.addListener(
-      'pushNotificationActionPerformed',
-      (notification: ActionPerformed) => {
-        //alert('Push action performed: ' + JSON.stringify(notification));
-      }
-    );
-
-    FCM.subscribeTo({ topic: 'user' })
-      .then(() => console.log(`subscribed to topic: user `))
-      .catch((err) => console.log(err));
-
-    this.authentication.getregistra().subscribe((data) => {
-      this.listaclan = data.clan;
-
-      this.listaclan.forEach((element) => {
-        if (element.idclan != Number(this.user.idclan)) {
-          FCM.unsubscribeFrom({ topic: element.nomeclan });
-          //console.log(`unsubscribed from topic: `, element.nomeclan);
-        }
-      });
-    });
-
-
-    const atopic2 = this.user.nomeclan;
-    FCM.subscribeTo({ topic: atopic2 })
-      .then(() => console.log(`subscribed to topic: `, atopic2))
-      .catch((err) => console.log(err));
-
-    this.router.navigate(['tabs']);
+      this.router.navigate(['tabs']);
+    }
   }
 
 
