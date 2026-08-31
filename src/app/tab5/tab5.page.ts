@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
-import { User, Userskill } from '../globals';
+import { pregiodifetto, User, Userskill } from '../globals';
 import { FeedService, FeedItem } from '../services/feed.service';
 import { Router } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';
@@ -36,6 +36,9 @@ export class Tab5Page implements OnInit {
 
   messaggioToast = '';
   
+  listapregi: Array<pregiodifetto> = [];
+  voldeb = false;  //volontà debole
+
 
   constructor(
     public user: User,
@@ -48,7 +51,17 @@ export class Tab5Page implements OnInit {
     this.loadDadi();
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.authservice.getpregi(this.user.idutente).subscribe((data: Array<pregiodifetto>) => {
+      this.listapregi = Array.isArray(data) ? [...data] : [];
+
+      const voldeb = this.listapregi.some(p => Number(p.idpregio) == 27); // volontà debole  
+      if (voldeb) {
+        this.voldeb = true;
+      }
+      //console.log('Pregi e difetti:', this.listapregi);
+    });
+  }
 
   /*
   handleRefresh() {
