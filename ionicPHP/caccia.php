@@ -69,6 +69,12 @@
 		$chance =	$chance +5 ;
 	}
 
+	$QD="SELECT * from pregidifetti where idutente=$idutente and idpregio=16"; //Zanne perm
+	$RD=mysqli_query($db,$QD);
+	if ($pres=mysqli_fetch_array($RD)) {
+		$chance =	$chance +5 ;
+	};
+	
 
 	$tiro=rand(1,100);
 

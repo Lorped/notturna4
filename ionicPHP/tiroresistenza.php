@@ -50,6 +50,13 @@
 		$fdv= $fdv + 1;
 	}
 
+	// check difetto
+	$Mysql2="SELECT * FROM pregidifetti  WHERE idutente=$idutente and idpregio=27";  //volontà debole	
+	$Result2=mysqli_query ($db, $Mysql2);
+	if ($res2=mysqli_num_rows($Result2)) {
+		$fdv= $fdv - 2;
+	}
+
 	$base = $fdv + $attivazione + $dom;
 	$dadi = rand(1, $base);
 
