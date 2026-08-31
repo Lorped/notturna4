@@ -33,6 +33,9 @@
 		WHERE idutente=$idutente";
 	$Result=mysqli_query ($db,$Mysql);
 	$res=mysqli_fetch_array($Result,MYSQLI_ASSOC);
+
+	$res['PScorrenti'] = (int)$res['PScorrenti'];
+	$res['fdv'] = (int)$res['fdv'];
 	
 	$output = json_encode($res);
     echo $output;
