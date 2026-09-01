@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // header('Content-type: text/xml; charset="utf-8"');
 header('Content-Type: text/html; charset=utf-8');
 
-include ('db2.inc.php');  // NEW MYSQL //
+require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
 
 
 $last=$_GET['last'];

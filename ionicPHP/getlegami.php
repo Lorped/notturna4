@@ -25,7 +25,7 @@
 
 
 
-	include ('db2.inc.php');  // NEW MYSQL //
+	require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
 
  	$idutente=$_GET['id'];
 

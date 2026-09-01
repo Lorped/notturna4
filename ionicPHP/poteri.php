@@ -26,7 +26,7 @@
   $idutente=$_GET['id'];
 
 
-    include ('db2.inc.php');  // NEW MYSQL //
+    require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
 
     $out1 = [];
 

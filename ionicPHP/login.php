@@ -28,7 +28,7 @@ require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
 //  ================================  //
 
 
-function controlla_ps ( $idutente, $db ) {  //inizio test su ps
+function controlla_ps ( int $idutente, mysqli $db ) {  //inizio test su ps
 
   $Mysql="SELECT PScorrenti, maxps, lastps FROM personaggio
     LEFT JOIN generazione ON personaggio.generazione = generazione.generazione
@@ -57,7 +57,7 @@ function controlla_ps ( $idutente, $db ) {  //inizio test su ps
   }
 }  //fine test su ps
 
-function controlla_fdv ( $idutente , $db ) {    //controllo-aggiorno fdv
+function controlla_fdv ( int $idutente, mysqli $db ) {    //controllo-aggiorno fdv
 
   $Mysql="SELECT fdv,fdvmax,lastfdv FROM personaggio WHERE idutente=$idutente";
   $Result=mysqli_query ($db, $Mysql);
@@ -102,7 +102,7 @@ function controlla_fdv ( $idutente , $db ) {    //controllo-aggiorno fdv
 
 
 
-function controlla_legami ($idutente, $db) {   /** 2 - 5 - 10 mesi + 5gg di sfrido */
+function controlla_legami ( int $idutente, mysqli $db ) {   /** 2 - 5 - 10 mesi + 5gg di sfrido */
   // legami
   $Mysql="DELETE FROM legami WHERE target = $idutente and livello = 1 and (DATE_ADD(dataultima, INTERVAL 65 DAY) < NOW())";
   $Result = mysqli_query($db, $Mysql);
@@ -112,7 +112,7 @@ function controlla_legami ($idutente, $db) {   /** 2 - 5 - 10 mesi + 5gg di sfri
   $Result = mysqli_query($db, $Mysql);
 }
 
-function controlla_maesta ( $idutente, $db) {  //inizio test su ps
+function controlla_maesta ( int $idutente, mysqli $db) {  //inizio test su ps
 
   $Mysql="SELECT nummaesta, lastmaesta, fdv FROM personaggio
   WHERE idutente=$idutente";

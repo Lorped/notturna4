@@ -24,7 +24,7 @@ header("Access-Control-Allow-Origin: *");
 // header('Content-type: text/xml; charset="utf-8"');
 
 	
-	include ('db2.inc.php');  // NEW MYSQL //
+	require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
 
 
 

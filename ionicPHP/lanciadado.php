@@ -43,7 +43,7 @@
 
 
 		$tiro=rand(1,5);
-    if ( ($idutente == 307 ) && $tiro == 5 ) {
+    if ( $idutente == 307  && $tiro == 5 ) {
       $tiro=rand(1,5);
     }
     if ( $idutente == 3 && $tiro == 1 ) {

@@ -1,5 +1,4 @@
 <?php
-	include ('messaggi.inc.php');
 
 	header("Access-Control-Allow-Origin: *");
 
@@ -25,8 +24,8 @@
 
 
 
-
-	include ('db2.inc.php');  // NEW MYSQL //
+	include ('messaggi.inc.php');
+	require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
 
 
 	$postdata = file_get_contents("php://input");
