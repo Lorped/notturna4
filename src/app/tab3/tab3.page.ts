@@ -76,7 +76,7 @@ export class Tab3Page {
     this.barcodes.push(...barcodes);
 
     // console.log('Barcode data', barcodes);
-    this.oggetto.id = this.barcodes[0].rawValue;
+    this.oggetto.id = this.barcodes[0].rawValue ?? '';
 
     if (this.oggetto.id.length > 12) {
       const newbarcode = this.oggetto.id.substr(-12);
