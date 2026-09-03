@@ -41,7 +41,7 @@ export class TaumPage implements OnInit {
 
     this.esito.tiro = res.tiro;
 
-    console.log('esito potere: ' + this.esito.tiro);
+    // console.log('esito potere: ' + this.esito.tiro);
 
 
     if (livellopot == 5 ) {

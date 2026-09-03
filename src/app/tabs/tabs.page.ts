@@ -31,7 +31,7 @@ export class TabsPage implements OnInit {
     this.toggleDarkPalette(isDark);
 
 
-    console.log ('Dark mode is ' + (isDark ? 'enabled' : 'disabled'));
+    // console.log ('Dark mode is ' + (isDark ? 'enabled' : 'disabled'));
 
     window.localStorage.setItem(
       'notturnadarkmode',
@@ -44,7 +44,7 @@ export class TabsPage implements OnInit {
     const shouldAdd = event.detail.checked;
     this.paletteToggle = shouldAdd;
 
-    console.log('Dark mode is ' + (shouldAdd ? 'enabled' : 'disabled'));
+    // console.log('Dark mode is ' + (shouldAdd ? 'enabled' : 'disabled'));
 
     this.toggleDarkPalette(shouldAdd);
   }

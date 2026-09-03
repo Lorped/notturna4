@@ -36,7 +36,7 @@ export class NecroPage implements OnInit {
 
     this.esito.tiro = res.tiro;
 
-    console.log('esito potere: ' + this.esito.tiro);
+    // console.log('esito potere: ' + this.esito.tiro);
 
 
     if (livellopot == 5 ) {
@@ -48,9 +48,9 @@ export class NecroPage implements OnInit {
     this.showalert(necro, pot, livellopot);
 
       if (this.user.PScorrenti <= this.user.frenesia) {
-        console.log('a rischio frenesia');
+        // console.log('a rischio frenesia');
       } else if (this.user.PScorrenti <= this.user.cacciaobbligata) {
-        console.log('in caccia obbligata');
+        // console.log('in caccia obbligata');
       } 
     });
 
