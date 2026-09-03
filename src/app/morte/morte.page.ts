@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { User } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { Router } from '@angular/router';
@@ -10,17 +10,17 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-export class MortePage implements OnInit {
+export class MortePage {
   constructor(
     public user: User,
     public authservice: AuthserviceService,
     public router: Router
   ) {}
 
-  ngOnInit() {}
+  // ngOnInit() {}
 
   morte() {
-    this.authservice.morteultima(this.user['idutente']).subscribe((res) => {
+    this.authservice.morteultima(this.user['idutente']).subscribe(() => {
       this.router.navigate(['/login']);
     });
   }

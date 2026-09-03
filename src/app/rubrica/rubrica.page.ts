@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';
 import { RubricaItem, User, ToChange } from '../globals';
@@ -10,13 +10,10 @@ import { RubricaItem, User, ToChange } from '../globals';
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-export class RubricaPage implements OnInit {
+export class RubricaPage  {
   constructor(private authservice: AuthserviceService, private user: User, private router: Router, private tochange: ToChange) {}
 
   rubrica: Array<RubricaItem> = [];
-
-  ngOnInit() {
-  }
 
    ionViewWillEnter(){
     this.authservice.loadrubrica(this.user.idutente).subscribe((data) => {
@@ -43,8 +40,8 @@ export class RubricaPage implements OnInit {
   }
 
   delete(id: number) {
-    this.authservice.delrubrica(id).subscribe((data) => {
-      this.authservice.loadrubrica(this.user.idutente).subscribe((data) => {
+    this.authservice.delrubrica(id).subscribe(() => {
+      this.authservice.loadrubrica(this.user.idutente).subscribe(() => {
         this.ionViewWillEnter();
       });
     });

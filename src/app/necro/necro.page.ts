@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component,  ChangeDetectionStrategy } from '@angular/core';
 import { User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
@@ -14,7 +14,7 @@ export interface EsitoPotere {
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-export class NecroPage implements OnInit {
+export class NecroPage {
   
   esito: EsitoPotere = { 
     tiro: 0
@@ -28,7 +28,7 @@ export class NecroPage implements OnInit {
     public authService: AuthserviceService
   ) {}
 
-  ngOnInit() {}
+
 
   gonecro(livellopot: number, pot: string, necro: string, idnecro2: number) {
 

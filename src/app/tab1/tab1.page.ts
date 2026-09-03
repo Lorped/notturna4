@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RefresherCustomEvent } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { User , Userskill } from '../globals';
+import { User  } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 
 export interface datips {
@@ -16,17 +16,14 @@ export interface datips {
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-export class Tab1Page implements OnInit{
+export class Tab1Page {
   constructor(
     public user: User,
-    public userskill: Userskill,
     private authentication: AuthserviceService,
     private router: Router
   ) {}
 
-  ngOnInit() {
-    // console.log ("user - " , this.user);
-  }
+
   ionViewWillEnter() {
     // console.log ("2 user - " , this.user);
   } 

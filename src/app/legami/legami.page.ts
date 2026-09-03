@@ -1,7 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Legame, Utente, User } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
-import { Router } from '@angular/router';
 
 export interface fullegami {
   target: Array<Legame>;
@@ -15,7 +14,7 @@ export interface fullegami {
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-export class LegamiPage implements OnInit {
+export class LegamiPage  {
   listalegami: Array<Legame> = [];
   listautenti: Array<Utente> = [];
 
@@ -24,11 +23,10 @@ export class LegamiPage implements OnInit {
 
   constructor(
     public user: User,
-    public router: Router,
     public authService: AuthserviceService
   ) {}
 
-  ngOnInit() {}
+
 
   ionViewWillEnter() {
     this.loadUtenti(this.user.idutente);

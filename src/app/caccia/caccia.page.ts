@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { pregiodifetto, User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
@@ -33,7 +32,6 @@ export class CacciaPage implements OnInit {
   timestart = 0;
 
   constructor(
-    private http: HttpClient,
     public user: User,
     public userskill: Userskill,
     public authservice: AuthserviceService,

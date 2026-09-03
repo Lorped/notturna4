@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { User } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 
@@ -9,7 +9,7 @@ import { AuthserviceService } from '../services/authservice.service';
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-export class ModificanotePage implements OnInit {
+export class ModificanotePage  {
   constructor(
     public user: User,
     private authService: AuthserviceService,
@@ -17,12 +17,14 @@ export class ModificanotePage implements OnInit {
 
   noteiniziali = '';
 
-  ngOnInit() {
+ 
+
+  ionViewWillEnter() {
     this.noteiniziali = this.user.note;
   }
 
   noteModificate(): boolean {
-    return this.user.note !== this.noteiniziali;
+    return this.user.note != this.noteiniziali;
   }
 
   modifica() {

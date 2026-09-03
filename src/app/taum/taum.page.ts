@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
@@ -15,7 +15,7 @@ export interface EsitoPotere {
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
-export class TaumPage implements OnInit {
+export class TaumPage {
 
   FurtoVitae = 1;
   
@@ -31,7 +31,6 @@ export class TaumPage implements OnInit {
     public authService: AuthserviceService
   ) {}
 
-  ngOnInit() {  }
 
   gotaum(livellopot: number, pot: string, taum: string, idtaum2: number) {
     //console.log(pot2);
