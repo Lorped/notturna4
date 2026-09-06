@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../globals';
+import { InAppBrowser } from '@capacitor/inappbrowser';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-tabs',
@@ -92,6 +94,21 @@ export class TabsPage implements OnInit {
   }
   logout() {
     this.router.navigate(['/login']);
+  }
+
+  async openDT() {
+    // Implementa la logica per aprire il DT
+    const url = 'https://example.com/dt'; // Sostituisci con l'URL corretto del DT
+
+    const platform = Capacitor.getPlatform();
+    if (platform === 'ios' || platform === 'android') {
+      await InAppBrowser.openInExternalBrowser({
+        url: url
+      });
+    }
+    else {
+      window.open(url, '_blank');
+    }
   }
 
 }
