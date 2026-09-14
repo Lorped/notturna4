@@ -46,27 +46,28 @@ export class Tab2Page {
 
     for (let i = 0; i < this.userskill.otherskill.length; i++) {
       if (this.userskill.otherskill[i].idskill == 42) {  //rissa
-        this.rissa = Number(this.userskill.otherskill[i].livello);
+        //this.rissa = Number(this.userskill.otherskill[i].livello);
+        this.rissa = this.userskill.otherskill[i].livello;
       }
       if (this.userskill.otherskill[i].idskill == 43) {  //mischia
-        this.mischia = Number(this.userskill.otherskill[i].livello);
+        this.mischia = this.userskill.otherskill[i].livello;
       }
       if (this.userskill.otherskill[i].idskill == 46) {  //lancio
-        this.lancio = Number(this.userskill.otherskill[i].livello);
+        this.lancio = this.userskill.otherskill[i].livello;
       }
       if (this.userskill.otherskill[i].idskill == 45) {  //Armi da tiro
-        this.tiro = Number(this.userskill.otherskill[i].livello);
+        this.tiro = this.userskill.otherskill[i].livello;
       }
       if (this.userskill.otherskill[i].idskill == 44) {  //Armi da fuoco
-        this.fuoco = Number(this.userskill.otherskill[i].livello);
+        this.fuoco = this.userskill.otherskill[i].livello;
       }
     }
     const pot = this.userskill.discipline.find((xx) => xx.iddisciplina == 17); //potenza
     if (pot) {
-      this.potenza = Number(pot.livello);
+      this.potenza = pot.livello;
     }
     const prot = this.userskill.discipline.find((xx) => xx.iddisciplina == 18); //proteide
-    if (prot && prot.livello > 1) {
+    if (prot && prot.livello > 2) {
       this.artigli = 1;
     }  
 

@@ -55,7 +55,8 @@ export class Tab5Page implements OnInit {
     this.authservice.getpregi(this.user.idutente).subscribe((data: Array<pregiodifetto>) => {
       this.listapregi = Array.isArray(data) ? [...data] : [];
 
-      const voldeb = this.listapregi.some(p => Number(p.idpregio) == 27); // volontà debole  
+      //const voldeb = this.listapregi.some(p => Number(p.idpregio) == 27); // volontà debole  
+      const voldeb = this.listapregi.some(p => p.idpregio == 27); // volontà debole  
       if (voldeb) {
         this.voldeb = true;
       }

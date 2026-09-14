@@ -96,7 +96,7 @@ export class LoginPage implements OnInit {
         Object.assign(this.user, data);
 
         // fix
-
+        /**
         this.user['PScorrenti'] = Number(this.user['PScorrenti']);
         this.user['forza'] = Number(this.user['forza']);
         this.user['destrezza'] = Number(this.user['destrezza']);
@@ -122,9 +122,11 @@ export class LoginPage implements OnInit {
 
         this.user['bonusrigen'] = Number(this.user['bonusrigen']);
         this.user['rigen'] = Number(this.user['rigen']);
+        */
 
         if (this.user.idlds == 21 ) {
-          this.user.bonusdisc = Number (this.user.bonusdisc) + 1;
+          // this.user.bonusdisc = Number (this.user.bonusdisc) + 1;
+          this.user.bonusdisc = this.user.bonusdisc + 1;
         }
 
 
@@ -142,12 +144,13 @@ export class LoginPage implements OnInit {
 
             this.user.rp = Math.floor(this.user['attutimento'] / 2 );
 
-
+            /*
             for (let i = 0; i < this.userskill.skill.length; i++) {
               this.userskill.skill[i].livello = Number(this.userskill.skill[i].livello);
             }
+            */
             for (let i = 0; i < this.userskill.otherskill.length; i++) {
-              this.userskill.otherskill[i].livello = Number(this.userskill.otherskill[i].livello);  
+              // this.userskill.otherskill[i].livello = Number(this.userskill.otherskill[i].livello);  
               if (this.userskill.otherskill[i].idskill == 47) {  //schivare
                 this.user.pf += this.userskill.otherskill[i].livello;
               }
@@ -156,13 +159,14 @@ export class LoginPage implements OnInit {
             const rob = this.userskill.discipline.find ( xx => xx.iddisciplina == 12 ); //robustezza
 
             if ( rob ) {
-              rob.livello = Number(rob.livello);
+              // rob.livello = Number(rob.livello);
               this.user.pf += rob.livello;
               this.user.rp = Math.floor( (this.user['attutimento'] + rob.livello) / 2 );
 
               for ( let j= 0 ; j < rob.poteri.length ; j++) {
                 if (rob.poteri[j].idpotere == 70 ) { 
-                  if (rob.focus > 0 ) { this.user.pf += Number(this.user.bonusdisc); }
+                  // if (rob.focus > 0 ) { this.user.pf += Number(this.user.bonusdisc); }
+                  if (rob.focus > 0 ) { this.user.pf += this.user.bonusdisc; }
                   this.user.pf += (5+rob.livello);
                 }
                 if (rob.poteri[j].idpotere == 74 ) { this.user.pf += 5;} //+5 sono nel potere precedente - che è prerequisito. focus contato una sola volta: la prima
@@ -273,7 +277,8 @@ export class LoginPage implements OnInit {
 
       await Promise.all(
         this.listaclan
-          .filter((element) => Number(element.idclan) !== Number(this.user.idclan))
+          //.filter((element) => Number(element.idclan) !== Number(this.user.idclan))
+          .filter((element) => element.idclan !== this.user.idclan)
           .map((element) =>
             FCM.unsubscribeFrom({ topic: element.nomeclan }).catch(() => undefined)
           )

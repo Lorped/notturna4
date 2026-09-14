@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../globals';
-import { InAppBrowser } from '@capacitor/inappbrowser';
+import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
 
 @Component({
@@ -102,8 +102,9 @@ export class TabsPage implements OnInit {
 
     const platform = Capacitor.getPlatform();
     if (platform === 'ios' || platform === 'android') {
-      await InAppBrowser.openInExternalBrowser({
-        url: url
+      await Browser.open({ 
+        url: url,
+        windowName: '_system'
       });
     }
     else {
