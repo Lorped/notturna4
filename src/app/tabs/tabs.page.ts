@@ -98,7 +98,7 @@ export class TabsPage implements OnInit {
 
   async openDT() {
     // Implementa la logica per aprire il DT
-    const url = 'https://example.com/dt'; // Sostituisci con l'URL corretto del DT
+    const url = 'https://larp-oracle-1.emergent.host/'; 
 
     const platform = Capacitor.getPlatform();
     if (platform === 'ios' || platform === 'android') {
