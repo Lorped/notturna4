@@ -119,7 +119,6 @@ export class User  {
   public maxdisc = 0 ; //da LEFT JOIN
 
   public bane = 0 ;
-  public urldt = '';
   public contanti = 0 ;
 
   public maxstat = 0 ; // from LEFT JOIN
@@ -137,6 +136,8 @@ export class User  {
 
   public incaccia = 0; //serve dopo
   public ToastFineCaccia = false; //serve dopo
+
+  public linkurl = '';
 }
 
 @Injectable()

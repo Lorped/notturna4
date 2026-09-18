@@ -112,4 +112,20 @@ export class TabsPage implements OnInit {
     }
   }
 
+    async openObiettivi() {
+    // Implementa la logica per aprire gli Obiettivi di Clan
+    const url = this.user.linkurl;
+
+    const platform = Capacitor.getPlatform();
+    if (platform === 'ios' || platform === 'android') {
+      await Browser.open({ 
+        url: url,
+        windowName: '_system'
+      });
+    }
+    else {
+      window.open(url, '_blank');
+    }
+  }
+
 }
