@@ -208,6 +208,7 @@ if (isset($postdata) && $username != "" && $password !="" ) {
             LEFT JOIN blood ON personaggio.bloodp=blood.bloodp
             LEFT JOIN cronaca ON personaggio.IDcronaca=cronaca.IDcronaca
             LEFT JOIN lineedisangue ON personaggio.idlds=lineedisangue.idlds
+            LEFT JOIN obiettivi ON personaggio.idclan = obiettivi.idclan AND personaggio.IDcronaca = obiettivi.IDcronaca
             WHERE idutente = '$idutente' ";
 
       $Result = mysqli_query($db, $MySql);
