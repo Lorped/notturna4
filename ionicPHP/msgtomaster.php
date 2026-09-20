@@ -37,16 +37,21 @@
  	//$destinatario=$request->destinatario;
 
 
-	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$idutente";
+	$Mysql="SELECT nomepg, nomeplayer FROM personaggio WHERE idutente=$idutente";
 	if ( $res=mysqli_fetch_array(mysqli_query($db, $Mysql)) ) {
 	$nomepg=$res['nomepg'];
+	$nomeplayer=$res['nomeplayer'];
 	} else {
 		$nomepg="NARRAZIONE";
+		$nomeplayer="";
 	}
 
-
+	if ( substr($messaggio,0,55)=="Richiesta di intervento da parte di un Arbitro in Nero.") {
+		$messaggio="[".$nomeplayer."] ".$messaggio;	
+	}
 
 	$xnomepg=mysqli_real_escape_string($db, $nomepg);
+	$xnomeplayer=mysqli_real_escape_string($db, $nomeplayer);
 	$xmessaggio=mysqli_real_escape_string($db, $messaggio );
 
 	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xmessaggio' , 0) ";
