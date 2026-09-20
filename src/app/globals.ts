@@ -241,7 +241,6 @@ export class RubricaItem {
   export class ToChange {
     contatto: string;
     cell: number;
-    email: number;
     home: number;
     note: string;
     idrubrica: number;
@@ -249,7 +248,6 @@ export class RubricaItem {
     constructor () {
         this.contatto = '';
         this.cell = 0;
-        this.email = 0;
         this.home = 0;
         this.note = '';
         this.idrubrica = 0;
