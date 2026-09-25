@@ -17,29 +17,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tabs/tabs.module').then((m) => m.TabsPageModule),
   },
-
-  {
-    path: 'rubrica',
-    loadChildren: () =>
-      import('./rubrica/rubrica.module').then((m) => m.RubricaPageModule),
-  },
-  {
-    path: 'background',
-    loadChildren: () =>
-      import('./background/background.module').then(
-        (m) => m.BackgroundPageModule
-      ),
-  },
-  {
-    path: 'pregi',
-    loadChildren: () =>
-      import('./pregi/pregi.module').then((m) => m.PregiPageModule),
-  },
-  {
-    path: 'focusattr',
-    loadChildren: () =>
-      import('./focusattr/focusattr.module').then((m) => m.FocusattrPageModule),
-  },
 ];
 
 @NgModule({

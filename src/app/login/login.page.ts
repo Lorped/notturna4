@@ -193,7 +193,7 @@ export class LoginPage implements OnInit {
             // all done
             this.loadingCtrl.dismiss();
 
-            this.pushsetup();    //  Da verificare se possibile semplificare
+            void this.pushsetup();
 
             //console.log ("user ", this.user);
             //console.log ("userskill ", this.userskill);
@@ -231,11 +231,10 @@ export class LoginPage implements OnInit {
       const permission = await PushNotifications.requestPermissions();
       if (permission.receive !== 'granted') {
         console.warn('Push permission not granted');
-        this.router.navigate(['tabs']);
         return;
       }
 
-      PushNotifications.createChannel({
+      await PushNotifications.createChannel({
         name: 'Notturna Channel',
         id: 'PushPluginChannel',
         description: 'Notturna Channel',
@@ -297,11 +296,8 @@ export class LoginPage implements OnInit {
         //alert('Push action performed');
       });
 
-      this.router.navigate(['tabs']);
     } catch (error) {
       console.error('Push registration failed', error);
-      alert('Error on registration: ' + JSON.stringify(error));
-      this.router.navigate(['tabs']);
     }
   }
 
