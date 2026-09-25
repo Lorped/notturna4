@@ -182,4 +182,8 @@ export class AuthserviceService {
     return this.http.get<any>('https://www.roma-by-night.it/ionicPHP/tiroresistenza.php?id=' + userid + '&dom=' + dom );
   }
 
+  usabol(userid: number) {
+    return this.http.get<any>('https://www.roma-by-night.it/ionicPHP/bol.php?id=' + userid);
+  }
+
 }

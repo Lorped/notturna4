@@ -239,4 +239,15 @@ export class Tab5Page implements OnInit {
     } 
   }
 
+  usabol() {
+    this.authservice.usabol(this.user.idutente).subscribe(() => {
+      this.user.PScorrenti -= this.user.bol;
+      this.user.puntiSangueAggiornati.next();
+      this.checkToast();
+      this.changeDetectorRef.markForCheck();
+      setTimeout(() => this.loadDadi(), 1000);
+    });  
+    console.log(`Hai usato ${this.user.bol} PS per Sussurro di Vita.`);
+  }
+
 }

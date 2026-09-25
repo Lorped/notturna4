@@ -140,6 +140,7 @@ export class User  {
     public readonly puntiSangueAggiornati = new Subject<void>();
 
   public linkurl = '';
+  public bol = 0 ; // Sussurro di Vita
 }
 
 @Injectable()

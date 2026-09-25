@@ -35,6 +35,11 @@
     </ion-item>
 
     <ion-item>
+      <ion-icon name="leaf-outline" size="small"></ion-icon>
+      <ion-button  id="bol" fill="clear"  color="dark" type="submit" (click)="usabol()" [disabled]="user.PScorrenti<user.bol+1 || user.valsentiero<5">Sussurro di Vita</ion-button>
+    </ion-item>    
+
+    <ion-item>
       <ion-icon name="dice-outline" size="small"></ion-icon>
       <ion-button  fill="clear"  color="danger" type="submit" (click)="tiraildado()">Tira un dado</ion-button>
     </ion-item>
