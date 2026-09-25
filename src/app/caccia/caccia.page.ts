@@ -226,6 +226,7 @@ export class CacciaPage implements OnInit {
     this.statocaccia = 2;
 
     this.user['PScorrenti'] = this.user['maxps'];
+    this.user.puntiSangueAggiornati.next();
 
     this.authservice.caccia(this.user['idutente'], this.bs).subscribe();
 

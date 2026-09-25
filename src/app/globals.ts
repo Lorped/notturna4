@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 
 @Injectable()
@@ -136,6 +137,7 @@ export class User  {
 
   public incaccia = 0; //serve dopo
   public ToastFineCaccia = false; //serve dopo
+    public readonly puntiSangueAggiornati = new Subject<void>();
 
   public linkurl = '';
 }

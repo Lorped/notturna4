@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { pregiodifetto, User, Userskill } from '../globals';
 import { FeedService, FeedItem } from '../services/feed.service';
@@ -15,7 +15,7 @@ export interface EsitoResistenza {
   selector: 'app-tab5',
   templateUrl: './tab5.page.html',
   styleUrls: ['./tab5.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class Tab5Page implements OnInit {
@@ -32,6 +32,9 @@ export class Tab5Page implements OnInit {
 
   messaggioArbitro = '';
   isModalOpen = false;
+  isSendingArbitro = false;
+  isArbitroErrorOpen = false;
+  messaggioArbitroError = '';
   isToastOpen = false;
 
   messaggioToast = '';
@@ -45,10 +48,10 @@ export class Tab5Page implements OnInit {
     public userskill: Userskill,
     public feed: FeedService,
     public router: Router,
-    public authservice: AuthserviceService
+    public authservice: AuthserviceService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.tiridado = [];
-    this.loadDadi();
   }
 
   ngOnInit() {
@@ -60,6 +63,7 @@ export class Tab5Page implements OnInit {
       if (voldeb) {
         this.voldeb = true;
       }
+      this.changeDetectorRef.markForCheck();
       //console.log('Pregi e difetti:', this.listapregi);
     });
   }
@@ -75,6 +79,7 @@ export class Tab5Page implements OnInit {
   loadDadi() {
     this.feed.getDadi(this.user['idutente']).subscribe((res: FeedItem[] | null) => {
       this.tiridado = res ?? [];
+      this.changeDetectorRef.markForCheck();
     });
   }
 
@@ -103,7 +108,9 @@ export class Tab5Page implements OnInit {
   menops() {
     this.authservice.menops(this.user['idutente']).subscribe(() => {
       this.user.PScorrenti--;
+      this.user.puntiSangueAggiornati.next();
       this.checkToast();
+      this.changeDetectorRef.markForCheck();
 
       setTimeout(() => this.loadDadi(), 1000);
     });
@@ -115,6 +122,7 @@ export class Tab5Page implements OnInit {
     this.authservice.tiroresistenza(this.user['idutente'], 0).subscribe((res: EsitoResistenza) => {
       this.esito = res.tiro;
       this.isResist1Open = true;
+      this.changeDetectorRef.markForCheck();
       this.authservice.msgtomaster(this.user['idutente'], 'Tiro di resistenza a Disciplina: ' + this.esito ).subscribe(() => {
         setTimeout(() => this.loadDadi(), 1000);
         });
@@ -125,6 +133,7 @@ export class Tab5Page implements OnInit {
     this.authservice.tiroresistenza(this.user['idutente'], this.user.rd).subscribe((res: EsitoResistenza) => {
       this.esito = res.tiro;
       this.isResist2Open = true;
+      this.changeDetectorRef.markForCheck();
       this.authservice.msgtomaster(this.user['idutente'], 'Tiro di resistenza a Dominazione: ' + this.esito ).subscribe(() => {
         setTimeout(() => this.loadDadi(), 1000);
         });
@@ -153,35 +162,68 @@ export class Tab5Page implements OnInit {
 
 
   mandaArbitro() {
+    if (this.isSendingArbitro) {
+      return;
+    }
 
-    // console.log('Arbitro in Nero');
-    // console.log('Messaggio da inviare: ', this.messaggioArbitro);
-    this.messaggioArbitro = this.messaggioArbitro.trim(); // Rimuove spazi bianchi iniziali e finali
+    const messaggio = this.messaggioArbitro.trim();
+    if (!messaggio) {
+      return;
+    }
 
-    this.messaggioArbitro = "Richiesta di intervento da parte di un Arbitro in Nero. " + this.messaggioArbitro;
+    this.isSendingArbitro = true;
+    this.changeDetectorRef.markForCheck();
 
-    this.authservice.msgtomaster(this.user.idutente, this.messaggioArbitro).subscribe(() => {
-      // console.log('Messaggio inviato con successo');
-      // this.messaggioArbitro = ''; // Pulisce il campo di input dopo l'invio
-      this.setOpen(false); // Chiude il modal dopo l'invio
-    }, error => {
-      this.setOpen(false); // Chiude il modal dopo l'invio
-      console.error('Errore durante invio messaggio', error);
-    }); 
+    this.authservice
+      .msgtomaster(
+        this.user.idutente,
+        `Richiesta di intervento da parte di un Arbitro in Nero. ${messaggio}`
+      )
+      .subscribe({
+        next: () => {
+          this.isSendingArbitro = false;
+          this.isModalOpen = false;
+          this.messaggioArbitro = '';
+          this.changeDetectorRef.markForCheck();
+        },
+        error: (error) => {
+          this.isSendingArbitro = false;
+          this.messaggioArbitroError =
+            'Invio non riuscito. Riprova mantenendo il messaggio.';
+          this.isArbitroErrorOpen = true;
+          this.changeDetectorRef.markForCheck();
+          console.error('Errore durante invio messaggio', error);
+        },
+      });
   }
 
   ionViewWillEnter() {
     this.tiridado = [];
     this.loadDadi();
     this.checkToast();
+    this.changeDetectorRef.markForCheck();
   }
 
-  setOpen(isOpen: boolean) {
+  openArbitro() {
     this.messaggioArbitro = '';
-    this.isModalOpen = isOpen;
+    this.isModalOpen = true;
   }
+
+  closeArbitro() {
+    if (this.isSendingArbitro) {
+      return;
+    }
+
+    this.messaggioArbitro = '';
+    this.isModalOpen = false;
+  }
+
   setToastOpen(isOpen: boolean) {
     this.isToastOpen = isOpen;
+  }
+
+  setArbitroErrorOpen(isOpen: boolean) {
+    this.isArbitroErrorOpen = isOpen;
   }
 
   checkToast() {

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { User, Userskill } from '../globals';
 // import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 
@@ -8,10 +8,10 @@ import { User, Userskill } from '../globals';
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class Tab2Page {
+export class Tab2Page implements OnInit {
 
   forza = 0; 
   rissa = 0;
@@ -33,7 +33,7 @@ export class Tab2Page {
     public userskill: Userskill,
   ) {}
 
-  ionViewWillEnter() {
+  ngOnInit() {
 
     this.rissa = 0;
     this.mischia = 0;

@@ -1,4 +1,4 @@
-import { Component,  ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
@@ -11,7 +11,7 @@ export interface EsitoPotere {
   selector: 'app-necro',
   templateUrl: './necro.page.html',
   styleUrls: ['./necro.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class NecroPage {
@@ -25,7 +25,8 @@ export class NecroPage {
     public user: User,
     public userskill: Userskill,
     public alertCtrl: AlertController,
-    public authService: AuthserviceService
+    public authService: AuthserviceService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
 
@@ -44,8 +45,10 @@ export class NecroPage {
     } else {
       this.user.PScorrenti = this.user.PScorrenti - 1;
     }
+    this.user.puntiSangueAggiornati.next();
 
     this.showalert(necro, pot, livellopot);
+    this.changeDetectorRef.markForCheck();
 
       if (this.user.PScorrenti <= this.user.frenesia) {
         // console.log('a rischio frenesia');

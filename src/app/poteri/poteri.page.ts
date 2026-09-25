@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { User, Potere, Userskill, Utente } from '../globals';
 import { ActivatedRoute } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';
@@ -13,7 +13,7 @@ export interface EsitoPotere {
   selector: 'app-poteri',
   templateUrl: './poteri.page.html',
   styleUrls: ['./poteri.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PoteriPage implements OnInit {
@@ -41,22 +41,21 @@ export class PoteriPage implements OnInit {
     public userskill: Userskill,
     public activatedroute: ActivatedRoute,
     public authservice: AuthserviceService,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() { 
     this.authservice.listautenti(this.user.idutente).subscribe((res: Array<Utente>) => {
       this.listautenti = res;
+      this.changeDetectorRef.markForCheck();
     });
   }
 
   ionViewWillEnter() {
-    
-    this.activatedroute.paramMap.subscribe((paramMap) => {
-      this.disc = Number(paramMap.get('disc'));
-      this.nomed = paramMap.get('nomed')!;
-      // console.log(paramMap);
-    });
+    const paramMap = this.activatedroute.snapshot.paramMap;
+    this.disc = Number(paramMap.get('disc'));
+    this.nomed = paramMap.get('nomed')!;
 
     for (let i = 0; i < this.userskill.discipline.length; i++) {
       if (this.userskill.discipline[i].iddisciplina == this.disc) {
@@ -64,6 +63,7 @@ export class PoteriPage implements OnInit {
         // console.log(this.mypoteri);
       }
     }
+    this.changeDetectorRef.markForCheck();
   }
 
   gopotere(pot: string, livellopot: number, idpotere: number) {
@@ -87,6 +87,7 @@ export class PoteriPage implements OnInit {
         } else {
           this.user.PScorrenti = this.user.PScorrenti - 1;
         }
+        this.user.puntiSangueAggiornati.next();
         if (idpotere== 15) {
           this.user.nummaesta = this.user.nummaesta - 1;
         }
@@ -102,6 +103,7 @@ export class PoteriPage implements OnInit {
         } else if (this.user.PScorrenti <= this.user.cacciaobbligata) {
           console.log('in caccia obbligata');
         } 
+        this.changeDetectorRef.markForCheck();
 
       });
     }
@@ -129,11 +131,14 @@ export class PoteriPage implements OnInit {
   cacciaanim() {
     this.authservice.cacciaanim(this.user['idutente']).subscribe(() => {
       this.user['PScorrenti'] = this.user['PScorrenti'] + 3 > this.user['maxps'] ? this.user['maxps'] : this.user['PScorrenti'] + 3;
+      this.user.puntiSangueAggiornati.next();
       this.showalert('Richiamo', 3, "NT");
       this.CacciaAnimalita = 0;
+      this.changeDetectorRef.markForCheck();
 
       setTimeout(() => {
         this.CacciaAnimalita = 1;
+        this.changeDetectorRef.markForCheck();
       }, 3600000); // 60 minuti in millisecondi 
       
 
@@ -147,9 +152,11 @@ export class PoteriPage implements OnInit {
     // console.log('pgscelto: ' + this.pgscelto);
     this.authservice.inviamessaggiotente(this.user['idutente'], this.pgscelto, this.messaggioTelepatico).subscribe(() => {
       this.user['PScorrenti']--;
+      this.user.puntiSangueAggiornati.next();
       this.showalert('Telepatia', 1, "NT");
       this.pgscelto = 0;
       this.messaggioTelepatico = '';
+      this.changeDetectorRef.markForCheck();
     });
 
   }

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
@@ -12,7 +12,7 @@ export interface EsitoPotere {
   selector: 'app-taum',
   templateUrl: './taum.page.html',
   styleUrls: ['./taum.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class TaumPage {
@@ -28,7 +28,8 @@ export class TaumPage {
     public user: User,
     public userskill: Userskill,
     public alertCtrl: AlertController,
-    public authService: AuthserviceService
+    public authService: AuthserviceService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
 
@@ -48,8 +49,10 @@ export class TaumPage {
     } else {
       this.user.PScorrenti = this.user.PScorrenti - 1;
     }
+    this.user.puntiSangueAggiornati.next();
 
     this.showalert(taum, pot, livellopot);
+    this.changeDetectorRef.markForCheck();
 
       if (this.user.PScorrenti <= this.user.frenesia) {
         console.log('a rischio frenesia');
@@ -66,13 +69,16 @@ export class TaumPage {
     this.authService.furtodivitae(this.user['idutente']).subscribe(() => {
 
       this.user['PScorrenti'] = this.user['PScorrenti'] + 3 > this.user['maxps'] ? this.user['maxps'] : this.user['PScorrenti'] + 3;
+      this.user.puntiSangueAggiornati.next();
       
       this.FurtoVitae = 0;
 
       this.showalert('Patto della Vitae', 'Rigenerazione della Vitae', 4);
+      this.changeDetectorRef.markForCheck();
 
       setTimeout(() => {
         this.FurtoVitae = 1;
+        this.changeDetectorRef.markForCheck();
       }, 1800000); // 30 minuti in millisecondi 
     });
   }

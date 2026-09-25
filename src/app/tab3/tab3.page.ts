@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { User, Oggetto } from '../globals';
 import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { AuthserviceService } from '../services/authservice.service';
@@ -9,7 +9,7 @@ import { AlertController } from '@ionic/angular';
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class Tab3Page {
@@ -24,12 +24,15 @@ export class Tab3Page {
   rispostaselezionata = '';
 
   oldscan: Array<Oggetto> = [];
+  private oldscanLoaded = false;
+  private hasNewScan = false;
 
 
   constructor(
     public user: User,
     public alertController: AlertController,
-    private authservice: AuthserviceService
+    private authservice: AuthserviceService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
       this.initialstuff();
   }
@@ -75,6 +78,10 @@ export class Tab3Page {
     const { barcodes } = await BarcodeScanner.scan();
     this.barcodes.push(...barcodes);
 
+    if (this.barcodes.length === 0) {
+      return;
+    }
+
     // console.log('Barcode data', barcodes);
     this.oggetto.id = this.barcodes[0].rawValue ?? '';
 
@@ -92,6 +99,7 @@ export class Tab3Page {
     this.authservice.barcode(this.user.idutente, this.oggetto.id).subscribe((data) => {
 
       this.isModalOpen = true;
+      this.hasNewScan = true;
       
       // console.log(data);
 
@@ -106,6 +114,7 @@ export class Tab3Page {
 
       this.giarisposto = false;
       this.rispostaselezionata = '';
+      this.changeDetectorRef.markForCheck();
 
 
 
@@ -121,16 +130,25 @@ export class Tab3Page {
 
   cancel() {
     this.isModalOpen = false;
+    if (!this.hasNewScan) {
+      return;
+    }
+
+    this.hasNewScan = false;
+    this.loadOldScan();
+  }
+
+  private loadOldScan() {
     this.authservice.getscan(this.user.idutente).subscribe((data) => {
       this.oldscan = data;
+      this.changeDetectorRef.markForCheck();
     });
   }
   
   ionViewWillEnter() {
-    this.authservice.getscan(this.user.idutente).subscribe((data) => {
-      //console.log(data);
-      this.oldscan = data;
-      // console.log("odscan : ", this.oldscan);
-    });
+    if (!this.oldscanLoaded) {
+      this.oldscanLoaded = true;
+      this.loadOldScan();
+    }
   }
 }

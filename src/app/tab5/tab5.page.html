@@ -46,19 +46,19 @@
 
     <ion-item>
       <ion-icon name="logo-appflow" size="small"></ion-icon>
-      <ion-button  fill="clear" color="dark" type="submit" (click)="setOpen(true)">Arbitro in Nero </ion-button>
+      <ion-button  fill="clear" color="dark" type="submit" (click)="openArbitro()">Arbitro in Nero </ion-button>
     </ion-item>
 
   </ion-list>
 
 
-  <ion-modal [isOpen]="isModalOpen" (didDismiss)="setOpen(false)">
+  <ion-modal [isOpen]="isModalOpen" [canDismiss]="!isSendingArbitro" (didDismiss)="closeArbitro()">
       <ng-template>
         <ion-header>
           <ion-toolbar color="medium">
             <ion-title>Arbitro in Nero</ion-title>
             <ion-buttons slot="end">
-              <ion-button (click)="setOpen(false)">Chiudi</ion-button>
+              <ion-button [disabled]="isSendingArbitro" (click)="closeArbitro()">Chiudi</ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
@@ -67,9 +67,9 @@
           <p class="ion-padding-horizontal">L'Arbitro in Nero riceverà un messaggio con il tuo nome e quello del tuo PG, e potrà contattarti in privato per risolvere la questione.</p>
           <p class="ion-padding-horizontal">Indica dove ti trovi ed eventuali altri dettagli.</p>
           <ion-item>
-            <ion-input placeholder="Messaggio per l'Arbitro in Nero" [(ngModel)]="messaggioArbitro" name="messaggioArbitro"></ion-input >
+            <ion-input placeholder="Messaggio per l'Arbitro in Nero" [(ngModel)]="messaggioArbitro" name="messaggioArbitro" [disabled]="isSendingArbitro"></ion-input >
           </ion-item>
-          <ion-button color="danger" shape="round" type="submit" expand="full"  (click)="mandaArbitro()" [disabled]="messaggioArbitro.trim()==''">Invia richiesta</ion-button>
+          <ion-button color="danger" shape="round" type="submit" expand="full" (click)="mandaArbitro()" [disabled]="isSendingArbitro || messaggioArbitro.trim()==''">Invia richiesta</ion-button>
         </ion-content>
       </ng-template>
     </ion-modal>
@@ -116,7 +116,15 @@
     [message]="messaggioToast"
     position = "middle"
     duration="5000"
-    (didDismiss)="setOpen(false)">
+    (didDismiss)="setToastOpen(false)">
+  </ion-toast>
+
+  <ion-toast
+    [isOpen]="isArbitroErrorOpen"
+    [message]="messaggioArbitroError"
+    position="middle"
+    duration="5000"
+    (didDismiss)="setArbitroErrorOpen(false)">
   </ion-toast>
 
 
