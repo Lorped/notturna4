@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { User } from '../globals';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
+import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'app-tabs',
@@ -13,7 +14,11 @@ import { Capacitor } from '@capacitor/core';
 })
 export class TabsPage implements OnInit {
   paletteToggle = false;
-  constructor(public router: Router, public user: User) {}
+  constructor(
+    public router: Router,
+    public user: User,
+    private session: SessionService
+  ) {}
 
   ngOnInit() {
     let savedDarkMode = window.localStorage.getItem('notturnadarkmode');
@@ -93,7 +98,7 @@ export class TabsPage implements OnInit {
     this.router.navigate(['/tabs/focusattr']);
   }
   logout() {
-    this.router.navigate(['/login']);
+    void this.session.logout();
   }
 
   async openDT() {

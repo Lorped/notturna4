@@ -141,6 +141,23 @@ export class User  {
 
   public linkurl = '';
   public bol = 0 ; // Sussurro di Vita
+
+    reset(): void {
+        const state = this as unknown as Record<string, unknown>;
+        const defaults = new User();
+
+        for (const key of Object.keys(state)) {
+            if (key !== 'puntiSangueAggiornati') {
+                delete state[key];
+            }
+        }
+
+        for (const [key, value] of Object.entries(defaults)) {
+            if (key !== 'puntiSangueAggiornati') {
+                state[key] = value;
+            }
+    }
+    }
 }
 
 @Injectable()
@@ -205,7 +222,13 @@ export class Userskill {
     public necro: Array<anecro> = [];
     public rituali: Array<Rituale> = [];
 
-    
+    reset(): void {
+        const state = this as unknown as Record<string, unknown>;
+        for (const key of Object.keys(state)) {
+            delete state[key];
+        }
+        Object.assign(this, new Userskill());
+    }
 }
 
 

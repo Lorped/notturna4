@@ -31,12 +31,12 @@
 
     <ion-item>
       <ion-icon name="school-outline" size="small"></ion-icon>
-      <ion-button  id="fdv" fill="clear"  color="dark" type="submit" (click)="usafdv()" [disabled]="user.fdv==0">Usa Forza di Volontà</ion-button>
+      <ion-button  id="fdv" fill="clear"  color="dark" type="submit" (click)="usafdv()" [disabled]="user.fdv==0 || resourceActions.isBusy">Usa Forza di Volontà</ion-button>
     </ion-item>
 
     <ion-item>
       <ion-icon name="leaf-outline" size="small"></ion-icon>
-      <ion-button  id="bol" fill="clear"  color="dark" type="submit" (click)="usabol()" [disabled]="user.PScorrenti<user.bol+1 || user.valsentiero<5">Sussurro di Vita</ion-button>
+      <ion-button  id="bol" fill="clear"  color="dark" type="submit" (click)="usabol()" [disabled]="user.PScorrenti<user.bol+1 || user.valsentiero<5 || resourceActions.isBusy">Sussurro di Vita</ion-button>
     </ion-item>    
 
     <ion-item>
@@ -46,7 +46,7 @@
 
     <ion-item>
       <ion-icon name="heart-circle-outline" size="small"></ion-icon>
-      <ion-button id="cura" fill="clear" color="secondary" type="submit" [disabled]="user.PScorrenti==0" (click)="menops()">Cura Ferite ( {{this.user.rigen+this.user.bonusrigen}} )</ion-button>
+      <ion-button id="cura" fill="clear" color="secondary" type="submit" [disabled]="user.PScorrenti==0 || resourceActions.isBusy" (click)="menops()">Cura Ferite ( {{this.user.rigen+this.user.bonusrigen}} )</ion-button>
     </ion-item>
 
     <ion-item>

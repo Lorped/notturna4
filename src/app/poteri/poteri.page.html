@@ -13,29 +13,29 @@
     <ion-row>
       @if (p.attivo=='N' && p.livellopot<5 && p.idpotere !=4 ) { <!-- un potere non Animalità.3/Richiamo -->
         <ion-col >
-          <ion-button  (click)="gopotere(p.nomepotere,p.livellopot,p.idpotere)"  color="danger"  shape="round" size="full" type="submit" [disabled]="user.PScorrenti==0" >{{p.livellopot}} - {{p.nomepotere}}</ion-button>
+          <ion-button  (click)="gopotere(p.nomepotere,p.livellopot,p.idpotere)"  color="danger"  shape="round" size="full" type="submit" [disabled]="user.PScorrenti==0 || resourceActions.isBusy" >{{p.livellopot}} - {{p.nomepotere}}</ion-button>
         </ion-col>
       }
       @if (p.attivo=='N' && p.livellopot==5 && p.idpotere != 15) {  <!-- un 5' potere non maesta'-->
         <ion-col >
-          <ion-button  (click)="gopotere(p.nomepotere, p.livellopot, p.idpotere)"  color="danger"  shape="round" size="full" type="submit" [disabled]="user.PScorrenti<2" >{{p.livellopot}} - {{p.nomepotere}}</ion-button>
+          <ion-button  (click)="gopotere(p.nomepotere, p.livellopot, p.idpotere)"  color="danger"  shape="round" size="full" type="submit" [disabled]="user.PScorrenti<2 || resourceActions.isBusy" >{{p.livellopot}} - {{p.nomepotere}}</ion-button>
         </ion-col>
       }
       @if (p.idpotere == 15) {  <!-- maesta -->
         <ion-col >
-          <ion-button  (click)="gopotere(p.nomepotere, p.livellopot, p.idpotere)"  color="danger"  shape="round" size="full" type="submit" [disabled]="user.PScorrenti<2 || user.nummaesta == 0 " >{{p.livellopot}} - {{p.nomepotere}} [{{user.nummaesta}}]</ion-button>
+          <ion-button  (click)="gopotere(p.nomepotere, p.livellopot, p.idpotere)"  color="danger"  shape="round" size="full" type="submit" [disabled]="user.PScorrenti<2 || user.nummaesta == 0 || resourceActions.isBusy" >{{p.livellopot}} - {{p.nomepotere}} [{{user.nummaesta}}]</ion-button>
         </ion-col>
       }
       @if (p.idpotere == 4) {  <!-- richiamo di Animalità NON di Ascendente-->
         <ion-col >
-          <ion-button  (click)="cacciaanim()" color="danger"  shape="round" size="full" type="submit" [disabled]="user.PScorrenti==user.maxps || CacciaAnimalita == 0" >{{p.livellopot}} - {{p.nomepotere}}</ion-button>
+          <ion-button  (click)="cacciaanim()" color="danger"  shape="round" size="full" type="submit" [disabled]="user.PScorrenti==user.maxps || CacciaAnimalita == 0 || resourceActions.isBusy" >{{p.livellopot}} - {{p.nomepotere}}</ion-button>
         </ion-col>
       }
 
       <!--  NON ESISTONO POTERI DI LIVELLO 6, MA SE CI FOSSE QUESTO E' IL CODICE DA USARE
       @if (p.attivo=='N' && p.livellopot >5 ) {
         <ion-col >
-          <ion-button  (click)="gopotere(p.nomepotere,p.livellopot)"  color="danger"  shape="round" size="full" type="submit" [disabled]="user.PScorrenti<2" >{{p.livellopot}} - {{p.nomepotere}}</ion-button>
+          <ion-button  (click)="gopotere(p.nomepotere,p.livellopot)"  color="danger"  shape="round" size="full" type="submit" [disabled]="user.PScorrenti<2 || resourceActions.isBusy" >{{p.livellopot}} - {{p.nomepotere}}</ion-button>
         </ion-col>
       }
       -->
@@ -76,7 +76,7 @@
           <ion-item>
             <ion-input placeholder="Messaggio telepatico" [(ngModel)]="messaggioTelepatico" name="messaggioTelepatico"></ion-input >
           </ion-item>
-          <ion-button color="danger" shape="round" type="submit" expand="full"  (click)="mandaMessaggio()" [disabled]="pgscelto==0||messaggioTelepatico.trim()=='' ">Invia</ion-button>
+          <ion-button color="danger" shape="round" type="submit" expand="full"  (click)="mandaMessaggio()" [disabled]="pgscelto==0||messaggioTelepatico.trim()=='' || resourceActions.isBusy">Invia</ion-button>
         </ion-content>
       </ng-template>
     </ion-modal>

@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { pregiodifetto, User, Userskill } from '../globals';
 import { FeedService, FeedItem } from '../services/feed.service';
 import { Router } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';
+import { finalize } from 'rxjs';
+import { ResourceActionService } from '../services/resource-action.service';
 
 
 export interface EsitoResistenza {
@@ -49,6 +51,7 @@ export class Tab5Page implements OnInit {
     public feed: FeedService,
     public router: Router,
     public authservice: AuthserviceService,
+    @Inject(ResourceActionService) public resourceActions: ResourceActionService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.tiridado = [];
@@ -90,7 +93,13 @@ export class Tab5Page implements OnInit {
   }
 
   usafdv() {
-    this.authservice.usofdv(this.user['idutente']).subscribe(() => {
+    if (!this.resourceActions.tryStart()) {
+      return;
+    }
+
+    this.authservice.usofdv(this.user['idutente'])
+      .pipe(finalize(() => this.resourceActions.finish()))
+      .subscribe(() => {
       setTimeout(() => this.loadDadi(), 1000);
     });
 
@@ -106,7 +115,13 @@ export class Tab5Page implements OnInit {
   }
 
   menops() {
-    this.authservice.menops(this.user['idutente']).subscribe(() => {
+    if (!this.resourceActions.tryStart()) {
+      return;
+    }
+
+    this.authservice.menops(this.user['idutente'])
+      .pipe(finalize(() => this.resourceActions.finish()))
+      .subscribe(() => {
       this.user.PScorrenti--;
       this.user.puntiSangueAggiornati.next();
       this.checkToast();
@@ -240,7 +255,13 @@ export class Tab5Page implements OnInit {
   }
 
   usabol() {
-    this.authservice.usabol(this.user.idutente).subscribe(() => {
+    if (!this.resourceActions.tryStart()) {
+      return;
+    }
+
+    this.authservice.usabol(this.user.idutente)
+      .pipe(finalize(() => this.resourceActions.finish()))
+      .subscribe(() => {
       this.user.PScorrenti -= this.user.bol;
       this.user.puntiSangueAggiornati.next();
       this.checkToast();

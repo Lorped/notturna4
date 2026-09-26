@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RefresherCustomEvent } from '@ionic/angular';
-import { Router } from '@angular/router';
 import { User  } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
+import { SessionService } from '../services/session.service';
 
 export interface datips {
   PScorrenti: number;
@@ -21,7 +21,7 @@ export class Tab1Page {
   constructor(
     public user: User,
     private authentication: AuthserviceService,
-    private router: Router,
+    private session: SessionService,
     private changeDetectorRef: ChangeDetectorRef,
     private destroyRef: DestroyRef
   ) {
@@ -37,7 +37,7 @@ export class Tab1Page {
 
   
   public logoutx() {
-    this.router.navigate(['login']);
+    void this.session.logout();
   }
   
 

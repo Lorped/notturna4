@@ -14,7 +14,16 @@
   
   <ion-row style="align-items: center;">
     <ion-col ><hr/></ion-col>
-    <ion-col size="6" style="text-align: center;"><ion-button color="danger" shape="round" outline (click)="openbarcode()">New Scan</ion-button></ion-col>
+    <ion-col size="6" style="text-align: center;">
+      <ion-button color="danger" shape="round" outline (click)="openbarcode()" [disabled]="isScanning">
+        @if (isScanning) {
+          <ion-spinner name="crescent" slot="start"></ion-spinner>
+          Scansione in corso...
+        } @else {
+          New Scan
+        }
+      </ion-button>
+    </ion-col>
     <ion-col ><hr/></ion-col>
   </ion-row>
 
@@ -48,7 +57,7 @@
 
   <!------    MODAL  PER LA VISUALIZZAZIONE DELL'OGGETTO -->
 
-  <ion-modal [isOpen]="isModalOpen" >
+  <ion-modal [isOpen]="isModalOpen" (ionModalDidDismiss)="cancel()" >
     <ng-template>
       <ion-header>
         <ion-toolbar color="medium">

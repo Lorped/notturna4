@@ -3,6 +3,7 @@ import { User, Oggetto } from '../globals';
 import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
+import { firstValueFrom } from 'rxjs';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class Tab3Page {
 
   public barcodes: Barcode[] = [];
   public isPermissionGranted = false;
+  public isScanning = false;
 
   isModalOpen = false;
   oggetto: Oggetto = new Oggetto();
@@ -33,28 +35,9 @@ export class Tab3Page {
     public alertController: AlertController,
     private authservice: AuthserviceService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {
-      this.initialstuff();
-  }
+  ) {}
 
 
-
-  async initialstuff() {
-    const granted = await this.requestPermissions();
-    if (!granted) {
-      this.presentAlert();
-    }
-
-    const { available } =
-      await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
-
-    if (available == false) {
-      // alert("debug: module not available");
-      await BarcodeScanner.installGoogleBarcodeScannerModule();
-    } else {
-      // alert("debug: module available");
-    }
-  }
 
   async requestPermissions(): Promise<boolean> {
     const { camera } = await BarcodeScanner.requestPermissions();
@@ -71,37 +54,41 @@ export class Tab3Page {
   }
 
   async openbarcode() {
-
-
-    /*******   TEST  ***/
-    this.barcodes = [];
-    const { barcodes } = await BarcodeScanner.scan();
-    this.barcodes.push(...barcodes);
-
-    if (this.barcodes.length === 0) {
+    if (this.isScanning) {
       return;
     }
 
-    // console.log('Barcode data', barcodes);
-    this.oggetto.id = this.barcodes[0].rawValue ?? '';
+    this.isScanning = true;
+    this.isPermissionGranted = false;
+    this.changeDetectorRef.markForCheck();
 
-    if (this.oggetto.id.length > 12) {
-      const newbarcode = this.oggetto.id.substr(-12);
-      this.oggetto.id = newbarcode;
-    }
+    try {
+      this.isPermissionGranted = await this.requestPermissions();
+      if (!this.isPermissionGranted) {
+        await this.presentAlert();
+        return;
+      }
 
-    
+      const { available } =
+        await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
+      if (!available) {
+        await BarcodeScanner.installGoogleBarcodeScannerModule();
+      }
 
-    /*******
-    this.oggetto.id='155405728268';
-    **********/
-    
-    this.authservice.barcode(this.user.idutente, this.oggetto.id).subscribe((data) => {
+      const { barcodes } = await BarcodeScanner.scan();
+      this.barcodes = barcodes;
+      if (barcodes.length === 0) {
+        return;
+      }
 
-      this.isModalOpen = true;
-      this.hasNewScan = true;
-      
-      // console.log(data);
+      this.oggetto.id = barcodes[0].rawValue ?? '';
+      if (this.oggetto.id.length > 12) {
+        this.oggetto.id = this.oggetto.id.slice(-12);
+      }
+
+      const data = await firstValueFrom(
+        this.authservice.barcode(this.user.idutente, this.oggetto.id)
+      );
 
       this.oggetto.nomeoggetto = data.nomeoggetto;
       this.oggetto.descrizione = data.descrizione;
@@ -110,15 +97,18 @@ export class Tab3Page {
       this.oggetto.R1 = data.R1;
       this.oggetto.R2 = data.R2;
       this.oggetto.esitoSI = data.esitoSI;
-      this.oggetto.esitoNO = data.esitoNO;  
-
+      this.oggetto.esitoNO = data.esitoNO;
       this.giarisposto = false;
       this.rispostaselezionata = '';
+      this.hasNewScan = true;
+      this.isModalOpen = true;
+    } catch (error) {
+      console.error('Errore durante la scansione del barcode', error);
+    } finally {
+      this.isScanning = false;
       this.changeDetectorRef.markForCheck();
+    }
 
-
-
-    });
   }
 
   risposta(risposta: string) {

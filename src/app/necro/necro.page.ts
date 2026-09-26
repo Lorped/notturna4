@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
+import { finalize } from 'rxjs';
+import { ResourceActionService } from '../services/resource-action.service';
 
 export interface EsitoPotere {
   tiro: number;
@@ -26,14 +28,20 @@ export class NecroPage {
     public userskill: Userskill,
     public alertCtrl: AlertController,
     public authService: AuthserviceService,
+    @Inject(ResourceActionService) public resourceActions: ResourceActionService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
 
 
   gonecro(livellopot: number, pot: string, necro: string, idnecro2: number) {
+    if (!this.resourceActions.tryStart()) {
+      return;
+    }
 
-    this.authService.usonecrotaum(this.user['idutente'], pot, idnecro2,  livellopot, necro, 'N').subscribe((res) => {
+    this.authService.usonecrotaum(this.user['idutente'], pot, idnecro2,  livellopot, necro, 'N')
+      .pipe(finalize(() => this.resourceActions.finish()))
+      .subscribe((res) => {
 
     this.esito.tiro = res.tiro;
 

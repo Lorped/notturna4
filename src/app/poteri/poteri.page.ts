@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { User, Potere, Userskill, Utente } from '../globals';
 import { ActivatedRoute } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
+import { finalize } from 'rxjs';
+import { ResourceActionService } from '../services/resource-action.service';
 
 export interface EsitoPotere {
   tiro: number;
@@ -42,6 +44,7 @@ export class PoteriPage implements OnInit {
     public activatedroute: ActivatedRoute,
     public authservice: AuthserviceService,
     public alertCtrl: AlertController,
+    @Inject(ResourceActionService) public resourceActions: ResourceActionService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -74,8 +77,13 @@ export class PoteriPage implements OnInit {
       this.messaggioTelepatico = '';
       this.isModalOpen = true;
     } else {
+      if (!this.resourceActions.tryStart()) {
+        return;
+      }
 
-      this.authservice.usopotere(this.user['idutente'], pot, idpotere,  livellopot, this.nomed).subscribe((res) => {
+      this.authservice.usopotere(this.user['idutente'], pot, idpotere,  livellopot, this.nomed)
+        .pipe(finalize(() => this.resourceActions.finish()))
+        .subscribe((res) => {
 
         this.esito.tiro = res.tiro;
 
@@ -129,7 +137,13 @@ export class PoteriPage implements OnInit {
   }
 
   cacciaanim() {
-    this.authservice.cacciaanim(this.user['idutente']).subscribe(() => {
+    if (!this.resourceActions.tryStart()) {
+      return;
+    }
+
+    this.authservice.cacciaanim(this.user['idutente'])
+      .pipe(finalize(() => this.resourceActions.finish()))
+      .subscribe(() => {
       this.user['PScorrenti'] = this.user['PScorrenti'] + 3 > this.user['maxps'] ? this.user['maxps'] : this.user['PScorrenti'] + 3;
       this.user.puntiSangueAggiornati.next();
       this.showalert('Richiamo', 3, "NT");
@@ -147,10 +161,16 @@ export class PoteriPage implements OnInit {
 
     
   mandaMessaggio() {
+    if (!this.resourceActions.tryStart()) {
+      return;
+    }
+
     this.isModalOpen = false;
     // console.log('mandaMessaggio: ' + this.messaggioTelepatico);
     // console.log('pgscelto: ' + this.pgscelto);
-    this.authservice.inviamessaggiotente(this.user['idutente'], this.pgscelto, this.messaggioTelepatico).subscribe(() => {
+    this.authservice.inviamessaggiotente(this.user['idutente'], this.pgscelto, this.messaggioTelepatico)
+      .pipe(finalize(() => this.resourceActions.finish()))
+      .subscribe(() => {
       this.user['PScorrenti']--;
       this.user.puntiSangueAggiornati.next();
       this.showalert('Telepatia', 1, "NT");

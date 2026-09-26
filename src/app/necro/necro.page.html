@@ -20,7 +20,7 @@
       <ion-row>
         @if (pp.attivo=='N') {
           <ion-col >  
-            <ion-button  (click)="gonecro(pp.livello, pp.nomenecro2, n.nomenecro, pp.idnecro2)"  shape="round" size="full" color="danger" type="submit" [disabled]="(user.PScorrenti==0)||(user.PScorrenti==1 && pp.livello==5 )" >{{pp.livello}} - {{pp.nomenecro2}}</ion-button>
+            <ion-button  (click)="gonecro(pp.livello, pp.nomenecro2, n.nomenecro, pp.idnecro2)"  shape="round" size="full" color="danger" type="submit" [disabled]="(user.PScorrenti==0)||(user.PScorrenti==1 && pp.livello==5 ) || resourceActions.isBusy" >{{pp.livello}} - {{pp.nomenecro2}}</ion-button>
           </ion-col>
         }
         @if (pp.attivo=='S') {

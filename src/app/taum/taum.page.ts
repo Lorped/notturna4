@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
+import { finalize } from 'rxjs';
+import { ResourceActionService } from '../services/resource-action.service';
 
 export interface EsitoPotere {
   tiro: number;
@@ -16,7 +18,6 @@ export interface EsitoPotere {
   standalone: false,
 })
 export class TaumPage {
-
   FurtoVitae = 1;
   
   esito: EsitoPotere = { 
@@ -29,6 +30,7 @@ export class TaumPage {
     public userskill: Userskill,
     public alertCtrl: AlertController,
     public authService: AuthserviceService,
+    @Inject(ResourceActionService) public resourceActions: ResourceActionService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -36,8 +38,13 @@ export class TaumPage {
   gotaum(livellopot: number, pot: string, taum: string, idtaum2: number) {
     //console.log(pot2);
     //console.log(livellopot);
+    if (!this.resourceActions.tryStart()) {
+      return;
+    }
 
-  this.authService.usonecrotaum(this.user['idutente'], pot, idtaum2,  livellopot, taum, 'T').subscribe((res) => {
+  this.authService.usonecrotaum(this.user['idutente'], pot, idtaum2,  livellopot, taum, 'T')
+    .pipe(finalize(() => this.resourceActions.finish()))
+    .subscribe((res) => {
 
     this.esito.tiro = res.tiro;
 
@@ -64,9 +71,13 @@ export class TaumPage {
   }
 
   gofurto() {
+    if (!this.resourceActions.tryStart()) {
+      return;
+    }
 
-
-    this.authService.furtodivitae(this.user['idutente']).subscribe(() => {
+    this.authService.furtodivitae(this.user['idutente'])
+      .pipe(finalize(() => this.resourceActions.finish()))
+      .subscribe(() => {
 
       this.user['PScorrenti'] = this.user['PScorrenti'] + 3 > this.user['maxps'] ? this.user['maxps'] : this.user['PScorrenti'] + 3;
       this.user.puntiSangueAggiornati.next();

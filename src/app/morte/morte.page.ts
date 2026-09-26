@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { User } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
-import { Router } from '@angular/router';
+import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'app-morte',
@@ -14,14 +14,14 @@ export class MortePage {
   constructor(
     public user: User,
     public authservice: AuthserviceService,
-    public router: Router
+    private session: SessionService
   ) {}
 
   // ngOnInit() {}
 
   morte() {
     this.authservice.morteultima(this.user['idutente']).subscribe(() => {
-      this.router.navigate(['/login']);
+      void this.session.logout();
     });
   }
 }
