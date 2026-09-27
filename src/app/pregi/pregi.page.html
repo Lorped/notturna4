@@ -35,7 +35,7 @@
 
         <ion-card-content>
           <ion-list>
-            @for (pr of this.listapregi; track pr) {
+            @for (pr of this.listapregi(); track pr) {
               <ion-item>
                 <ion-label>{{ pr.nomepregio}}</ion-label>
                 @if (pr.valore>0) {

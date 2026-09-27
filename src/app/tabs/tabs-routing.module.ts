@@ -30,7 +30,7 @@ const routes: Routes = [
       },
       {
         path: 'background',
-        loadChildren: () => import('../background/background.module').then( m => m.BackgroundPageModule)
+        loadComponent: () => import('../background/background.page').then( m => m.BackgroundPage)
       },
       {
         path: 'rubrica',
@@ -46,7 +46,7 @@ const routes: Routes = [
       },
       {
         path: 'pregi',
-        loadChildren: () => import('../pregi/pregi.module').then( m => m.PregiPageModule)
+        loadComponent: () => import('../pregi/pregi.page').then( m => m.PregiPage)
       },
       {
         path: 'caccia',

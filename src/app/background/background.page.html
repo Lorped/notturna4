@@ -22,17 +22,17 @@
       <ion-col size="7">{{ dd.nomeback}}</ion-col>
       <ion-col>
           @for (item of 5|times ; track item; let ix = $index) {
-            <i class="fa fa-circle-o mysmallicon " [ngClass]="{'fa-circle myred2': ix < dd.livello}"></i>
+            <i class="fa fa-circle-o mysmallicon" [class.fa-circle]="ix < dd.livello" [class.myred2]="ix < dd.livello"></i>
           }
       </ion-col>
     </ion-row>
 
-    @if ((dd.idback == 77 || dd.idback == 88) && dd.livello > 5) {
+    @if ((dd.idback === 77 || dd.idback === 88) && dd.livello > 5) {
       <ion-row>
         <ion-col size="7">&nbsp;</ion-col>
         <ion-col>
           @for (item of 5|times ; track item; let ix = $index) {
-            <i class="fa fa-circle-o mysmallicon " [ngClass]="{'fa-circle myred2': ix+5 < dd.livello}"></i>
+            <i class="fa fa-circle-o mysmallicon" [class.fa-circle]="ix+5 < dd.livello" [class.myred2]="ix+5 < dd.livello"></i>
           } 
         </ion-col>
       </ion-row>
@@ -60,7 +60,7 @@
           <ion-col size="7">{{ dd.nomecontatto}}</ion-col>
           <ion-col>
             @for (item of 5|times ; track item; let ix = $index) {
-              <i class="fa fa-circle-o mysmallicon " [ngClass]="{'fa-circle myred2': ix < dd.livello}"></i>
+              <i class="fa fa-circle-o mysmallicon" [class.fa-circle]="ix < dd.livello" [class.myred2]="ix < dd.livello"></i>
             } 
           </ion-col>
         </ion-row>
@@ -81,7 +81,7 @@
           <ion-col size="7">{{ dd.nomealleato}}</ion-col>
           <ion-col>
             @for (item of 5|times ; track item; let ix = $index) {
-              <i class="fa fa-circle-o mysmallicon " [ngClass]="{'fa-circle myred2': ix < dd.livello}"></i>
+              <i class="fa fa-circle-o mysmallicon" [class.fa-circle]="ix < dd.livello" [class.myred2]="ix < dd.livello"></i>
             } 
           </ion-col>
         </ion-row>
