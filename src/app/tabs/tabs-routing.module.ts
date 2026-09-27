@@ -26,7 +26,7 @@ const routes: Routes = [
       },
       {
         path: 'modificanote',
-        loadChildren: () => import('../modificanote/modificanote.module').then( m => m.ModificanotePageModule)
+        loadComponent: () => import('../modificanote/modificanote.page').then( m => m.ModificanotePage)
       },
       {
         path: 'background',
@@ -34,15 +34,15 @@ const routes: Routes = [
       },
       {
         path: 'rubrica',
-        loadChildren: () => import('../rubrica/rubrica.module').then( m => m.RubricaPageModule)
+        loadComponent: () => import('../rubrica/rubrica.page').then( m => m.RubricaPage)
       },
       {
         path: 'addcontatto',
-        loadChildren: () => import('../addcontatto/addcontatto.module').then( m => m.AddcontattoPageModule)
+        loadComponent: () => import('../addcontatto/addcontatto.page').then( m => m.AddcontattoPage)
       },
       {
         path: 'changecontatto',
-        loadChildren: () => import('../changecontatto/changecontatto.module').then( m => m.ChangecontattoPageModule)
+        loadComponent: () => import('../changecontatto/changecontatto.page').then( m => m.ChangecontattoPage)
       },
       {
         path: 'pregi',

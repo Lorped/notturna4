@@ -37,14 +37,14 @@
 		<ion-row >
 		  <ion-col >
 			  <ion-item >
-				  <ion-checkbox name="cell"  [(ngModel)]="cell.checked" color="danger" >Cellulare</ion-checkbox>
+			  <ion-checkbox name="cell"  [ngModel]="cellChecked()" (ngModelChange)="cellChecked.set($event)" color="danger" >Cellulare</ion-checkbox>
 				</ion-item>
 			</ion-col>
 		</ion-row>
 		<ion-row >
 		  <ion-col >				
 			  <ion-item >
-				  <ion-checkbox name="home"  [(ngModel)]="home.checked" color="danger" >Rifugio</ion-checkbox>
+			  <ion-checkbox name="home"  [ngModel]="homeChecked()" (ngModelChange)="homeChecked.set($event)" color="danger" >Rifugio</ion-checkbox>
 				</ion-item>
 			</ion-col>
 		</ion-row>

@@ -10,7 +10,7 @@
   </ion-header> 
 
   <ion-list>
-  @for (item of rubrica; track item) {
+  @for (item of rubrica(); track item) {
       <ion-item-sliding >
         <ion-item (click)="edit(item.idrubrica)">
           <ion-avatar slot="start">

@@ -31,14 +31,14 @@
 		<ion-row >
 			<ion-col >
 				<ion-item >		
-			  		<ion-input style="font-size:1.5em;"  type="text" placeholder="Nome del Contatto" name="contatto" [(ngModel)]="nuovoContatto.contatto" autofocus required ></ion-input>
+			  		<ion-input style="font-size:1.5em;"  type="text" placeholder="Nome del Contatto" name="contatto" [ngModel]="contatto()" (ngModelChange)="contatto.set($event)" autofocus required ></ion-input>
 				</ion-item>
 			</ion-col>
 		</ion-row>			
 		<ion-row >
 			<ion-col >
 				<ion-item >
-					<ion-checkbox name="cell" [(ngModel)]="nuovoContatto.cell" color="danger" >Cellulare/Email/TG</ion-checkbox>
+					<ion-checkbox name="cell" [ngModel]="cell()" (ngModelChange)="cell.set($event)" color="danger" >Cellulare/Email/TG</ion-checkbox>
 				</ion-item>
 			</ion-col>
 		</ion-row>
@@ -46,14 +46,14 @@
 		<ion-row >
 			<ion-col >		
 				<ion-item >
-					<ion-checkbox name="home" [(ngModel)]="nuovoContatto.home" color="danger" >Rifugio</ion-checkbox>
+					<ion-checkbox name="home" [ngModel]="home()" (ngModelChange)="home.set($event)" color="danger" >Rifugio</ion-checkbox>
 				</ion-item>
 			</ion-col>			
 		</ion-row>
 		<ion-row >
 			<ion-col >
 				<ion-item >
-					<ion-input name="note" style="font-size:1em;"  type="text" placeholder="Altre annotazioni" [(ngModel)]="nuovoContatto.note" ></ion-input>
+					<ion-input name="note" style="font-size:1em;"  type="text" placeholder="Altre annotazioni" [ngModel]="note()" (ngModelChange)="note.set($event)" ></ion-input>
 				</ion-item>
 			</ion-col>
 		</ion-row>

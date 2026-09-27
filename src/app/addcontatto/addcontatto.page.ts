@@ -1,5 +1,7 @@
-import { Component,  ChangeDetectionStrategy } from '@angular/core';
-import { User, RubricaItem } from '../globals';
+import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonMenuButton, IonRow, IonCol, IonAvatar, IonItem, IonInput, IonCheckbox, IonButton } from '@ionic/angular/standalone';
+import { User } from '../globals';
 import { Router } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';
 
@@ -7,39 +9,34 @@ import { AuthserviceService } from '../services/authservice.service';
   selector: 'app-addcontatto',
   templateUrl: './addcontatto.page.html',
   styleUrls: ['./addcontatto.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonMenuButton, IonRow, IonCol, IonAvatar, IonItem, IonInput, IonCheckbox, IonButton],
 })
 export class AddcontattoPage  {
-  nuovoContatto = new RubricaItem();
+  contatto = signal('');
+  cell = signal(0);
+  home = signal(0);
+  note = signal('');
 
-  constructor(
-    public router: Router,
-    public user: User,
-    public authservice: AuthserviceService 
-  ) {}
-
-
+  router = inject(Router);
+  user = inject(User);
+  authservice = inject(AuthserviceService);
 
   add() {
-    if (this.nuovoContatto.cell === undefined) this.nuovoContatto.cell = 0;
-    if (this.nuovoContatto.home === undefined) this.nuovoContatto.home = 0;
-
     this.authservice.addcontatto(
       this.user.idutente,
-      this.nuovoContatto.contatto,
-      this.nuovoContatto.cell,
-      this.nuovoContatto.home,
-      this.nuovoContatto.note
+      this.contatto(),
+      this.cell(),
+      this.home(),
+      this.note()
     ).subscribe(() => {
       this.router.navigate(['/tabs/rubrica']);
     });
   }
 
   ionViewWillEnter() {
-    this.nuovoContatto.contatto = '';
-    this.nuovoContatto.cell = 0;
-    this.nuovoContatto.home = 0;
-    this.nuovoContatto.note = '';
+    this.contatto.set('');
+    this.cell.set(0);
+    this.home.set(0);
+    this.note.set('');
   }
 }

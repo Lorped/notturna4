@@ -1,4 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonItem, IonTextarea, IonFooter, IonButton } from '@ionic/angular/standalone';
 import { User } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 
@@ -6,30 +8,27 @@ import { AuthserviceService } from '../services/authservice.service';
   selector: 'app-modificanote',
   templateUrl: './modificanote.page.html',
   styleUrls: ['./modificanote.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [FormsModule, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonItem, IonTextarea, IonFooter, IonButton],
 })
 export class ModificanotePage  {
-  constructor(
-    public user: User,
-    private authService: AuthserviceService,
-  ) {}
+  user = inject(User);
+  private authService = inject(AuthserviceService);
 
-  noteiniziali = '';
+  noteiniziali = signal('');
 
  
 
   ionViewWillEnter() {
-    this.noteiniziali = this.user.note;
+    this.noteiniziali.set(this.user.note);
   }
 
   noteModificate(): boolean {
-    return this.user.note != this.noteiniziali;
+    return this.user.note != this.noteiniziali();
   }
 
   modifica() {
     this.authService.modifcanote(this.user.idutente, this.user.note).subscribe(() => {
-      this.noteiniziali = this.user.note;
+      this.noteiniziali.set(this.user.note);
     });
   }
 }

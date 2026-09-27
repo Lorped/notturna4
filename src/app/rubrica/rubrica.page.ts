@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonList, IonItemSliding, IonItem, IonAvatar, IonLabel, IonIcon, IonItemOptions, IonButton, IonFab, IonFabButton } from '@ionic/angular/standalone';
 import { AuthserviceService } from '../services/authservice.service';
 import { RubricaItem, User, ToChange } from '../globals';
 
@@ -7,17 +8,19 @@ import { RubricaItem, User, ToChange } from '../globals';
   selector: 'app-rubrica',
   templateUrl: './rubrica.page.html',
   styleUrls: ['./rubrica.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonList, IonItemSliding, IonItem, IonAvatar, IonLabel, IonIcon, IonItemOptions, IonButton, IonFab, IonFabButton],
 })
 export class RubricaPage  {
-  constructor(private authservice: AuthserviceService, private user: User, private router: Router, private tochange: ToChange) {}
+  private authservice = inject(AuthserviceService);
+  private user = inject(User);
+  private router = inject(Router);
+  private tochange = inject(ToChange);
 
-  rubrica: Array<RubricaItem> = [];
+  rubrica = signal<Array<RubricaItem>>([]);
 
    ionViewWillEnter(){
     this.authservice.loadrubrica(this.user.idutente).subscribe((data) => {
-      this.rubrica = data;
+      this.rubrica.set(data);
     });
    }
 
@@ -25,7 +28,7 @@ export class RubricaPage  {
     this.router.navigate(['/tabs/addcontatto']);
   }
   edit(id: number) {
-    const tochange=this.rubrica.find((item) => item.idrubrica === id);
+    const tochange=this.rubrica().find((item) => item.idrubrica === id);
     if(tochange) {
       this.tochange.idrubrica = tochange.idrubrica;
       this.tochange.contatto = tochange.contatto;
