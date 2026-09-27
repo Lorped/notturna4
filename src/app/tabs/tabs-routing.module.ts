@@ -50,7 +50,7 @@ const routes: Routes = [
       },
       {
         path: 'caccia',
-        loadChildren: () => import('../caccia/caccia.module').then( m => m.CacciaPageModule)
+        loadComponent: () => import('../caccia/caccia.page').then( m => m.CacciaPage)
       },
       {
         path: 'poteri/:disc/:nomed',
@@ -66,7 +66,7 @@ const routes: Routes = [
       },
       {
         path: 'legami',
-        loadChildren: () => import('../legami/legami.module').then( m => m.LegamiPageModule)
+        loadComponent: () => import('../legami/legami.page').then( m => m.LegamiPage)
       },
       {
         path: 'morte',

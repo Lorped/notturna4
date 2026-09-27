@@ -1,14 +1,16 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { pregiodifetto, User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
+import { IonRow, IonCol, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons,  IonMenuButton,  IonItem,   IonButton, IonText, IonLabel } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-caccia',
   templateUrl: './caccia.page.html',
   styleUrls: ['./caccia.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  imports: [ IonRow, IonCol, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons,  IonMenuButton, IonItem,  IonButton, IonText, IonLabel], 
 })
+
 export class CacciaPage implements OnInit {
   duratacaccia = 600; /* base 10 minuti */
   minuti = 10;
@@ -31,11 +33,17 @@ export class CacciaPage implements OnInit {
 
   timestart = 0;
 
-  constructor(
-    public user: User,
-    public userskill: Userskill,
-    public authservice: AuthserviceService,
-  ) {}
+  public user = inject(User);
+  public userskill = inject(Userskill);
+  private authservice = inject(AuthserviceService);
+  private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
+
+  constructor() {
+    this.user.puntiSangueAggiornati
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.cdr.markForCheck());
+  }
 
   ngOnInit() {
     const pot = this.userskill.discipline.find((d) => d.iddisciplina == 17);  // potenza
@@ -73,6 +81,7 @@ export class CacciaPage implements OnInit {
         //console.log('nuovo tempo rimanente: ' + this.duratacaccia + ' secondi');
 
         this.StartTimer();
+        this.cdr.markForCheck();
       }
   }
 
@@ -136,6 +145,7 @@ export class CacciaPage implements OnInit {
       this.authservice.msgtomaster(this.user['idutente'], 'ha iniziato la caccia').subscribe();
 
       this.StartTimer();
+      this.cdr.markForCheck();
 
     });
   }
@@ -209,6 +219,7 @@ export class CacciaPage implements OnInit {
         window.localStorage.removeItem('NotturnaDurataCaccia');
         this.msgfine();
       }
+      this.cdr.markForCheck();
     }, 1000);
   }
 

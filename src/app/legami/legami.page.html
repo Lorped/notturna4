@@ -28,7 +28,7 @@
         <ion-icon slot="start" name="person-outline"></ion-icon>
         <!--<div slot="label">Possibile Domitor </div>-->
           @for (pg of listautenti; track pg) {
-            <ion-select-option value="{{pg.idutente}}" >{{pg.nomepg}}</ion-select-option>
+            <ion-select-option [value]="pg.idutente">{{pg.nomepg}}</ion-select-option>
           }
         </ion-select>
       </ion-item>
