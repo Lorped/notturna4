@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -11,7 +10,7 @@ import { BackgroundPage } from './background.page';
 import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, BackgroundPageRoutingModule, PipesModule],
+  imports: [CommonModule, IonicModule, BackgroundPageRoutingModule, PipesModule],
   declarations: [BackgroundPage],
 })
 export class BackgroundPageModule {}

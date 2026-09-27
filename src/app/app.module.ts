@@ -13,7 +13,6 @@ import {
   withXhr,
 } from '@angular/common/http';
 
-import { PipesModule } from './pipes/pipes.module';
 //import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 //import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
@@ -24,7 +23,6 @@ import { PipesModule } from './pipes/pipes.module';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    PipesModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
