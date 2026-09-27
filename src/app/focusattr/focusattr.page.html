@@ -17,7 +17,7 @@
   </ion-item>
 
   <ion-list>
-  @for (item of listafocusattr; track item) {
+  @for (item of listafocusattr(); track item) {
 
     @if (item.bonus.length > 0) {
     <ion-item-group>

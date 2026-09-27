@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonItem, IonLabel, IonText, IonList, IonItemGroup, IonItemDivider } from '@ionic/angular/standalone';
 import { User } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 
@@ -18,19 +19,18 @@ interface FocusAttr {
   selector: 'app-focusattr',
   templateUrl: './focusattr.page.html',
   styleUrls: ['./focusattr.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,  
+  imports: [IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonItem, IonLabel, IonText, IonList, IonItemGroup, IonItemDivider],
 })
 export class FocusattrPage {
-  constructor(private authService: AuthserviceService, private user: User) { }
+  private authService = inject(AuthserviceService);
+  private user = inject(User);
 
-  listafocusattr: FocusAttr[] = [];
+  listafocusattr = signal<FocusAttr[]>([]);
 
   ionViewWillEnter() {
     this.authService.focusattr(this.user.idutente).subscribe(
       (data) => {
-        this.listafocusattr = data;
-        //console.log('FocusAttr data:', this.listafocusattr);
+        this.listafocusattr.set(data);
       }
     );
   }

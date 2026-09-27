@@ -70,11 +70,11 @@ const routes: Routes = [
       },
       {
         path: 'morte',
-        loadChildren: () => import('../morte/morte.module').then( m => m.MortePageModule)
+        loadComponent: () => import('../morte/morte.page').then( m => m.MortePage)
       },
       {
         path: 'focusattr',
-        loadChildren: () => import('../focusattr/focusattr.module').then( m => m.FocusattrPageModule)
+        loadComponent: () => import('../focusattr/focusattr.page').then( m => m.FocusattrPage)
       },        
       {
         path: '',
