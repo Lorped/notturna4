@@ -1,8 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'times',
-    standalone: false
+  name: 'times'
 })
 export class TimesPipe implements PipeTransform {
 

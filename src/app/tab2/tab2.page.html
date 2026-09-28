@@ -105,7 +105,7 @@
 
 <ion-accordion-group>
 @for ( sk of this.userskill.skill; track sk) {
-  <ion-accordion value="{{ sk.nomeskill }}">
+  <ion-accordion [value]="sk.nomeskill">
     <ion-item slot="header" color="light">
 
       <ion-label style="display: flex; justify-content: space-between;">

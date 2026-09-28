@@ -1,10 +1,33 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+  AlertController,
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonMenuButton,
+  IonModal,
+  IonRow,
+  IonSelect,
+  IonSelectOption,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { User, Potere, Userskill, Utente } from '../globals';
 import { ActivatedRoute } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';
-import { AlertController } from '@ionic/angular';
 import { finalize } from 'rxjs';
 import { ResourceActionService } from '../services/resource-action.service';
+import { addIcons } from 'ionicons';
+import { personOutline } from 'ionicons/icons';
+
+addIcons({ 'person-outline': personOutline });
 
 export interface EsitoPotere {
   tiro: number;
@@ -15,7 +38,25 @@ export interface EsitoPotere {
   selector: 'app-poteri',
   templateUrl: './poteri.page.html',
   styleUrls: ['./poteri.page.scss'],
-  standalone: false,
+  imports: [
+    FormsModule,
+    IonButton,
+    IonButtons,
+    IonCol,
+    IonContent,
+    IonHeader,
+    IonIcon,
+    IonInput,
+    IonItem,
+    IonLabel,
+    IonMenuButton,
+    IonModal,
+    IonRow,
+    IonSelect,
+    IonSelectOption,
+    IonTitle,
+    IonToolbar,
+  ],
 })
 export class PoteriPage implements OnInit {
   disc = 0;

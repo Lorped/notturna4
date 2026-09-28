@@ -1,4 +1,15 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonHeader,
+  IonMenuButton,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
@@ -13,11 +24,21 @@ export interface EsitoPotere {
   selector: 'app-taum',
   templateUrl: './taum.page.html',
   styleUrls: ['./taum.page.scss'],
-  standalone: false,
+  imports: [
+    IonButton,
+    IonButtons,
+    IonCol,
+    IonContent,
+    IonHeader,
+    IonMenuButton,
+    IonRow,
+    IonTitle,
+    IonToolbar,
+  ],
 })
 export class TaumPage {
-  FurtoVitae = 1;
   
+  FurtoVitae = 1;
   esito: EsitoPotere = { 
     tiro: 0
   };

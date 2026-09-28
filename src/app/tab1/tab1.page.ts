@@ -1,9 +1,30 @@
 import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RefresherCustomEvent } from '@ionic/angular';
+import {
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonMenuButton,
+  IonRefresher,
+  IonRefresherContent,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { User  } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { SessionService } from '../services/session.service';
+import { TimesPipe } from '../pipes/times.pipe';
+import { addIcons } from 'ionicons';
+import { logOutOutline } from 'ionicons/icons';
+
+addIcons({ 'log-out-outline': logOutOutline });
 
 export interface datips {
   PScorrenti: number;
@@ -14,7 +35,23 @@ export interface datips {
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  standalone: false,
+  imports: [
+    CommonModule,
+    TimesPipe,
+    IonButton,
+    IonButtons,
+    IonCol,
+    IonContent,
+    IonGrid,
+    IonHeader,
+    IonIcon,
+    IonMenuButton,
+    IonRefresher,
+    IonRefresherContent,
+    IonRow,
+    IonTitle,
+    IonToolbar,
+  ],
 })
 export class Tab1Page {
 

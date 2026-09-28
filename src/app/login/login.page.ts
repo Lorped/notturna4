@@ -128,34 +128,6 @@ export class LoginPage implements OnInit {
         //this.user = data;
         Object.assign(this.user, data);
 
-        // fix
-        /**
-        this.user['PScorrenti'] = Number(this.user['PScorrenti']);
-        this.user['forza'] = Number(this.user['forza']);
-        this.user['destrezza'] = Number(this.user['destrezza']);
-        this.user['attutimento'] = Number(this.user['attutimento']);
-        this.user['carisma'] = Number(this.user['carisma']);
-        this.user['persuasione'] = Number(this.user['persuasione']);
-        this.user['saggezza'] = Number(this.user['saggezza']);
-        this.user['prontezza'] = Number(this.user['prontezza']);
-        this.user['intelligenza'] = Number(this.user['intelligenza']);
-        this.user['percezione'] = Number(this.user['percezione']);
-
-        this.user['fdv'] = Number(this.user['fdv']);
-        this.user['fdvmax'] = Number(this.user['fdvmax']);
-        this.user['fama1'] = Number(this.user['fama1']);
-        this.user['fama2'] = Number(this.user['fama2']);
-        this.user['fama3'] = Number(this.user['fama3']);
-
-        this.user['xp'] = Number(this.user['xp']);
-        this.user['contanti'] = Number(this.user['contanti']);
-            
-        this.user['PScorrenti'] = Number(this.user['PScorrenti']);
-        this.user['maxps'] = Number(this.user['maxps']);
-
-        this.user['bonusrigen'] = Number(this.user['bonusrigen']);
-        this.user['rigen'] = Number(this.user['rigen']);
-        */
 
         if (this.user.idlds == 21 ) {
           // this.user.bonusdisc = Number (this.user.bonusdisc) + 1;

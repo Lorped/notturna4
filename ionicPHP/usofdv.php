@@ -25,10 +25,7 @@
 
 require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
 
-  $postdata = file_get_contents("php://input");
-  $request = json_decode($postdata);
-
-  $idutente = $request->userid;
+  $idutente=$_GET['id'];
 
 
 

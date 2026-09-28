@@ -1,11 +1,51 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { IonModal } from '@ionic/angular';
+import { ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+  IonAlert,
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonMenuButton,
+  IonModal,
+  IonRow,
+  IonText,
+  IonTitle,
+  IonToast,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { pregiodifetto, User, Userskill } from '../globals';
 import { FeedService, FeedItem } from '../services/feed.service';
 import { Router } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';
 import { finalize } from 'rxjs';
 import { ResourceActionService } from '../services/resource-action.service';
+import { addIcons } from 'ionicons';
+import {
+  diceOutline,
+  handLeftOutline,
+  handRightOutline,
+  heartCircleOutline,
+  leafOutline,
+  logoAppflow,
+  schoolOutline,
+} from 'ionicons/icons';
+
+addIcons({
+  'hand-right-outline': handRightOutline,
+  'hand-left-outline': handLeftOutline,
+  'school-outline': schoolOutline,
+  'leaf-outline': leafOutline,
+  'dice-outline': diceOutline,
+  'heart-circle-outline': heartCircleOutline,
+  'logo-appflow': logoAppflow,
+});
 
 
 export interface EsitoResistenza {
@@ -17,8 +57,27 @@ export interface EsitoResistenza {
   selector: 'app-tab5',
   templateUrl: './tab5.page.html',
   styleUrls: ['./tab5.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    FormsModule,
+    IonAlert,
+    IonButton,
+    IonButtons,
+    IonCol,
+    IonContent,
+    IonHeader,
+    IonIcon,
+    IonInput,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonMenuButton,
+    IonModal,
+    IonRow,
+    IonText,
+    IonTitle,
+    IonToast,
+    IonToolbar,
+  ],
 })
 export class Tab5Page implements OnInit {
   @ViewChild(IonModal) modal!: IonModal;
@@ -29,6 +88,7 @@ export class Tab5Page implements OnInit {
 
   isResist1Open = false;
   isResist2Open = false;
+  isDadoOpen = false;
   esito = 0;
 
 
@@ -75,14 +135,17 @@ export class Tab5Page implements OnInit {
   */
 
   loadDadi() {
-    this.feed.getDadi(this.user['idutente']).subscribe((res: FeedItem[] | null) => {
+    this.feed.getDadi(this.user.idutente).subscribe((res: FeedItem[] | null) => {
       this.tiridado = res ?? [];
       this.changeDetectorRef.markForCheck();
     });
   }
 
   tiraildado() {
-    this.authservice.lanciadado(this.user['idutente']).subscribe(() => {
+    this.authservice.lanciadado(this.user.idutente).subscribe((res: EsitoResistenza) => {
+      this.esito = res.tiro;
+      this.isDadoOpen = true;
+      this.changeDetectorRef.markForCheck();
       setTimeout(() => this.loadDadi(), 1000);
     });
   }
@@ -92,21 +155,22 @@ export class Tab5Page implements OnInit {
       return;
     }
 
-    this.authservice.usofdv(this.user['idutente'])
+    this.authservice.usofdv(this.user.idutente)
       .pipe(finalize(() => this.resourceActions.finish()))
       .subscribe(() => {
       setTimeout(() => this.loadDadi(), 1000);
     });
 
-    this.user['fdv']--;
-    this.user['rd'] = Math.floor(
-      (this.user['carisma'] +
-        this.user['intelligenza'] +
-        this.user['prontezza'] +
-        this.user['percezione'] +
-        this.user['fdv']) /
+    this.user.fdv--;
+    this.user.rd = Math.floor(
+      (this.user.carisma +
+        this.user.intelligenza +
+        this.user.prontezza +
+        this.user.percezione +
+        this.user.fdv) /
         5
     );
+    this.user.puntiSangueAggiornati.next();
   }
 
   menops() {
@@ -114,7 +178,7 @@ export class Tab5Page implements OnInit {
       return;
     }
 
-    this.authservice.menops(this.user['idutente'])
+    this.authservice.menops(this.user.idutente)
       .pipe(finalize(() => this.resourceActions.finish()))
       .subscribe(() => {
       this.user.PScorrenti--;
@@ -129,18 +193,18 @@ export class Tab5Page implements OnInit {
 
   resistidisc(){
 
-    this.authservice.tiroresistenza(this.user['idutente'], 0).subscribe((res: EsitoResistenza) => {
+    this.authservice.tiroresistenza(this.user.idutente, 0).subscribe((res: EsitoResistenza) => {
       this.esito = res.tiro;
       this.isResist1Open = true;
       this.changeDetectorRef.markForCheck();
-      this.authservice.msgtomaster(this.user['idutente'], 'Tiro di resistenza a Disciplina: ' + this.esito ).subscribe(() => {
+      this.authservice.msgtomaster(this.user.idutente, 'Tiro di resistenza a Disciplina: ' + this.esito ).subscribe(() => {
         setTimeout(() => this.loadDadi(), 1000);
         });
     });
   }
 
   resistidisc2(){
-    this.authservice.tiroresistenza(this.user['idutente'], this.user.rd).subscribe((res: EsitoResistenza) => {
+    this.authservice.tiroresistenza(this.user.idutente, this.user.rd).subscribe((res: EsitoResistenza) => {
       this.esito = res.tiro;
       this.isResist2Open = true;
       this.changeDetectorRef.markForCheck();
@@ -154,6 +218,7 @@ export class Tab5Page implements OnInit {
   togglealert(isOpen: boolean) {
     this.isResist1Open = isOpen;
     this.isResist2Open = isOpen;
+    this.isDadoOpen = isOpen;
   }
  
 

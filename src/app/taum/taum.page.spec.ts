@@ -5,11 +5,15 @@ describe('TaumPage', () => {
   let component: TaumPage;
   let fixture: ComponentFixture<TaumPage>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TaumPage],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(TaumPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

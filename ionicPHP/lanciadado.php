@@ -25,10 +25,8 @@
 
   require_once __DIR__ . "/db2.inc.php"; // NEW MYSQL //
 
-  $postdata = file_get_contents("php://input");
-  $request = json_decode($postdata);
+  $idutente = $_GET['id'];
 
-  $idutente = $request->userid;
 
 
 
@@ -53,6 +51,13 @@
 		//$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo) VALUES ( $idutente, '$nomepg', NOW(), '$testo' ) ";
     $Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$nomepg', NOW(), '$testo' , -1) ";
 		mysqli_query($db, $Mysql);
+
+  $out = [
+		'tiro' => $tiro,
+	];
+	
+	$output = json_encode ($out, JSON_UNESCAPED_UNICODE);
+	echo $output;
 
 
 

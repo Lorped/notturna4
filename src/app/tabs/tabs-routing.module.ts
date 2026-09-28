@@ -10,19 +10,19 @@ const routes: Routes = [
     children: [
       {
         path: 'tab1',
-        loadChildren: () => import('../tab1/tab1.module').then(m => m.Tab1PageModule)
+        loadComponent: () => import('../tab1/tab1.page').then(m => m.Tab1Page)
       },
       {
         path: 'tab2',
-        loadChildren: () => import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+        loadComponent: () => import('../tab2/tab2.page').then(m => m.Tab2Page)
       },
       {
         path: 'tab3',
-        loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+        loadComponent: () => import('../tab3/tab3.page').then(m => m.Tab3Page)
       },
       {
         path: 'tab5',
-        loadChildren: () => import('../tab5/tab5.module').then( m => m.Tab5PageModule)
+        loadComponent: () => import('../tab5/tab5.page').then( m => m.Tab5Page)
       },
       {
         path: 'modificanote',
@@ -54,15 +54,15 @@ const routes: Routes = [
       },
       {
         path: 'poteri/:disc/:nomed',
-        loadChildren: () => import('../poteri/poteri.module').then( m => m.PoteriPageModule)
+        loadComponent: () => import('../poteri/poteri.page').then( m => m.PoteriPage)
       },
       {
         path: 'taum',
-        loadChildren: () => import('../taum/taum.module').then( m => m.TaumPageModule)
+        loadComponent: () => import('../taum/taum.page').then( m => m.TaumPage)
       },
       {
         path: 'necro',
-        loadChildren: () => import('../necro/necro.module').then( m => m.NecroPageModule)
+        loadComponent: () => import('../necro/necro.page').then( m => m.NecroPage)
       },
       {
         path: 'legami',

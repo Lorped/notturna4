@@ -1,5 +1,21 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  IonAccordion,
+  IonAccordionGroup,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonLabel,
+  IonMenuButton,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { User, Userskill } from '../globals';
+import { TimesPipe } from '../pipes/times.pipe';
 // import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 
 
@@ -8,7 +24,22 @@ import { User, Userskill } from '../globals';
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  standalone: false,
+  imports: [
+    CommonModule,
+    TimesPipe,
+    IonAccordion,
+    IonAccordionGroup,
+    IonButtons,
+    IonCol,
+    IonContent,
+    IonHeader,
+    IonItem,
+    IonLabel,
+    IonMenuButton,
+    IonRow,
+    IonTitle,
+    IonToolbar,
+  ],
 })
 export class Tab2Page implements OnInit {
 

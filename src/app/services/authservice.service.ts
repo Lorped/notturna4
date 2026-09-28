@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -8,7 +8,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AuthserviceService {
 
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
+
+  constructor() { }
 
   
   login(username: string, password: string) {
@@ -157,9 +159,7 @@ export class AuthserviceService {
   }
 
   lanciadado(userid: number) {
-    return this.http.post<any>('https://www.roma-by-night.it/ionicPHP/lanciadado.php', {
-      userid: userid
-    });
+    return this.http.get<any>('https://www.roma-by-night.it/ionicPHP/lanciadado.php?id=' + userid);
   }
 
   inviamessaggiotente(userid: number, destinatario: number, messaggio: string) {

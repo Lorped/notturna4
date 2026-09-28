@@ -1,8 +1,31 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { User, Oggetto } from '../globals';
 import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { AuthserviceService } from '../services/authservice.service';
-import { AlertController } from '@ionic/angular';
+import {
+  AlertController,
+  IonButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCol,
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonMenuButton,
+  IonModal,
+  IonRow,
+  IonSpinner,
+  IonText,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { firstValueFrom } from 'rxjs';
 
 
@@ -10,7 +33,29 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  standalone: false,
+  imports: [
+    CommonModule,
+    IonButton,
+    IonButtons,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCol,
+    IonContent,
+    IonHeader,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonMenuButton,
+    IonModal,
+    IonRow,
+    IonSpinner,
+    IonText,
+    IonTitle,
+    IonToolbar,
+  ],
 })
 export class Tab3Page {
 

@@ -1,4 +1,15 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonHeader,
+  IonMenuButton,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
@@ -13,7 +24,17 @@ export interface EsitoPotere {
   selector: 'app-necro',
   templateUrl: './necro.page.html',
   styleUrls: ['./necro.page.scss'],
-  standalone: false,
+  imports: [
+    IonButton,
+    IonButtons,
+    IonCol,
+    IonContent,
+    IonHeader,
+    IonMenuButton,
+    IonRow,
+    IonTitle,
+    IonToolbar,
+  ],
 })
 export class NecroPage {
   

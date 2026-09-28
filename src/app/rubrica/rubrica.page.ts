@@ -3,6 +3,16 @@ import { Router } from '@angular/router';
 import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonList, IonItemSliding, IonItem, IonAvatar, IonLabel, IonIcon, IonItemOptions, IonButton, IonFab, IonFabButton } from '@ionic/angular/standalone';
 import { AuthserviceService } from '../services/authservice.service';
 import { RubricaItem, User, ToChange } from '../globals';
+import { addIcons } from 'ionicons';
+import { add, call, createOutline, home, trashOutline } from 'ionicons/icons';
+
+addIcons({
+  call,
+  home,
+  'create-outline': createOutline,
+  'trash-outline': trashOutline,
+  add,
+});
 
 @Component({
   selector: 'app-rubrica',

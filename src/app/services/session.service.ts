@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { User, Userskill } from '../globals';
 
@@ -6,11 +6,11 @@ import { User, Userskill } from '../globals';
   providedIn: 'root',
 })
 export class SessionService {
-  constructor(
-    private navController: NavController,
-    private user: User,
-    private userskill: Userskill
-  ) {}
+
+  private navController = inject(NavController);
+  private user = inject(User);
+  private userskill = inject(Userskill);
+  constructor() {}
 
   async logout(): Promise<boolean> {
     this.user.reset();

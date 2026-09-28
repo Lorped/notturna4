@@ -31,7 +31,7 @@
 
     <ion-item>
       <ion-icon name="school-outline" size="small"></ion-icon>
-      <ion-button  id="fdv" fill="clear"  color="dark" type="submit" (click)="usafdv()" [disabled]="user.fdv==0 || resourceActions.isBusy">Usa Forza di Volontà</ion-button>
+      <ion-button  id="fdv" fill="clear"  color="dark" type="submit" (click)="usafdv()" [disabled]="user.fdv===0 || resourceActions.isBusy">Usa Forza di Volontà</ion-button>
     </ion-item>
 
     <ion-item>
@@ -46,7 +46,7 @@
 
     <ion-item>
       <ion-icon name="heart-circle-outline" size="small"></ion-icon>
-      <ion-button id="cura" fill="clear" color="secondary" type="submit" [disabled]="user.PScorrenti==0 || resourceActions.isBusy" (click)="menops()">Cura Ferite ( {{this.user.rigen+this.user.bonusrigen}} )</ion-button>
+      <ion-button id="cura" fill="clear" color="secondary" type="submit" [disabled]="user.PScorrenti===0 || resourceActions.isBusy" (click)="menops()">Cura Ferite ( {{this.user.rigen+this.user.bonusrigen}} )</ion-button>
     </ion-item>
 
     <ion-item>
@@ -105,11 +105,20 @@
     (didDismiss)="togglealert(false)"
     class="myalert">
   </ion-alert>
-   <ion-alert
+  <ion-alert
     [isOpen]="isResist2Open"
     header="Prova contrapposta"
     subHeader="Resistere a Dominazione"
     message="Il tiro di resistenza è {{esito}}. "
+    [buttons]="alertButtons"
+    (didDismiss)="togglealert(false)"
+    class="myalert">
+  </ion-alert>
+  <ion-alert
+    [isOpen]="isDadoOpen"
+    header="Tiro di dado"
+    subHeader="Tiro di dado generico"
+    message="Il tiro effettuato è {{esito}}. "
     [buttons]="alertButtons"
     (didDismiss)="togglealert(false)"
     class="myalert">
