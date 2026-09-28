@@ -5,11 +5,15 @@ describe('TabsPage', () => {
   let component: TabsPage;
   let fixture: ComponentFixture<TabsPage>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TabsPage],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(TabsPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

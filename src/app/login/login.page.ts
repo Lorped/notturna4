@@ -1,4 +1,21 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+  IonButton,
+  IonCheckbox,
+  IonCol,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonInputPasswordToggle,
+  IonItem,
+  IonList,
+  IonLoading,
+  IonRow,
+  IonText,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 
 import { User , Userskill} from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
@@ -21,7 +38,23 @@ export class Clan {
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  standalone: false,
+  imports: [
+    FormsModule,
+    IonButton,
+    IonCheckbox,
+    IonCol,
+    IonContent,
+    IonHeader,
+    IonInput,
+    IonInputPasswordToggle,
+    IonItem,
+    IonList,
+    IonLoading,
+    IonRow,
+    IonText,
+    IonTitle,
+    IonToolbar,
+  ],
 })
 export class LoginPage implements OnInit {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);

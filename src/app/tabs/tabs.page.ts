@@ -1,16 +1,89 @@
 import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonMenu,
+  IonMenuToggle,
+  IonTabBar,
+  IonTabButton,
+  IonTabs,
+  IonTitle,
+  IonToast,
+  IonToggle,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { User } from '../globals';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
 import { SessionService } from '../services/session.service';
 
+import { addIcons } from 'ionicons';
+import {
+  bulbOutline,
+  cellularOutline,
+  contractOutline,
+  flash,
+  flameOutline,
+  gitCompareOutline,
+  globeOutline,
+  keypadOutline,
+  logOutOutline,
+  peopleOutline,
+  personOutline,
+  readerOutline,
+  skullOutline,
+  waterOutline,
+} from 'ionicons/icons';
+
+addIcons({
+  'people-outline': peopleOutline,
+  flash,
+  'git-compare-outline': gitCompareOutline,
+  'water-outline': waterOutline,
+  'reader-outline': readerOutline,
+  'cellular-outline': cellularOutline,
+  'flame-outline': flameOutline,
+  'skull-outline': skullOutline,
+  'contract-outline': contractOutline,
+  'globe-outline': globeOutline,
+  'log-out-outline': logOutOutline,
+  'person-outline': personOutline,
+  'bulb-outline': bulbOutline,
+  'keypad-outline': keypadOutline,
+});
+
+
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs.page.html',
   styleUrls: ['./tabs.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  imports: [
+    FormsModule,
+    IonButton,
+    IonContent,
+    IonHeader,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonMenu,
+    IonMenuToggle,
+    IonTabBar,
+    IonTabButton,
+    IonTabs,
+    IonTitle,
+    IonToast,
+    IonToggle,
+    IonToolbar,
+  ],
 })
 
 
