@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { User, Oggetto } from '../globals';
 import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { AuthserviceService } from '../services/authservice.service';
@@ -10,7 +10,6 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class Tab3Page {
@@ -29,14 +28,10 @@ export class Tab3Page {
   private oldscanLoaded = false;
   private hasNewScan = false;
 
-
-  constructor(
-    public user: User,
-    public alertController: AlertController,
-    private authservice: AuthserviceService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
-
+  public authservice = inject(AuthserviceService);
+  public user = inject(User);
+  public alertController = inject(AlertController);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
 
   async requestPermissions(): Promise<boolean> {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 
 import { User , Userskill} from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
@@ -21,10 +21,10 @@ export class Clan {
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class LoginPage implements OnInit {
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   username = '';
   userid = 0;
 
@@ -37,13 +37,13 @@ export class LoginPage implements OnInit {
   };
   registerCredentials = { username: '', password: '' };
 
-  constructor(
-    private router: Router,
-    private authentication: AuthserviceService,
-    public user: User,
-    public userskill: Userskill,
-    private loadingCtrl: LoadingController
-  ) {
+  private router = inject(Router);
+  private authentication = inject(AuthserviceService);
+  public user = inject(User);
+  public userskill = inject(Userskill);
+  private loadingCtrl = inject(LoadingController);
+
+  constructor() {
     this.registerCredentials.username =
       window.localStorage.getItem('notturnauserid')!;
     this.registerCredentials.password =
@@ -55,7 +55,6 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.applyAppPalette();
-
   }
   
   private applyAppPalette() {
@@ -68,6 +67,7 @@ export class LoginPage implements OnInit {
     this.isDarkMode = savedDarkMode === 'true';
     document.documentElement.classList.toggle('ion-palette-dark', this.isDarkMode);
     document.documentElement.classList.remove('ion-palette-light');
+    this.changeDetectorRef.markForCheck();
   }
 
   public login() {

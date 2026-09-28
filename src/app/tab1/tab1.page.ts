@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RefresherCustomEvent } from '@ionic/angular';
 import { User  } from '../globals';
@@ -14,26 +14,24 @@ export interface datips {
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class Tab1Page {
-  constructor(
-    public user: User,
-    private authentication: AuthserviceService,
-    private session: SessionService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private destroyRef: DestroyRef
-  ) {
+
+  public user = inject(User);
+  private session = inject(SessionService);
+  private authentication = inject(AuthserviceService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
+
+  constructor() {
     this.user.puntiSangueAggiornati
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.changeDetectorRef.markForCheck());
   }
 
 
-  ionViewWillEnter() {
-    // console.log ("2 user - " , this.user);
-  } 
+  ionViewWillEnter() { } 
 
   
   public logoutx() {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
@@ -13,7 +13,6 @@ export interface EsitoPotere {
   selector: 'app-necro',
   templateUrl: './necro.page.html',
   styleUrls: ['./necro.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class NecroPage {
@@ -22,15 +21,15 @@ export class NecroPage {
     tiro: 0
   };
 
+  public user = inject(User);
+  public userskill = inject(Userskill);
+  public alertCtrl = inject(AlertController);
+  public authService = inject(AuthserviceService);
+  public resourceActions = inject(ResourceActionService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(
-    public user: User,
-    public userskill: Userskill,
-    public alertCtrl: AlertController,
-    public authService: AuthserviceService,
-    @Inject(ResourceActionService) public resourceActions: ResourceActionService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
+
+  // constructor removed as inject() is used instead
 
 
 

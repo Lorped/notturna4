@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
@@ -9,12 +9,10 @@ export interface EsitoPotere {
   tiro: number;
 }
 
-
 @Component({
   selector: 'app-taum',
   templateUrl: './taum.page.html',
   styleUrls: ['./taum.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class TaumPage {
@@ -24,15 +22,12 @@ export class TaumPage {
     tiro: 0
   };
   
-
-  constructor(
-    public user: User,
-    public userskill: Userskill,
-    public alertCtrl: AlertController,
-    public authService: AuthserviceService,
-    @Inject(ResourceActionService) public resourceActions: ResourceActionService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  public user = inject(User);
+  public userskill = inject(Userskill);
+  public alertCtrl = inject(AlertController);
+  public authService = inject(AuthserviceService);
+  public resourceActions = inject(ResourceActionService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
 
   gotaum(livellopot: number, pot: string, taum: string, idtaum2: number) {

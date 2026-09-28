@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { pregiodifetto, User, Userskill } from '../globals';
 import { FeedService, FeedItem } from '../services/feed.service';
@@ -25,7 +25,7 @@ export class Tab5Page implements OnInit {
 
 
   alertButtons = ['OK'];
-  tiridado: Array<FeedItem>;
+  tiridado: Array<FeedItem> = [];
 
   isResist1Open = false;
   isResist2Open = false;
@@ -44,18 +44,13 @@ export class Tab5Page implements OnInit {
   listapregi: Array<pregiodifetto> = [];
   voldeb = false;  //volontà debole
 
-
-  constructor(
-    public user: User,
-    public userskill: Userskill,
-    public feed: FeedService,
-    public router: Router,
-    public authservice: AuthserviceService,
-    @Inject(ResourceActionService) public resourceActions: ResourceActionService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {
-    this.tiridado = [];
-  }
+  public user = inject(User);
+  public userskill = inject(Userskill);
+  public feed = inject(FeedService);
+  public router = inject(Router);
+  public authservice = inject(AuthserviceService);
+  public resourceActions = inject(ResourceActionService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.authservice.getpregi(this.user.idutente).subscribe((data: Array<pregiodifetto>) => {

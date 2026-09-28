@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { User, Potere, Userskill, Utente } from '../globals';
 import { ActivatedRoute } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';
@@ -15,7 +15,6 @@ export interface EsitoPotere {
   selector: 'app-poteri',
   templateUrl: './poteri.page.html',
   styleUrls: ['./poteri.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class PoteriPage implements OnInit {
@@ -37,16 +36,14 @@ export class PoteriPage implements OnInit {
   listautenti: Array<Utente> = [];
   pgscelto = 0;
 
+  public user = inject(User);
+  public userskill = inject(Userskill);
+  public activatedroute = inject(ActivatedRoute);
+  public authservice = inject(AuthserviceService);
+  public alertCtrl = inject(AlertController);
+  public resourceActions = inject(ResourceActionService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor(
-    public user: User,
-    public userskill: Userskill,
-    public activatedroute: ActivatedRoute,
-    public authservice: AuthserviceService,
-    public alertCtrl: AlertController,
-    @Inject(ResourceActionService) public resourceActions: ResourceActionService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
 
   ngOnInit() { 
     this.authservice.listautenti(this.user.idutente).subscribe((res: Array<Utente>) => {

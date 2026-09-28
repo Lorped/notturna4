@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../globals';
 import { Browser } from '@capacitor/browser';
@@ -9,16 +9,19 @@ import { SessionService } from '../services/session.service';
   selector: 'app-tabs',
   templateUrl: './tabs.page.html',
   styleUrls: ['./tabs.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
+
+
+
 export class TabsPage implements OnInit {
+
+  public router = inject(Router);
+  public user = inject(User);
+  public session = inject(SessionService);
+
   paletteToggle = false;
-  constructor(
-    public router: Router,
-    public user: User,
-    private session: SessionService
-  ) {}
 
   ngOnInit() {
     let savedDarkMode = window.localStorage.getItem('notturnadarkmode');

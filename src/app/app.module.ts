@@ -13,8 +13,6 @@ import {
   withXhr,
 } from '@angular/common/http';
 
-//import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-//import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,8 +24,6 @@ import {
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    //BarcodeScanner,
-    //InAppBrowser,
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
   ],
 })
