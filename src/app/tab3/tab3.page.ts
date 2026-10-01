@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { User, Oggetto } from '../globals';
 import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { AuthserviceService } from '../services/authservice.service';
+import { MenopsRoutineService } from '../services/menops-routine.service';
 import {
   AlertController,
   IonButton,
@@ -57,7 +58,7 @@ import { firstValueFrom } from 'rxjs';
     IonToolbar,
   ],
 })
-export class Tab3Page {
+export class Tab3Page implements OnInit {
 
   public barcodes: Barcode[] = [];
   public isPermissionGranted = false;
@@ -77,6 +78,11 @@ export class Tab3Page {
   public user = inject(User);
   public alertController = inject(AlertController);
   private changeDetectorRef = inject(ChangeDetectorRef);
+  private menopsRoutine = inject(MenopsRoutineService);
+
+  ngOnInit() {
+    this.menopsRoutine.ripristina(this.user);
+  }
 
 
   async requestPermissions(): Promise<boolean> {
@@ -142,6 +148,10 @@ export class Tab3Page {
       this.rispostaselezionata = '';
       this.hasNewScan = true;
       this.isModalOpen = true;
+
+      if (data.nomeoggetto === 'SEGRETERIA' && this.user.idlds === 17) {
+        this.menopsRoutine.avvia(this.user);
+      }
     } catch (error) {
       console.error('Errore durante la scansione del barcode', error);
     } finally {

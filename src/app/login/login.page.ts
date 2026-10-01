@@ -28,6 +28,7 @@ import { FCM } from '@capacitor-community/fcm';
 
 
 import { PushNotifications, Token } from '@capacitor/push-notifications';
+import { MenopsRoutineService } from '../services/menops-routine.service';
 
 export class Clan {
   idclan = 0;
@@ -75,6 +76,7 @@ export class LoginPage implements OnInit {
   public user = inject(User);
   public userskill = inject(Userskill);
   private loadingCtrl = inject(LoadingController);
+  private menopsRoutine = inject(MenopsRoutineService);
 
   constructor() {
     this.registerCredentials.username =
@@ -128,6 +130,7 @@ export class LoginPage implements OnInit {
         //this.user = data;
         Object.assign(this.user, data);
 
+        this.menopsRoutine.riconciliaAlLogin(this.user);
 
         if (this.user.idlds == 21 ) {
           // this.user.bonusdisc = Number (this.user.bonusdisc) + 1;
