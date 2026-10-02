@@ -27,7 +27,7 @@
 
   @for (desc of this.userskill.discipline; track desc) {
   <ion-row>
-      <ion-col size="7">{{ desc.nomedisc }} @if(desc.focus == 1 ){ <i class="fa fa-star mymedicon "></i>}</ion-col>
+      <ion-col size="7">{{ desc.nomedisc }} @if(desc.focus === 1 ){ <i class="fa fa-star mymedicon "></i>}</ion-col>
       <ion-col>
         @for (item of 5|times ; track item; let ix = $index) {
           <i class="fa fa-circle-o mysmallicon " [ngClass]="{'fa-circle myred2': ix < desc.livello}"></i>
@@ -51,7 +51,7 @@
     </ion-row>
     @for ( necro of this.userskill.necro; track necro) {
       <ion-row>
-        <ion-col size="7">{{ necro.nomenecro }} @if(necro.focus == 1 ){ <i class="fa fa-star mymedicon "></i>}</ion-col>
+        <ion-col size="7">{{ necro.nomenecro }} @if(necro.focus === 1 ){ <i class="fa fa-star mymedicon "></i>}</ion-col>
         <ion-col>
           @for (item of 5|times ; track item; let ix = $index) {
             <i class="fa fa-circle-o mysmallicon " [ngClass]="{'fa-circle myred2': ix < necro.livello}"></i>
@@ -68,7 +68,7 @@
     </ion-row>
     @for ( taum of this.userskill.taum; track taum) {
       <ion-row>
-        <ion-col size="7">{{ taum.nometaum }} @if(taum.focus == 1 ){ <i class="fa fa-star mymedicon "></i>}</ion-col>
+        <ion-col size="7">{{ taum.nometaum }} @if(taum.focus === 1 ){ <i class="fa fa-star mymedicon "></i>}</ion-col>
         <ion-col>
           @for (item of 5|times ; track item; let ix = $index) {
             <i class="fa fa-circle-o mysmallicon " [ngClass]="{'fa-circle myred2': ix < taum.livello}"></i>
@@ -155,10 +155,10 @@
 
 @for (desc of this.userskill.skill; track desc) {
   <ion-row>
-    @if (desc.tipologia == 2 ) {
+    @if (desc.tipologia === 2 ) {
       <ion-col size="7">{{ desc.nomeskill }}</ion-col>
     }
-    @if (desc.tipologia == 2 ) {
+    @if (desc.tipologia === 2 ) {
       <ion-col>
         @for (item of 5|times ; track item; let ix = $index) {
           <i class="fa fa-circle mysmallicon myred2" [ngClass]="{'mywhite': ix >= desc.livello}"></i>
@@ -193,7 +193,7 @@
     <ion-col size="7" >Pugno/Calcio</ion-col>
     <ion-col >{{ foripot2  }} </ion-col>
   </ion-row>
-  @if (artigli == 1) {
+  @if (artigli === 1) {
     <ion-row>
       <ion-col size="7" >Artigli della Bestia</ion-col>
       <ion-col >{{ forza +  rissa + potenza +1 }} </ion-col>

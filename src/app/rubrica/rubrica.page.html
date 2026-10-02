@@ -20,11 +20,11 @@
             <h2 >{{item.contatto}}</h2>
             <p c>{{item.note}}</p>
           </ion-label>
-          @if (item.cell==1) {
+          @if (item.cell===1) {
             <ion-icon  name="call"  slot="end"></ion-icon>
           }
 
-          @if (item.home==1) {
+          @if (item.home===1) {
             <ion-icon name="home"  slot="end"></ion-icon>
           }
         </ion-item>

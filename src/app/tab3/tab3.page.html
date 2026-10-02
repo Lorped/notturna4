@@ -88,21 +88,25 @@
           }
         </ion-card>
 
-        @if (this.oggetto.domanda && this.oggetto.domanda != '') {
+        @if (this.oggetto.domanda && this.oggetto.domanda !== '') {
           <ion-card>
             <ion-card-header>
               <ion-card-title>{{oggetto.domanda}}</ion-card-title>
             </ion-card-header>
 
             <div style="text-align:center; justify-content: center; display: flex; ">
-            <ion-button *ngIf="rispostaselezionata != 'NO'" size="small" color="success" (click)="risposta('SI')"  [disabled]="giarisposto" style="margin-left: 15%;margin-right: 15%;">SI</ion-button>
-            <ion-button *ngIf="rispostaselezionata != 'SI'" size="small" color="danger" (click)="risposta('NO')" [disabled]="giarisposto" style="margin-left: 15%;margin-right: 15%;">NO</ion-button>
+              @if (rispostaselezionata !== 'NO') {
+                <ion-button size="small" color="success" (click)="risposta('SI')" [disabled]="giarisposto" style="margin-left: 15%;margin-right: 15%;">SI</ion-button>
+              }
+              @if (rispostaselezionata !== 'SI') {
+                <ion-button size="small" color="danger" (click)="risposta('NO')" [disabled]="giarisposto" style="margin-left: 15%;margin-right: 15%;">NO</ion-button>
+              }
             </div>
 
 
     
             <ion-card-content>
-               @if (rispostaselezionata == 'SI' ) {  
+               @if (rispostaselezionata === 'SI' ) {  
                 <ion-list>
                   <ion-item>
                     <ion-label> {{oggetto.R1}} </ion-label>               
@@ -115,7 +119,7 @@
                   }
                 </ion-list>
               }
-              @if (rispostaselezionata == 'NO' ) {
+              @if (rispostaselezionata === 'NO' ) {
                 <ion-list>
                   <ion-item>
                     <ion-label> {{oggetto.R2}} </ion-label>               

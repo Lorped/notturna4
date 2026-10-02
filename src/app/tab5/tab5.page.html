@@ -74,7 +74,7 @@
           <ion-item>
             <ion-input placeholder="Messaggio per l'Arbitro in Nero" [(ngModel)]="messaggioArbitro" name="messaggioArbitro" [disabled]="isSendingArbitro"></ion-input >
           </ion-item>
-          <ion-button color="danger" shape="round" type="submit" expand="full" (click)="mandaArbitro()" [disabled]="isSendingArbitro || messaggioArbitro.trim()==''">Invia richiesta</ion-button>
+          <ion-button color="danger" shape="round" type="submit" expand="full" (click)="mandaArbitro()" [disabled]="isSendingArbitro || messaggioArbitro.trim()===''">Invia richiesta</ion-button>
         </ion-content>
       </ng-template>
     </ion-modal>
@@ -147,7 +147,7 @@
   <ion-row >
     @for (pot of this.userskill.discipline; track pot) {
       <ion-col size="6">
-        <ion-button color="danger" (click)="godisciplina(pot.iddisciplina,pot.nomedisc )"  class="submit-btn2" expand="full" shape="round" type="submit" [disabled]="this.user.PScorrenti==0" >{{pot.nomedisc}}</ion-button>
+        <ion-button color="danger" (click)="godisciplina(pot.iddisciplina,pot.nomedisc )"  class="submit-btn2" expand="full" shape="round" type="submit" [disabled]="this.user.PScorrenti===0" >{{pot.nomedisc}}</ion-button>
       </ion-col>
     }
   </ion-row>

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { map } from 'rxjs';
 
 export class FeedItem {
@@ -21,8 +21,8 @@ export class FeedItem {
   providedIn: 'root'
 })
 export class FeedService {
+	http = inject(HttpClient);
 
-  constructor(public http: HttpClient) { }
 
   public getDadi(userid: number) {
     const url = 'https://www.roma-by-night.it/ionicPHP/dadi.php?last=0&userid='+userid;
