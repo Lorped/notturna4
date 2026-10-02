@@ -44,7 +44,7 @@
 		$Mysql="UPDATE personaggio SET PScorrenti = $PScorrenti-1, lastps=NOW()  WHERE idutente=$idutente";
 		$Result=mysqli_query ($db, $Mysql);
 
-		$testo="consuma un livello di sete";
+		$testo="consuma un livello di sangue per Spesa di Sangue Dissociativa";
 		$xtesto=mysqli_real_escape_string($db, $testo);
 		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario) VALUES ( $idutente, '$xnomepg', NOW(), '$xtesto' , 0) ";
 		mysqli_query($db, $Mysql);
