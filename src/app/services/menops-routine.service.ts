@@ -78,7 +78,7 @@ export class MenopsRoutineService {
       return;
     }
 
-    this.authservice.menops(user.idutente).subscribe(() => {
+    this.authservice.menopsGen(user.idutente).subscribe(() => {
       user.PScorrenti--;
       user.puntiSangueAggiornati.next();
 
@@ -110,7 +110,7 @@ export class MenopsRoutineService {
   }
 
   private eseguiEsecuzione(user: User, start: number, restanti: number) {
-    this.authservice.menops(user.idutente).subscribe(() => {
+    this.authservice.menopsGen(user.idutente).subscribe(() => {
       user.PScorrenti--;
       user.puntiSangueAggiornati.next();
 

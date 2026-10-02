@@ -107,6 +107,9 @@ export class AuthserviceService {
   menops(userid: number) {
     return this.http.get<any>('https://www.roma-by-night.it/ionicPHP/menops2.php?id=' + userid);
   }
+  menopsGen(userid: number) {
+    return this.http.get<any>('https://www.roma-by-night.it/ionicPHP/menops3.php?id=' + userid);
+  }
 
   usofdv(userid: number) {
     return this.http.get<any>('https://www.roma-by-night.it/ionicPHP/usofdv.php?id=' + userid);
