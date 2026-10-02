@@ -13,6 +13,32 @@ export class MenopsRoutineService {
 
   private authservice = inject(AuthserviceService);
   private timeout?: ReturnType<typeof setTimeout>;
+  private inCorso = false; // chiamata menops in volo: evita esecuzioni doppie
+  private user?: User;
+  private visibilityListener?: () => void;
+
+  // Al ritorno in primo piano (sblocco schermo) i timer possono essere stati sospesi: riallinea al tempo reale
+  private osservaVisibilita(user: User) {
+    this.user = user;
+    if (this.visibilityListener) {
+      return;
+    }
+    this.visibilityListener = () => {
+      if (document.visibilityState === 'visible' && this.user && !this.inCorso) {
+        this.riconciliaAlLogin(this.user);
+      }
+    };
+    document.addEventListener('visibilitychange', this.visibilityListener);
+    window.addEventListener('pageshow', this.visibilityListener);
+  }
+
+  private smettiDiOsservare() {
+    if (this.visibilityListener) {
+      document.removeEventListener('visibilitychange', this.visibilityListener);
+      window.removeEventListener('pageshow', this.visibilityListener);
+      this.visibilityListener = undefined;
+    }
+  }
 
   // Avvia la routine (10 esecuzioni); se già attiva non fa nulla
   avvia(user: User) {
@@ -78,7 +104,11 @@ export class MenopsRoutineService {
       return;
     }
 
-    this.authservice.menopsGen(user.idutente).subscribe(() => {
+    this.inCorso = true;
+    this.authservice.menopsGen(user.idutente).subscribe({
+      error: () => (this.inCorso = false),
+      next: () => {
+      this.inCorso = false;
       user.PScorrenti--;
       user.puntiSangueAggiornati.next();
 
@@ -89,11 +119,13 @@ export class MenopsRoutineService {
       );
 
       this.recuperaEsecuzioni(user, start, restantiAggiornati, daRecuperare - 1);
+      },
     });
   }
 
   private pianifica(user: User, start: number, restanti: number) {
     clearTimeout(this.timeout);
+    this.osservaVisibilita(user);
 
     if (restanti <= 0) {
       this.cancella();
@@ -110,27 +142,37 @@ export class MenopsRoutineService {
   }
 
   private eseguiEsecuzione(user: User, start: number, restanti: number) {
-    this.authservice.menopsGen(user.idutente).subscribe(() => {
-      user.PScorrenti--;
-      user.puntiSangueAggiornati.next();
+    if (this.inCorso) {
+      return;
+    }
+    this.inCorso = true;
+    this.authservice.menopsGen(user.idutente).subscribe({
+      error: () => (this.inCorso = false),
+      next: () => {
+        this.inCorso = false;
+        user.PScorrenti--;
+        user.puntiSangueAggiornati.next();
 
-      const restantiAggiornati = restanti - 1;
-      window.localStorage.setItem(
-        MenopsRoutineService.RESTANTI_KEY,
-        restantiAggiornati.toString()
-      );
+        const restantiAggiornati = restanti - 1;
+        window.localStorage.setItem(
+          MenopsRoutineService.RESTANTI_KEY,
+          restantiAggiornati.toString()
+        );
 
-      this.pianifica(user, start, restantiAggiornati);
+        this.pianifica(user, start, restantiAggiornati);
+      },
     });
   }
 
   private cancella() {
     clearTimeout(this.timeout);
+    this.smettiDiOsservare();
     window.localStorage.removeItem(MenopsRoutineService.START_KEY);
     window.localStorage.removeItem(MenopsRoutineService.RESTANTI_KEY);
   }
 
   fermaTimer() {
     clearTimeout(this.timeout);
+    this.smettiDiOsservare();
   }
 }
