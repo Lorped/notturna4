@@ -34,9 +34,10 @@
 	$target = $request->target;
 
 	/***  mando messaggio di accettazione */
-	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$target";
+	$Mysql="SELECT nomepg, idclan FROM personaggio WHERE idutente=$target";
 	if ( $res=mysqli_fetch_array(mysqli_query($db, $Mysql)) ) {
 		$nomepg=$res['nomepg'];
+		$idclantarget=$res['idclan'];
 	}
 
 	$Mysql="SELECT nomepg FROM personaggio WHERE idutente=$domitor";
@@ -64,12 +65,9 @@
 	$Mysql="SELECT * from personaggio  WHERE idutente=$domitor ";
 	$Result=mysqli_query ($db, $Mysql);
 	$res = mysqli_fetch_array($Result);
-	if ($res['idclan'] == 7) {
-		/* domitor tremere:  non faccio nulla*/
-		// die();
-	}
 
-	$Mysql="SELECT * from pregidifetti  WHERE idutente=$target and idpregio=121";
+
+	$Mysql="SELECT * from pregidifetti  WHERE idutente=$target and idpregio=51";
 	$Result=mysqli_query ($db, $Mysql);
 	if ( $res = mysqli_fetch_array( $Result) ) {
 		/* invincolabile non faccio nulla*/
@@ -122,8 +120,14 @@
 		}
 	} else {
 		/* inserisco a 1  */
-		$Mysql="INSERT INTO legami ( domitor, target, dataultima, livello) VALUES ($domitor, $target, NOW(), 1 )";
-		$Result=mysqli_query ($db, $Mysql);
+		if ($idclantarget == 7) {
+			/* più sensibili -> salto direttamente a 2 !! */
+			$Mysql="INSERT INTO legami ( domitor, target, dataultima, livello) VALUES ($domitor, $target, NOW(), 2 )";
+			$Result=mysqli_query ($db, $Mysql);
+		} else {
+			$Mysql="INSERT INTO legami ( domitor, target, dataultima, livello) VALUES ($domitor, $target, NOW(), 1 )";
+			$Result=mysqli_query ($db, $Mysql);
+		}
 	}
 
 
