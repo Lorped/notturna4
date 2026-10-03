@@ -162,7 +162,7 @@ export class AuthserviceService {
   }
 
   lanciadado(userid: number) {
-    return this.http.get<any>('https://www.roma-by-night.it/ionicPHP/lanciadado.php?id=' + userid);
+    return this.http.get<any>('https://www.roma-by-night.it/ionicPHP/lanciadado.php?userid=' + userid);
   }
 
   inviamessaggiotente(userid: number, destinatario: number, messaggio: string) {

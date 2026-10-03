@@ -25,7 +25,7 @@
 
   require_once __DIR__ . "/db2.inc.php"; // NEW MYSQL //
 
-  $idutente = $_GET['id'];
+  $idutente = $_GET['userid'];
 
 
 
@@ -35,6 +35,7 @@
     $nomepg= mysqli_real_escape_string( $db, $res['nomepg'] );
   }  else {
       $nomepg="NARRAZIONE";
+      $idutente = 0;
   }
   
 

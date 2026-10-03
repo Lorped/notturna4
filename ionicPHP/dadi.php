@@ -1,119 +1,114 @@
 <?php
-header("Access-Control-Allow-Origin: *");
 
-//http://stackoverflow.com/questions/18382740/cors-not-working-php
-if (isset($_SERVER['HTTP_ORIGIN'])) {
-	header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-	header('Access-Control-Allow-Credentials: true');
-   header('Access-Control-Max-Age: 86400');    // cache for 1 day
- }
+header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Max-Age: 86400');
 
-// Access-Control headers are received during OPTIONS requests
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+function respond(array $payload, int $statusCode = 200): void
+{
+    http_response_code($statusCode);
 
-	if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-		header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    try {
+        echo json_encode(
+            $payload,
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR
+        );
+    } catch (JsonException $exception) {
+        error_log('dadi.php JSON encoding failed: ' . $exception->getMessage());
+        http_response_code(500);
+        echo '{"error":"Internal server error"}';
+    }
 
-	if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
-		header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-	exit(0);
+    exit;
 }
 
-
-// header('Content-type: text/xml; charset="utf-8"');
-header('Content-Type: text/html; charset=utf-8');
-
-require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
-
-
-$last=$_GET['last'];
-
-$userid=$_GET['userid'];
-
-$idclan = -99;
-$idcronaca = -1;
-if ($userid != -1){//utente normale
-	$mysql="SELECT idclan, IDcronaca from personaggio where idutente='$userid'";
-	$Result = mysqli_query($db, $mysql);
-	$res=mysqli_fetch_array($Result);
-
-	$idclan = $res['idclan'];
-	$idcronaca = $res['IDcronaca'];
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+if ($requestMethod === 'OPTIONS') {
+    http_response_code(204);
+    exit;
 }
 
-
-if ($last=="") $last=0;
-if ($userid=="") $userid=0;
-
-if ($userid==-1) { //Narrazione
-	$MySql = "SELECT count(*) FROM dadi";
-} elseif ($userid!=0) { //utente normale
-	$MySql = "SELECT count(*) FROM dadi WHERE Destinatario=-1 OR Destinatario=$userid OR idutente=$userid or 
-		(clan=$idclan and cronaca = -1 ) or (clan=$idclan and cronaca=$idcronaca) "   ;
-} else {  // BAH!
-	$MySql = "SELECT count(*) FROM dadi WHERE Destinatario=-1";
+if ($requestMethod !== 'GET') {
+    header('Allow: GET, OPTIONS');
+    respond(['error' => 'Method not allowed'], 405);
 }
-$Result = mysqli_query($db, $MySql);
-$rs=mysqli_fetch_row($Result);
-$count=$rs['0'];
 
+$rawUserId = $_GET['userid'] ?? '0';
+$userId = is_string($rawUserId) ? filter_var($rawUserId, FILTER_VALIDATE_INT) : false;
 
-// inizio output XML
-
-$output='<?xml version="1.0" encoding="utf-8" ?>';
-
-$output.= '<chat>';
-
-
-if ( $count == 0 ) {
-
-	$output.= '<status>0</status>';	 // vuota
-	$output.= '<post></post>';	 // vuota
-
-} else {
-
-	$output.= '<status>'.$count.'</status>';
-	$MySql = "SELECT * FROM dadi  WHERE destinatario=-1 ORDER BY ID DESC  ";
-
-	if ( $userid ==  -1 ) {
-		$MySql = "SELECT dadi.ID, dadi.nomepg, Ora, Testo, Destinatario, personaggio.nomepg AS Nomedest FROM dadi LEFT JOIN personaggio ON dadi.Destinatario = personaggio.idutente ORDER BY ID DESC ";
-	} elseif ( $userid != 0 ) {
-		$MySql = "SELECT * FROM dadi WHERE Destinatario=-1 OR Destinatario=$userid OR idutente=$userid or (clan=$idclan and cronaca = -1 ) or (clan=$idclan and cronaca=$idcronaca) ORDER BY ID DESC  ";
-	}
-
-	$Result = mysqli_query($db, $MySql);
-
-
-	while ($rs=mysqli_fetch_array($Result) ) {
-
-		$output.= '<post>';
-		$output.= '<pg>'.$rs['nomepg'].'</pg>';
-
-		$output.= '<testo>'.htmlspecialchars($rs['Testo'],ENT_QUOTES).'</testo>';
-
-		$output.= '<dest>+</dest>';
-
-		/**
-		if ( $rs['Nomedest'] != "" ) {
-			 $output.= '<dest> a '.htmlspecialchars($rs['Nomedest'],ENT_QUOTES).'</dest>';
-		} else {
-			$output.= '<dest>+</dest>';
-		}
-		**/
-
-		$output.= '<ora>'.strftime("%H:%M", strtotime($rs['Ora'])).'</ora>';
-		$output.= '<data>'.strftime("%d/%m/%Y", strtotime($rs['Ora'])).'</data>';
-		$output.= '</post>';
-	}
-
-
+if ($userId === false) {
+    respond(['error' => 'Invalid userid'], 400);
 }
-$output.= '</chat>';
 
+try {
+    require_once __DIR__ . '/db2.inc.php';
 
-$xml = simplexml_load_string($output);
-$json = json_encode($xml,JSON_UNESCAPED_SLASHES);
+    $clanId = -99;
+    $chronicleId = -1;
 
-echo $json;
+    if ($userId !== -1 && $userId !== 0) {
+        $profileStatement = $db->prepare(
+            'SELECT idclan, IDcronaca FROM personaggio WHERE idutente = ?'
+        );
+        $profileStatement->bind_param('i', $userId);
+        $profileStatement->execute();
+        $profile = $profileStatement->get_result()->fetch_assoc();
+        $profileStatement->close();
 
-?>
+        if (is_array($profile)) {
+            $clanId = (int) $profile['idclan'];
+            $chronicleId = (int) $profile['IDcronaca'];
+        }
+    }
+
+    if ($userId === -1) {
+        $statement = $db->prepare(
+            'SELECT nomepg, Ora, Testo FROM dadi ORDER BY ID DESC'
+        );
+    } elseif ($userId === 0) {
+        $statement = $db->prepare(
+            'SELECT nomepg, Ora, Testo FROM dadi WHERE Destinatario = -1 ORDER BY ID DESC'
+        );
+    } else {
+        $statement = $db->prepare(
+            'SELECT nomepg, Ora, Testo FROM dadi
+             WHERE Destinatario = -1
+                OR Destinatario = ?
+                OR idutente = ?
+                OR (clan = ? AND cronaca = -1)
+                OR (clan = ? AND cronaca = ?)
+             ORDER BY ID DESC'
+        );
+        $statement->bind_param(
+            'iiiii',
+            $userId,
+            $userId,
+            $clanId,
+            $clanId,
+            $chronicleId
+        );
+    }
+
+    $statement->execute();
+    $result = $statement->get_result();
+    $posts = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $date = new DateTimeImmutable($row['Ora']);
+        $posts[] = [
+            'pg' => $row['nomepg'],
+            'testo' => $row['Testo'] ?? '',
+            'ora' => $date->format('H:i'),
+            'data' => $date->format('d/m/Y'),
+        ];
+    }
+
+    $statement->close();
+
+    respond($posts);
+} catch (Throwable $exception) {
+    error_log('dadi.php request failed: ' . $exception->getMessage());
+    respond(['error' => 'Internal server error'], 500);
+}
