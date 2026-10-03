@@ -39,11 +39,12 @@
 
 	$Mysql="SELECT nomepg, nomeplayer FROM personaggio WHERE idutente=$idutente";
 	if ( $res=mysqli_fetch_array(mysqli_query($db, $Mysql)) ) {
-	$nomepg=$res['nomepg'];
-	$nomeplayer=$res['nomeplayer'];
+		$nomepg=$res['nomepg'];
+		$nomeplayer=$res['nomeplayer'];
 	} else {
 		$nomepg="NARRAZIONE";
 		$nomeplayer="";
+		die("Errore: utente non trovato");
 	}
 
 	if ( substr($messaggio,0,55)=="Richiesta di intervento da parte di un Arbitro in Nero.") {

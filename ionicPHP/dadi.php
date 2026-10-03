@@ -31,12 +31,14 @@ $last=$_GET['last'];
 $userid=$_GET['userid'];
 
 $idclan = -99;
+$idcronaca = -1;
 if ($userid != -1){//utente normale
-	$mysql="SELECT idclan from personaggio where idutente='$userid'";
+	$mysql="SELECT idclan, IDcronaca from personaggio where idutente='$userid'";
 	$Result = mysqli_query($db, $mysql);
 	$res=mysqli_fetch_array($Result);
 
 	$idclan = $res['idclan'];
+	$idcronaca = $res['IDcronaca'];
 }
 
 
@@ -46,7 +48,8 @@ if ($userid=="") $userid=0;
 if ($userid==-1) { //Narrazione
 	$MySql = "SELECT count(*) FROM dadi";
 } elseif ($userid!=0) { //utente normale
-	$MySql = "SELECT count(*) FROM dadi WHERE Destinatario=-1 OR Destinatario=$userid OR idutente=$userid or clan=$idclan"   ;
+	$MySql = "SELECT count(*) FROM dadi WHERE Destinatario=-1 OR Destinatario=$userid OR idutente=$userid or 
+		(clan=$idclan and cronaca = -1 ) or (clan=$idclan and cronaca=$idcronaca) "   ;
 } else {  // BAH!
 	$MySql = "SELECT count(*) FROM dadi WHERE Destinatario=-1";
 }
@@ -75,7 +78,7 @@ if ( $count == 0 ) {
 	if ( $userid ==  -1 ) {
 		$MySql = "SELECT dadi.ID, dadi.nomepg, Ora, Testo, Destinatario, personaggio.nomepg AS Nomedest FROM dadi LEFT JOIN personaggio ON dadi.Destinatario = personaggio.idutente ORDER BY ID DESC ";
 	} elseif ( $userid != 0 ) {
-		$MySql = "SELECT * FROM dadi WHERE Destinatario=-1 OR Destinatario=$userid OR idutente=$userid or clan=$idclan ORDER BY ID DESC  ";
+		$MySql = "SELECT * FROM dadi WHERE Destinatario=-1 OR Destinatario=$userid OR idutente=$userid or (clan=$idclan and cronaca = -1 ) or (clan=$idclan and cronaca=$idcronaca) ORDER BY ID DESC  ";
 	}
 
 	$Result = mysqli_query($db, $MySql);

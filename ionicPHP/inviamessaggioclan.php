@@ -34,26 +34,58 @@
  	$idutente=$request->idutente;
  	$destinatario=$request->destinatario;
 	$messaggio=$request->messaggio;
+	$idcronaca=$request->idcronaca; // array of selected cronache
 
 	$xmessaggio=mysqli_real_escape_string($db, $messaggio );
 
+	if (empty($idcronaca)) {
+		// If no cronache are selected, set it to an empty array to indicate all cronache
+		// Uso il campo clan nel file e uso master2clan per le notifiche a tutte le cronache
+		$idcronaca = [];
+		// set post fields
+		$Mysql="SELECT * FROM clan WHERE idclan='$destinatario'";
+		$Result=mysqli_query($db, $Mysql);
+		$res=mysqli_fetch_array($Result);
 
+		$nomeclan = $res['nomeclan']; //topic
+		$clanimg = $res['clanimg'];
+
+		$xmessaggio = "[".$nomeclan."] ".$xmessaggio;
+
+		$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario, clan) VALUES ( 0, 'NARRAZIONE', NOW(), '$xmessaggio' , 0 , '$destinatario') ";
+		mysqli_query($db, $Mysql);
+
+		master2clan($destinatario, $nomeclan, $clanimg, $messaggio, $db) ;
+	} else {
+		// Handle the case when specific cronache are selected
+		// You can add your logic here for sending messages to selected cronache
+
+		$Mysql="SELECT * FROM clan WHERE idclan='$destinatario'";
+		$Result=mysqli_query($db, $Mysql);
+		$res=mysqli_fetch_array($Result);
+
+		$nomeclan = $res['nomeclan']; //topic
+		$clanimg = $res['clanimg'];
+
+		$Mysql = "SELECT * from personaggio WHERE IDcronaca IN (" . implode(",", $idcronaca) . ")";
+		$Result=mysqli_query($db, $Mysql);
+		while ($res=mysqli_fetch_array($Result)) {
+			$idutente = $res['idutente'];
+			master2user4clan ( $idutente , $nomeclan, $clanimg , $messaggio , $db);
+		}
+
+		// da vedere come mettere nel log dei dadi i messaggi inviati alle cronache specifiche....
+		foreach ($idcronaca as $cronaca) {
+
+			$xmessaggio = "[".$nomeclan." - Cronaca:".$cronaca."] ".$xmessaggio;
+			$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario, clan, cronaca) VALUES ( 0, 'NARRAZIONE', NOW(), '$xmessaggio' , 0 , '$destinatario', '$cronaca') ";
+			mysqli_query($db, $Mysql);
+		}
+
+	}
 	
 
-	// set post fields
-	$Mysql="SELECT * FROM clan WHERE idclan='$destinatario'";
-	$Result=mysqli_query($db, $Mysql);
-	$res=mysqli_fetch_array($Result);
 
-	$nomeclan = $res['nomeclan']; //topic
-	$clanimg = $res['clanimg'];
-
-	$xmessaggio = "[".$nomeclan."] ".$xmessaggio;
-
-	$Mysql="INSERT INTO dadi ( idutente, nomepg, Ora, Testo, Destinatario, clan) VALUES ( 0, 'NARRAZIONE', NOW(), '$xmessaggio' , 0 , '$destinatario') ";
-	mysqli_query($db, $Mysql);
-
-	master2clan($destinatario, $nomeclan, $clanimg, $messaggio, $db) ;
 
 
 

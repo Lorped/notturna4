@@ -116,12 +116,8 @@ function master2user ( $idutente , $testo , $db) {
 		pushmsg ($data);
 
 	} else {
-
 		// NON FACCIO NULLA
-
 	}
-
-
 
 
 }
@@ -163,15 +159,11 @@ function user2user ( $nomepg, $destinatario , $testo , $db) {
 		pushmsg ($data);
 
 	} else {
-
 		// NON FACCIO NULLA
-
 	}
 
-
-
-
 }
+
 
 
 function master2clan ( $idclan , $nomeclan, $clanimg, $testo , $db) {
@@ -196,13 +188,47 @@ function master2clan ( $idclan , $nomeclan, $clanimg, $testo , $db) {
         ]
     ];
 	pushmsg ($data);
-
 	
-
 }
 
 
+function master2user4clan ( $idutente , $nomeclan, $clanimg , $testo , $db) {
 
+	$Mysql="SELECT registrationID FROM utente WHERE idutente=$idutente";
+	$Result=mysqli_query($db, $Mysql);
+	$res=mysqli_fetch_array($Result);
+
+	if ($res['registrationID'] != "" ) {
+
+		$token= $res['registrationID'];
+
+		$data = [
+			'message' => [
+				"notification"=> [
+					"title" => "NOTTURNA",
+					"body" => "Messaggio per clan ".$nomeclan . ". ". $testo,
+	
+					// 'sound' => 'default',
+					// 'notification_priority' => '2'
+				],
+				"android" => [
+					"notification" => [
+						"channel_id" => "PushPluginChannel",
+						'image' => "https://www.roma-by-night.it/imgs/".$clanimg,
+					]
+				],
+				'token' => $token,
+				//'topic' => 'master' 
+			]
+		];
+	
+		pushmsg ($data);
+
+	} else {
+		// NON FACCIO NULLA
+	}
+
+}
 
 
 ?>
