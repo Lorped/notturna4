@@ -70,16 +70,18 @@ export class CacciaPage implements OnInit {
         this.user.incaccia = 1;
         this.timestart = parseInt(oldstart);
         this.duratacaccia = parseInt(olddurata);
+        this.bs = window.localStorage.getItem('NotturnaCacciaBs') === '1' ? 1 : 0;
+        const mod = JSON.parse(
+          window.localStorage.getItem('NotturnaCacciaMod') ?? '{}',
+        ) as Partial<Record<'metab' | 'zanne' | 'organovoro' | 'gregge', number>>;
+        this.metab = mod.metab ?? 0;
+        this.zanne = mod.zanne ?? 0;
+        this.organovoro = mod.organovoro ?? 0;
+        this.gregge = mod.gregge ?? 0;
 
         //console.log('inizio caccia: ' + this.timestart);
         //console.log('durata caccia: ' + this.duratacaccia);
-        const ttn = new Date();
-        const nowt = ttn.getTime();
-        const elapsedSeconds = Math.round((nowt - this.timestart) / 1000);
-        //console.log('tempo trascorso: ' + elapsedSeconds + ' secondi'); 
-        this.duratacaccia = this.duratacaccia - elapsedSeconds;
-        //console.log('nuovo tempo rimanente: ' + this.duratacaccia + ' secondi');
-
+        this.updateDisplay(Math.round((new Date().getTime() - this.timestart) / 1000));
         this.StartTimer();
         this.cdr.markForCheck();
       }
@@ -137,6 +139,16 @@ export class CacciaPage implements OnInit {
         'NotturnaCacciaTimestart',
         this.timestart.toString()
       );
+      window.localStorage.setItem('NotturnaCacciaBs', this.bs.toString());
+      window.localStorage.setItem(
+        'NotturnaCacciaMod',
+        JSON.stringify({
+          metab: this.metab,
+          zanne: this.zanne,
+          organovoro: this.organovoro,
+          gregge: this.gregge,
+        }),
+      );
 
 
       //console.log('inizio caccia: ' + this.timestart);
@@ -150,20 +162,12 @@ export class CacciaPage implements OnInit {
     });
   }
 
-  scrivilocale(restanti: number) {
-      //scrivo in locale l'ora d'inizio della caccia
-      const tn = new Date();
-      const ttn = tn.getTime();
-      window.localStorage.setItem(
-        'NotturnaCacciaTimestart',
-        ttn.toString()
-      );
-      //scrivo in locale i secondi restanti
-      window.localStorage.setItem(
-        'NotturnaDurataCaccia',
-        restanti.toString()
-      );
-
+  private updateDisplay(elapsedSeconds: number) {
+    const rimasti = Math.max(0, this.duratacaccia - elapsedSeconds);
+    this.minuti = Math.floor(rimasti / 60);
+    this.secondi = rimasti % 60;
+    this.secondi_string = this.secondi.toString().padStart(2, '0');
+    this.min_string = this.minuti.toString().padStart(2, '0');
   }
 
   StartTimer() {
@@ -175,22 +179,7 @@ export class CacciaPage implements OnInit {
       //secondi trascorsi dall'inizio della caccia
       const elapsedSeconds = Math.round((nowt - this.timestart) / 1000);
 
-      this.minuti = Math.floor( (this.duratacaccia - elapsedSeconds) / 60 );
-      this.secondi = (this.duratacaccia - elapsedSeconds)  - (this.minuti * 60);
-
-      //console.log('tempo trascorso: ' + elapsedSeconds + ' secondi');
-      //console.log('tempo rimanente: ' + this.minuti + ' minuti e ' + this.secondi + ' secondi');
-
-      if (this.secondi < 10) {
-        this.secondi_string = '0' + this.secondi.toString();
-      } else {
-        this.secondi_string = this.secondi.toString();
-      }
-      if (this.minuti < 10) {
-        this.min_string = '0' + this.minuti.toString();
-      } else {
-        this.min_string = this.minuti.toString();
-      }
+      this.updateDisplay(elapsedSeconds);
 
       if (elapsedSeconds < this.duratacaccia ) {
         if (this.statocaccia == -1) { // cancellata la caccia
@@ -200,12 +189,13 @@ export class CacciaPage implements OnInit {
           this.bs = 0 ;
           window.localStorage.removeItem('NotturnaCacciaTimestart');
           window.localStorage.removeItem('NotturnaDurataCaccia');
+          window.localStorage.removeItem('NotturnaCacciaBs');
+          window.localStorage.removeItem('NotturnaCacciaMod');
         } else {
           //console.log("è passato un secondo, non ho finito, rilancio il timer");
           //console.log ('tempo trascorso: ' + elapsedSeconds + ' secondi');
           this.statocaccia = 1;
           this.user.incaccia = 1;
-          this.scrivilocale(this.duratacaccia-elapsedSeconds);
           this.StartTimer();
         }
       } else {
@@ -217,6 +207,8 @@ export class CacciaPage implements OnInit {
         this.user.ToastFineCaccia = true;
         window.localStorage.removeItem('NotturnaCacciaTimestart');
         window.localStorage.removeItem('NotturnaDurataCaccia');
+        window.localStorage.removeItem('NotturnaCacciaBs');
+        window.localStorage.removeItem('NotturnaCacciaMod');
         this.msgfine();
       }
       this.cdr.markForCheck();

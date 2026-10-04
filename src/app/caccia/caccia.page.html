@@ -56,7 +56,7 @@
       <ion-col style="text-align: center; font-size: 2.1em; font-family: 'MyFont';">{{min_string}}:{{secondi_string}}</ion-col>
     </ion-row>
   }
-  @if (this.user.incaccia===0 && this.statocaccia===2) {
+  @if (this.user.incaccia===0 && this.statocaccia===2 && this.user.PScorrenti>=this.user.maxps) {
     <ion-row style="align-items: center;">
       <ion-col style="text-align: center; font-size: 1em;">Caccia terminata!</ion-col>
     </ion-row>
