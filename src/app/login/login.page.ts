@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonButton,
@@ -23,6 +23,8 @@ import { AuthserviceService } from '../services/authservice.service';
 import { LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
+import { Keyboard } from '@capacitor/keyboard';
+import type { PluginListenerHandle } from '@capacitor/core';
 import { FCM } from '@capacitor-community/fcm';
 
 
@@ -57,7 +59,9 @@ export class Clan {
     IonToolbar,
   ],
 })
-export class LoginPage implements OnInit {
+export class LoginPage implements OnInit, OnDestroy {
+  private readonly content = viewChild.required(IonContent, { read: ElementRef });
+  private keyboardListeners: Promise<PluginListenerHandle>[] = [];
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   username = '';
   userid = 0;
@@ -90,6 +94,28 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.applyAppPalette();
+    this.keyboardListeners = [
+      Keyboard.addListener('keyboardWillShow', (info) =>
+        this.setKeyboardOffset(info.keyboardHeight)
+      ),
+      Keyboard.addListener('keyboardWillHide', () => this.setKeyboardOffset(0)),
+    ];
+  }
+
+  ngOnDestroy() {
+    this.keyboardListeners.forEach((l) => l.then((h) => h.remove()));
+  }
+
+  // Con edge-to-edge la WebView non si ridimensiona: lasciamo spazio alla tastiera
+  private setKeyboardOffset(height: number) {
+    const el = this.content().nativeElement as HTMLElement;
+    el.style.setProperty('--keyboard-offset', `${height}px`);
+    if (height > 0) {
+      setTimeout(() => {
+        const active = document.activeElement as HTMLElement | null;
+        active?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }, 100);
+    }
   }
   
   private applyAppPalette() {
