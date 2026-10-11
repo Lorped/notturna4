@@ -282,7 +282,7 @@
 
 	
 
-	$Mysql="SELECT tipocond, tabcond, valcond, descrX, risp, subskill  FROM oggetti LEFT JOIN cond_oggetti ON oggetti.idoggetto = cond_oggetti.idoggetto WHERE barcode='$barcode' ORDER BY cond_oggetti.valcond ASC ";
+	$Mysql="SELECT tipocond, tabcond, valcond, descrX, risp, cond_oggetti.subskill AS subskill, skill_main.subskill AS parentskill  FROM oggetti LEFT JOIN cond_oggetti ON oggetti.idoggetto = cond_oggetti.idoggetto LEFT JOIN skill_main ON skill_main.idskill = cond_oggetti.tabcond AND cond_oggetti.tipocond = 'SS' WHERE barcode='$barcode' ORDER BY cond_oggetti.valcond ASC ";
 	$Result=mysqli_query($db, $Mysql);
 	if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db) ."+".$Mysql);
 
@@ -414,7 +414,7 @@
 				$specificoSoddisfatto = false;
 				for ( $i=0; $i< count($condizioni); $i++ ) {
 					
-					if ( $condizioni[$i]['tipocond'] == 'SS' && $condizioni[$i]['subskill'] == $ids ) {
+					if ( $condizioni[$i]['tipocond'] == 'SS' && $condizioni[$i]['parentskill'] == $ids ) {
 
 						$specifica = $condizioni[$i]['tabcond'];
 
@@ -460,7 +460,7 @@
 			foreach ($condizioni as $condizioneGenerica) {
 				if (
 					$condizioneGenerica['tipocond'] == 'S'
-					&& $condizioneGenerica['tabcond'] == $cond['subskill']
+					&& $condizioneGenerica['tabcond'] == $cond['parentskill']
 				) {
 					$condizioneGenericaEsistente = true;
 					break;
