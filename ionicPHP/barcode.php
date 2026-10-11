@@ -411,7 +411,7 @@
 
 			if ( $res4=mysqli_fetch_array($Result4)  ) {
 				// HO UN SKILL GENERICO confermato. ESISTE UNA CONDIZIONE Su SKILL SPECIFICO ?
-				$esistesoecifico=false;
+				$specificoSoddisfatto = false;
 				for ( $i=0; $i< count($condizioni); $i++ ) {
 					
 					if ( $condizioni[$i]['tipocond'] == 'SS' && $condizioni[$i]['subskill'] == $ids ) {
@@ -425,45 +425,21 @@
 						$Result5=mysqli_query($db, $mysql5);
 
 						if ( $res5=mysqli_fetch_array($Result5)  ) {
-							$esistesoecifico=true;
-
 							// c'è una condizione su skill specifico verificato?
 							if ( $res5['livello'] >= $condizioni[$i]['valcond'] ) {
+								$specificoSoddisfatto = true;
 								$rigarisp = [
 									'motivo' => $res5['nomeskill'],
 									'descrizione' => $condizioni[$i]['descrX'],
 									'sino' => $cond['risp']
 								];
 								$esito[] = $rigarisp;										
-							} else {
-								// allora inserisco solo il generico perchè ho lo skill specifico troppo basso
-								if (!isset($genericiAggiunti[$ids])) {
-									$rigarisp = [
-										'motivo' => $res4['nomeskill'],
-										'descrizione' => $cond['descrX'],
-										'sino' => $cond['risp']
-									];
-									$esito[] = $rigarisp;
-									$genericiAggiunti[$ids] = true;
-								}
-							}
-						} else {
-							$esistesoecifico=true;
-							// allora inserisco solo il generico perchè non ho lo skill specifico
-							if (!isset($genericiAggiunti[$ids])) {
-								$rigarisp = [
-									'motivo' => $res4['nomeskill'],
-									'descrizione' => $cond['descrX'],
-									'sino' => $cond['risp']
-								];
-								$esito[] = $rigarisp;
-								$genericiAggiunti[$ids] = true;
 							}
 						}
 					}
 				}
-				//se alla fine non esiste uno skill specifico verificato allora inserisco il generico
-				if ( $esistesoecifico == false && !isset($genericiAggiunti[$ids]) ) {
+				// Mostro il generico una volta sola, e solo se nessuno specifico è soddisfatto.
+				if ( !$specificoSoddisfatto && !isset($genericiAggiunti[$ids]) ) {
 					$rigarisp = [
 						'motivo' => $res4['nomeskill'],
 						'descrizione' => $cond['descrX'],
