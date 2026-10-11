@@ -391,8 +391,9 @@
 	}
 
 
-	// INIZIO SKILL  SPECIFICI
+	// INIZIO SKILL  SPECIFICI + GENERICI
 
+	$genericiAggiunti = [];
 
 	foreach ($condizioni as $cond) {
 
@@ -436,35 +437,77 @@
 								$esito[] = $rigarisp;										
 							} else {
 								// allora inserisco solo il generico perchè ho lo skill specifico troppo basso
+								if (!isset($genericiAggiunti[$ids])) {
+									$rigarisp = [
+										'motivo' => $res4['nomeskill'],
+										'descrizione' => $cond['descrX'],
+										'sino' => $cond['risp']
+									];
+									$esito[] = $rigarisp;
+									$genericiAggiunti[$ids] = true;
+								}
+							}
+						} else {
+							$esistesoecifico=true;
+							// allora inserisco solo il generico perchè non ho lo skill specifico
+							if (!isset($genericiAggiunti[$ids])) {
 								$rigarisp = [
 									'motivo' => $res4['nomeskill'],
 									'descrizione' => $cond['descrX'],
 									'sino' => $cond['risp']
 								];
-								$esito[] = $rigarisp;	
+								$esito[] = $rigarisp;
+								$genericiAggiunti[$ids] = true;
 							}
-						} else {
-							$esistesoecifico=true;
-							// allora inserisco solo il generico perchè non ho lo skill specifico
-							$rigarisp = [
-								'motivo' => $res4['nomeskill'],
-								'descrizione' => $cond['descrX'],
-								'sino' => $cond['risp']
-							];
-							$esito[] = $rigarisp;
 						}
 					}
 				}
 				//se alla fine non esiste uno skill specifico verificato allora inserisco il generico
-				if ( $esistesoecifico == false ) {
+				if ( $esistesoecifico == false && !isset($genericiAggiunti[$ids]) ) {
 					$rigarisp = [
 						'motivo' => $res4['nomeskill'],
 						'descrizione' => $cond['descrX'],
 						'sino' => $cond['risp']
 					];
-					$esito[] = $rigarisp;	
+					$esito[] = $rigarisp;
+					$genericiAggiunti[$ids] = true;
 				}								
 
+			}
+		}
+	}
+
+	foreach ($condizioni as $cond) {
+
+		if ($cond['tipocond'] == 'SS') {
+			$condizioneGenericaEsistente = false;
+			foreach ($condizioni as $condizioneGenerica) {
+				if (
+					$condizioneGenerica['tipocond'] == 'S'
+					&& $condizioneGenerica['tabcond'] == $cond['subskill']
+				) {
+					$condizioneGenericaEsistente = true;
+					break;
+				}
+			}
+
+			if (!$condizioneGenericaEsistente) {
+				$specifica = $cond['tabcond'];
+				$mysql5 = "SELECT * FROM skill_main
+					LEFT JOIN skill ON skill_main.idskill = skill.idskill
+					WHERE skill_main.idskill = $specifica AND idutente = '$idutente' ";
+				$Result5 = mysqli_query($db, $mysql5);
+
+				if ($res5 = mysqli_fetch_array($Result5)) {
+					if ($res5['livello'] >= $cond['valcond']) {
+						$rigarisp = [
+							'motivo' => $res5['nomeskill'],
+							'descrizione' => $cond['descrX'],
+							'sino' => $cond['risp']
+						];
+						$esito[] = $rigarisp;
+					}
+				}
 			}
 		}
 	}
