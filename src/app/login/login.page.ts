@@ -22,6 +22,7 @@ import { AuthserviceService } from '../services/authservice.service';
 
 import { LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 import { Keyboard } from '@capacitor/keyboard';
 import type { PluginListenerHandle } from '@capacitor/core';
@@ -32,10 +33,9 @@ import { FCM } from '@capacitor-community/fcm';
 import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { MenopsRoutineService } from '../services/menops-routine.service';
 
-export class Clan {
-  idclan = 0;
-  nomeclan = '';
-}
+import type { GetSkill, GetTaum, Clan } from '../services/authservice.service';
+
+
 
 @Component({
   selector: 'app-login',
@@ -136,7 +136,7 @@ export class LoginPage implements OnInit, OnDestroy {
     // console.log( this.registerCredentials.password );
 
     this.authentication.login(this.registerCredentials.username,this.registerCredentials.password).subscribe(
-      (data) => {
+      (data: User) => {
         //save if required
         if (this.saveme.checked == true) {
           window.localStorage.setItem(
@@ -165,7 +165,7 @@ export class LoginPage implements OnInit, OnDestroy {
 
 
         this.authentication.skill(this.user.idutente).subscribe(
-          (data) => {
+          (data: GetSkill) => {
             this.userskill.skill = data.skill;
             this.userskill.otherskill = data.otherskill;
             this.userskill.discipline = data.discipline;
@@ -217,10 +217,10 @@ export class LoginPage implements OnInit, OnDestroy {
             );
 
             this.authentication.taum(this.user.idutente).subscribe(
-              (data) => {
-                this.userskill.taum = data[0].taum;
-                this.userskill.necro = data[0].necro;
-                this.userskill.rituali = data[0].rituali;
+              (data: GetTaum) => {
+                this.userskill.taum = data.taum;
+                this.userskill.necro = data.necro;
+                this.userskill.rituali = data.rituali;
             });
 
 
@@ -299,14 +299,16 @@ export class LoginPage implements OnInit, OnDestroy {
         PushNotifications.register();
       });
 
-      await this.authentication.updateid(this.user.idutente, token.value).toPromise();
+      await firstValueFrom(
+        this.authentication.updateid(this.user.idutente, token.value)
+      );
 
       await FCM.subscribeTo({ topic: 'user' })
         .then(() => console.log('subscribed to topic: user'))
         .catch((err) => console.error('Error subscribing to user topic', err));
 
-      const data = await this.authentication.getregistra().toPromise();
-      this.listaclan = data?.clan ?? [];
+      const data = await firstValueFrom(this.authentication.clan());
+      this.listaclan = data ?? [];
 
       await Promise.all(
         this.listaclan

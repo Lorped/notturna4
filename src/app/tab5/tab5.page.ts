@@ -23,7 +23,7 @@ import {
 import { pregiodifetto, User, Userskill } from '../globals';
 import { FeedService, FeedItem } from '../services/feed.service';
 import { Router } from '@angular/router';
-import { AuthserviceService } from '../services/authservice.service';
+import { AuthserviceService, EsitoResistenza } from '../services/authservice.service';
 import { finalize } from 'rxjs';
 import { ResourceActionService } from '../services/resource-action.service';
 import { addIcons } from 'ionicons';
@@ -48,9 +48,7 @@ addIcons({
 });
 
 
-export interface EsitoResistenza {
-  tiro: number;
-}
+
 
 
 @Component({

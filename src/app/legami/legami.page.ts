@@ -1,13 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Legame, Utente, User } from '../globals';
-import { AuthserviceService } from '../services/authservice.service';
+import { AuthserviceService, fullegami } from '../services/authservice.service';
 import { IonRow, IonCol, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons,  IonMenuButton,  IonItem,   IonButton,  IonLabel, IonSelect, IonSelectOption, IonIcon, IonList } from '@ionic/angular/standalone';
 
-export interface fullegami {
-  target: Legame[];
-  domitor: Utente[];
-}
+
 
 @Component({
   selector: 'app-legami',

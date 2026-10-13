@@ -100,7 +100,7 @@ export class CacciaPage implements OnInit {
       this.gregge = gg.livello;
     }
 
-    this.authservice.getpregi(this.user.idutente).subscribe((data) => {
+    this.authservice.getpregi(this.user.idutente).subscribe((data: pregiodifetto[]) => {
       Object.assign(this.pregi, data);
 
       const metab = this.pregi.find((p) => p.idpregio == 5);

@@ -26,10 +26,7 @@ import { logOutOutline } from 'ionicons/icons';
 
 addIcons({ 'log-out-outline': logOutOutline });
 
-export interface datips {
-  PScorrenti: number;
-  fdv: number;
-}
+import { datips } from '../services/authservice.service';
 
 @Component({
   selector: 'app-tab1',

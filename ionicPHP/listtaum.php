@@ -150,7 +150,7 @@
 
 
 
-  $outx [] = [
+  $outx = [
     'taum' => $outtaum,
     'necro' => $outnecro,
     'rituali' => $outrituali

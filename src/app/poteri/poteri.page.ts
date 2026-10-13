@@ -29,9 +29,8 @@ import { personOutline } from 'ionicons/icons';
 
 addIcons({ 'person-outline': personOutline });
 
-export interface EsitoPotere {
-  tiro: number;
-}
+import { EsitoPotere } from '../services/authservice.service';
+
 
 
 @Component({
@@ -121,7 +120,7 @@ export class PoteriPage implements OnInit {
 
       this.authservice.usopotere(this.user['idutente'], pot, idpotere,  livellopot, this.nomed)
         .pipe(finalize(() => this.resourceActions.finish()))
-        .subscribe((res) => {
+        .subscribe((res: EsitoPotere) => {
 
         this.esito.tiro = res.tiro;
 

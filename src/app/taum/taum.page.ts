@@ -11,14 +11,11 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { User, Userskill } from '../globals';
-import { AuthserviceService } from '../services/authservice.service';
+import { EsitoPotere, AuthserviceService } from '../services/authservice.service';
 import { AlertController } from '@ionic/angular';
 import { finalize } from 'rxjs';
 import { ResourceActionService } from '../services/resource-action.service';
 
-export interface EsitoPotere {
-  tiro: number;
-}
 
 @Component({
   selector: 'app-taum',
@@ -60,7 +57,7 @@ export class TaumPage {
 
   this.authService.usonecrotaum(this.user['idutente'], pot, idtaum2,  livellopot, taum, 'T')
     .pipe(finalize(() => this.resourceActions.finish()))
-    .subscribe((res) => {
+    .subscribe((res: EsitoPotere) => {
 
     this.esito.tiro = res.tiro;
 

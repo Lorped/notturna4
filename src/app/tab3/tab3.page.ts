@@ -177,7 +177,7 @@ export class Tab3Page implements OnInit {
   }
 
   private loadOldScan() {
-    this.authservice.getscan(this.user.idutente).subscribe((data) => {
+    this.authservice.getscan(this.user.idutente).subscribe((data: Oggetto[]) => {
       this.oldscan = data;
       this.changeDetectorRef.markForCheck();
     });

@@ -1,19 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonItem, IonLabel, IonText, IonList, IonItemGroup, IonItemDivider } from '@ionic/angular/standalone';
 import { User } from '../globals';
-import { AuthserviceService } from '../services/authservice.service';
+import { AuthserviceService, FocusAttr } from '../services/authservice.service';
 
 
-interface Bonus {
-  nomeattr: string;
-  livelloattr: string;
-  bonus: string;
-}
 
-interface FocusAttr {
-  attr: string;
-  bonus: Bonus[];
-}
 
 @Component({
   selector: 'app-focusattr',
