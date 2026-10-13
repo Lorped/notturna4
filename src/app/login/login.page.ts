@@ -66,7 +66,7 @@ export class LoginPage implements OnInit, OnDestroy {
   username = '';
   userid = 0;
 
-  listaclan: Array<Clan> = [];
+  listaclan: Clan[] = [];
 
   isDarkMode = false;
 
@@ -183,10 +183,10 @@ export class LoginPage implements OnInit, OnDestroy {
               this.userskill.skill[i].livello = Number(this.userskill.skill[i].livello);
             }
             */
-            for (let i = 0; i < this.userskill.otherskill.length; i++) {
-              // this.userskill.otherskill[i].livello = Number(this.userskill.otherskill[i].livello);  
-              if (this.userskill.otherskill[i].idskill == 47) {  //schivare
-                this.user.pf += this.userskill.otherskill[i].livello;
+            for (const skill of this.userskill.otherskill) {
+              // skill.livello = Number(skill.livello);
+              if (skill.idskill == 47) {  //schivare
+                this.user.pf += skill.livello;
               }
             }
 
@@ -197,13 +197,13 @@ export class LoginPage implements OnInit, OnDestroy {
               this.user.pf += rob.livello;
               this.user.rp = Math.floor( (this.user['attutimento'] + rob.livello) / 2 );
 
-              for ( let j= 0 ; j < rob.poteri.length ; j++) {
-                if (rob.poteri[j].idpotere == 70 ) { 
+              for (const potere of rob.poteri) {
+                if (potere.idpotere == 70 ) { 
                   // if (rob.focus > 0 ) { this.user.pf += Number(this.user.bonusdisc); }
                   if (rob.focus > 0 ) { this.user.pf += this.user.bonusdisc; }
                   this.user.pf += (5+rob.livello);
                 }
-                if (rob.poteri[j].idpotere == 74 ) { this.user.pf += 5;} //+5 sono nel potere precedente - che è prerequisito. focus contato una sola volta: la prima
+                if (potere.idpotere == 74 ) { this.user.pf += 5;} //+5 sono nel potere precedente - che è prerequisito. focus contato una sola volta: la prima
               }
             }
 

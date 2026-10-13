@@ -5,8 +5,8 @@ import { AuthserviceService } from '../services/authservice.service';
 import { IonRow, IonCol, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons,  IonMenuButton,  IonItem,   IonButton,  IonLabel, IonSelect, IonSelectOption, IonIcon, IonList } from '@ionic/angular/standalone';
 
 export interface fullegami {
-  target: Array<Legame>;
-  domitor: Array<Utente>;
+  target: Legame[];
+  domitor: Utente[];
 }
 
 @Component({
@@ -16,18 +16,17 @@ export interface fullegami {
   imports: [FormsModule, IonRow, IonCol, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonItem, IonButton, IonLabel, IonSelect, IonSelectOption, IonIcon, IonList]
 })
 export class LegamiPage  {
-  listalegami: Array<Legame> = [];
-  listautenti: Array<Utente> = [];
+  listalegami: Legame[] = [];
+  listautenti: Utente[] = [];
 
   private readonly cdr = inject(ChangeDetectorRef);
 
-  pgscelto: number = 0;
-  selected: string = '';
+  pgscelto = 0;
+  selected = '';
 
   public user = inject(User);
   private authService = inject(AuthserviceService);
 
-  constructor() {}
 
 
 
@@ -38,7 +37,7 @@ export class LegamiPage  {
   }
 
   loadUtenti(a: number) {
-    this.authService.listautenti(a).subscribe((res: Array<Utente>) => {
+    this.authService.listautenti(a).subscribe((res: Utente[]) => {
       this.listautenti = res;
       this.cdr.markForCheck();
       //console.log('utenti: ', this.listautenti);

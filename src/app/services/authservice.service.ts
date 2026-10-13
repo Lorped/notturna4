@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -10,7 +9,7 @@ export class AuthserviceService {
 
   private http = inject(HttpClient);
 
-  constructor() { }
+
 
   
   login(username: string, password: string) {

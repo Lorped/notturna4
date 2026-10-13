@@ -26,7 +26,7 @@ export class RubricaPage  {
   private router = inject(Router);
   private tochange = inject(ToChange);
 
-  rubrica = signal<Array<RubricaItem>>([]);
+  rubrica = signal<RubricaItem[]>([]);
 
    ionViewWillEnter(){
     this.authservice.loadrubrica(this.user.idutente).subscribe((data) => {

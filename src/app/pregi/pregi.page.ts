@@ -13,10 +13,10 @@ export class PregiPage {
   user = inject(User);
   private auth = inject(AuthserviceService);
 
-  listapregi = signal<Array<pregiodifetto>>([]);
+  listapregi = signal<pregiodifetto[]>([]);
 
   ionViewWillEnter() {
-    this.auth.getpregi(this.user.idutente).subscribe((data: Array<pregiodifetto>) => {
+    this.auth.getpregi(this.user.idutente).subscribe((data: pregiodifetto[]) => {
       this.listapregi.set(Array.isArray(data) ? [...data] : []);
     });
   }

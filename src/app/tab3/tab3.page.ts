@@ -68,7 +68,7 @@ export class Tab3Page implements OnInit {
   giarisposto = false;
   rispostaselezionata = '';
 
-  oldscan: Array<Oggetto> = [];
+  oldscan: Oggetto[] = [];
   private oldscanLoaded = false;
   private hasNewScan = false;
 

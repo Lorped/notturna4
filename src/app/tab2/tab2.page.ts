@@ -72,22 +72,22 @@ export class Tab2Page implements OnInit {
     this.artigli = 0;
 
 
-    for (let i = 0; i < this.userskill.otherskill.length; i++) {
-      if (this.userskill.otherskill[i].idskill == 42) {  //rissa
-        //this.rissa = Number(this.userskill.otherskill[i].livello);
-        this.rissa = this.userskill.otherskill[i].livello;
+    for (const skill of this.userskill.otherskill) {
+      if (skill.idskill == 42) {  //rissa
+        //this.rissa = Number(skill.livello);
+        this.rissa = skill.livello;
       }
-      if (this.userskill.otherskill[i].idskill == 43) {  //mischia
-        this.mischia = this.userskill.otherskill[i].livello;
+      if (skill.idskill == 43) {  //mischia
+        this.mischia = skill.livello;
       }
-      if (this.userskill.otherskill[i].idskill == 46) {  //lancio
-        this.lancio = this.userskill.otherskill[i].livello;
+      if (skill.idskill == 46) {  //lancio
+        this.lancio = skill.livello;
       }
-      if (this.userskill.otherskill[i].idskill == 45) {  //Armi da tiro
-        this.tiro = this.userskill.otherskill[i].livello;
+      if (skill.idskill == 45) {  //Armi da tiro
+        this.tiro = skill.livello;
       }
-      if (this.userskill.otherskill[i].idskill == 44) {  //Armi da fuoco
-        this.fuoco = this.userskill.otherskill[i].livello;
+      if (skill.idskill == 44) {  //Armi da fuoco
+        this.fuoco = skill.livello;
       }
     }
     const pot = this.userskill.discipline.find((xx) => xx.iddisciplina == 17); //potenza

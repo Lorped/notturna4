@@ -68,8 +68,6 @@ export class Tab1Page {
   }
 
 
-  ionViewWillEnter() { } 
-
   
   public logoutx() {
     void this.session.logout();

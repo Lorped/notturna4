@@ -63,7 +63,7 @@ export class PoteriPage implements OnInit {
   nomed = '';
   CacciaAnimalita = 1;
 
-  mypoteri: Array<Potere> = [];
+  mypoteri: Potere[] = [];
 
   esito: EsitoPotere = { 
     tiro: 0
@@ -74,7 +74,7 @@ export class PoteriPage implements OnInit {
   messaggioTelepatico = '';
   isModalOpen = false;
 
-  listautenti: Array<Utente> = [];
+  listautenti: Utente[] = [];
   pgscelto = 0;
 
   public user = inject(User);
@@ -87,7 +87,7 @@ export class PoteriPage implements OnInit {
 
 
   ngOnInit() { 
-    this.authservice.listautenti(this.user.idutente).subscribe((res: Array<Utente>) => {
+    this.authservice.listautenti(this.user.idutente).subscribe((res: Utente[]) => {
       this.listautenti = res;
       this.changeDetectorRef.markForCheck();
     });
@@ -98,9 +98,9 @@ export class PoteriPage implements OnInit {
     this.disc = Number(paramMap.get('disc'));
     this.nomed = paramMap.get('nomed')!;
 
-    for (let i = 0; i < this.userskill.discipline.length; i++) {
-      if (this.userskill.discipline[i].iddisciplina == this.disc) {
-        this.mypoteri = this.userskill.discipline[i].poteri;
+    for (const disciplina of this.userskill.discipline) {
+      if (disciplina.iddisciplina == this.disc) {
+        this.mypoteri = disciplina.poteri;
         // console.log(this.mypoteri);
       }
     }

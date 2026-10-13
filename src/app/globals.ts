@@ -35,7 +35,7 @@ export class Skill {
     public idskill = 0 ;
     public nomeskill = '';
     public livello = 0;
-    public subskill: Array<Subskill> = [];
+    public subskill: Subskill[] = [];
 }
 
 
@@ -53,7 +53,7 @@ export class Disciplina {
     public nomedisc = '';
     public livello = 0;
     public focus = 0;
-    public poteri: Array<Potere> = [];
+    public poteri: Potere[] = [];
 }
 
 
@@ -182,7 +182,7 @@ export class ataum  {
     public nometaum = '';
     public livello = 0;
     public focus = 0;
-    public poteri: Array<apottaum> = [ ]; 
+    public poteri: apottaum[] = [ ]; 
 }
 
 
@@ -200,7 +200,7 @@ export class anecro  {
     public nomenecro = '';
     public livello = 0;
     public focus = 0;
-    public poteri: Array<apotnecro> = [];
+    public poteri: apotnecro[] = [];
 }
 
 @Injectable()
@@ -212,15 +212,15 @@ export class Rituale  {
 
 @Injectable({ providedIn: 'root' })
 export class Userskill {
-    public skill: Array<Skill> = [];
-    public otherskill: Array<Skill> = [];
-    public discipline: Array<Disciplina> = [];
-    public background: Array<Background> =[];
-    public alleati: Array<Alleato> =[];
-    public contatti: Array<Contatto> =[];
-    public taum: Array<ataum> = [];
-    public necro: Array<anecro> = [];
-    public rituali: Array<Rituale> = [];
+    public skill: Skill[] = [];
+    public otherskill: Skill[] = [];
+    public discipline: Disciplina[] = [];
+    public background: Background[] =[];
+    public alleati: Alleato[] =[];
+    public contatti: Contatto[] =[];
+    public taum: ataum[] = [];
+    public necro: anecro[] = [];
+    public rituali: Rituale[] = [];
 
     reset(): void {
         const state = this as unknown as Record<string, unknown>;
@@ -243,12 +243,12 @@ export class Oggetto {
     public id = '';
     public nomeoggetto = '';
     public descrizione = '';
-    public esito: Array<Esito> = [];
+    public esito: Esito[] = [];
     public domanda = '';
     public R1 = '';
     public R2 = '';
-    public esitoSI: Array<Esito> = [];
-    public esitoNO: Array<Esito> = [];
+    public esitoSI: Esito[] = [];
+    public esitoNO: Esito[] = [];
     public datascan = '';
 }
 
@@ -281,9 +281,9 @@ export class RubricaItem {
   }
 
 export class Legame {
-    nomepg: string = '';
-    livello: number = 0;
-    dataultima: string = '';
+    nomepg = '';
+    livello = 0;
+    dataultima = '';
 }
 
 export class Utente {

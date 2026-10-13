@@ -29,7 +29,7 @@ export class CacciaPage implements OnInit {
   organovoro = 0; // organo voro +2 min
   bspossibile = 0; // bacio selvaggio possibile
 
-  pregi: Array<pregiodifetto> = [];
+  pregi: pregiodifetto[] = [];
 
   timestart = 0;
 
