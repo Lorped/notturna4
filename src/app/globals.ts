@@ -240,7 +240,8 @@ export class Esito {
 
   
 export class Oggetto {
-    public id = '';
+    public id = '';         // ID SCANSIONE BARCODE
+    public idoggetto = 0;  // VERO IDOGGETTO
     public nomeoggetto = '';
     public descrizione = '';
     public esito: Esito[] = [];
@@ -250,6 +251,9 @@ export class Oggetto {
     public esitoSI: Esito[] = [];
     public esitoNO: Esito[] = [];
     public datascan = '';
+    public enigma = '';
+    public soluzione = '';
+    public premio = '';
 }
 
 

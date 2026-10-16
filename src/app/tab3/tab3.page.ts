@@ -25,6 +25,7 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  IonInput,
 } from '@ionic/angular/standalone';
 import { firstValueFrom } from 'rxjs';
 
@@ -54,9 +55,14 @@ import { firstValueFrom } from 'rxjs';
     IonText,
     IonTitle,
     IonToolbar,
+    IonInput,
   ],
 })
 export class Tab3Page implements OnInit {
+
+  rispcorretta = 0;
+  rispostaenigma = ''; // Risposta utente all'enigma
+  numrisposte = 0; // Numero di risposte inviate all'enigma
 
   public barcodes: Barcode[] = [];
   public isPermissionGranted = false;
@@ -134,6 +140,7 @@ export class Tab3Page implements OnInit {
         this.authservice.barcode(this.user.idutente, this.oggetto.id)
       );
 
+      this.oggetto.idoggetto = data.idoggetto;
       this.oggetto.nomeoggetto = data.nomeoggetto;
       this.oggetto.descrizione = data.descrizione;
       this.oggetto.esito = data.esito;
@@ -142,10 +149,17 @@ export class Tab3Page implements OnInit {
       this.oggetto.R2 = data.R2;
       this.oggetto.esitoSI = data.esitoSI;
       this.oggetto.esitoNO = data.esitoNO;
+      this.oggetto.premio = data.premio;
+      this.oggetto.soluzione = data.soluzione;
+      this.oggetto.enigma = data.enigma;
       this.giarisposto = false;
       this.rispostaselezionata = '';
       this.hasNewScan = true;
       this.isModalOpen = true;
+
+      this.numrisposte = 0; // Reset the number of attempts for the new scan
+      this.rispcorretta = 0; // Reset the correctness of the enigma response for the new scan
+      this.rispostaenigma = ''; // Reset the enigma response for the new scan
 
       if (data.nomeoggetto === 'SEGRETERIA' && this.user.idlds === 17) {
         this.menopsRoutine.avvia(this.user);
@@ -187,6 +201,27 @@ export class Tab3Page implements OnInit {
     if (!this.oldscanLoaded) {
       this.oldscanLoaded = true;
       this.loadOldScan();
+    }
+  }
+
+  async RispostaEnigma() {
+    // Logica per gestire la risposta all'enigma
+    console.log('Risposta all\'enigma:', this.rispostaenigma);
+    if ( this.rispostaenigma.trim().toUpperCase() === this.oggetto.soluzione.trim().toUpperCase()) {
+      
+      await this.authservice.writeenigma(this.user.idutente, this.oggetto.idoggetto).subscribe();
+      this.rispcorretta = 1; // Risposta corretta sblocco enigma su frontend
+      this.authservice.msgtomaster(this.user.idutente,'Risolto enigma ' + this.oggetto.nomeoggetto).subscribe();
+
+      
+    } else {
+      this.rispcorretta = 0; // Risposta errata
+      this.numrisposte++;
+      if (this.numrisposte >= 10) {
+        //this.rispcorretta = -1; // Blocco dopo 10 tentativi
+        this.authservice.msgtomaster(this.user.idutente,'Tentativi esauriti per enigma ' + this.oggetto.nomeoggetto).subscribe();
+        this.cancel();
+      }
     }
   }
 }

@@ -241,4 +241,8 @@ export class AuthserviceService {
     return this.http.get('https://www.roma-by-night.it/ionicPHP/bol.php?id=' + userid);
   }
 
+  writeenigma(userid: number, idoggetto: number) {
+    return this.http.get('https://www.roma-by-night.it/ionicPHP/rispostaenigma.php?id=' + userid + '&idoggetto=' + idoggetto);
+  }
+
 }

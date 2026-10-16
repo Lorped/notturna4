@@ -154,6 +154,9 @@
 				'domanda' => null,
 				'R1' => null,
 				'R2' => null,
+				'enigma' => null,
+				'soluzione' => null,
+				'premio' => null,
 			];		
 
 
@@ -172,6 +175,9 @@
 				'domanda' => null,
 				'R1' => null,
 				'R2' => null,
+				'enigma' => null,
+				'soluzione' => null,
+				'premio' => null,
 			];
 			$output = json_encode ($out, JSON_UNESCAPED_UNICODE);
 			echo $output;
@@ -205,6 +211,9 @@
 			'domanda' => null,
 			'R1' => null,
 			'R2' => null,
+			'enigma' => null,
+			'soluzione' => null,
+			'premio' => null,
 		];
 		$output = json_encode ($out, JSON_UNESCAPED_UNICODE);
 		echo $output;
@@ -221,6 +230,9 @@
 	$ifdomanda=$res8['ifdomanda'];
 	$R1=$res8['r1'];
 	$R2=$res8['r2'];
+	$enigma=$res8['enigma'];
+	$soluzione=$res8['soluzione'];
+	$premio=$res8['premio'];
 
 	$Mysql9="SELECT * FROM paired WHERE idoggetto1 = '$idx' or idoggetto2 = '$idx' ";
 	$Result9=mysqli_query($db, $Mysql9);
@@ -484,7 +496,7 @@
 
 		}
 	} else {
-		// Cancello i logscanfull esistenti per questo oggetto e li reinserisco
+		// Cancello i logscanfull esistenti per questo oggetto e li reinserisco eccetto Enigma 
 		$newaccoppiamento = false;
 		foreach ($esito as $riga) {
 			if ( str_starts_with($riga['motivo'], 'Accoppiamento') ) {
@@ -492,9 +504,9 @@
 			}	
 		}
 		if ( $newaccoppiamento ) { // cancello anche l'accoppiamento precedente se esiste
-			$mysql4 = "DELETE FROM logscanfull WHERE idutente = '$idutente' AND idoggetto = '$idx'  ";
+			$mysql4 = "DELETE FROM logscanfull WHERE idutente = '$idutente' AND idoggetto = '$idx' AND motivo != 'Enigma' ";
 		} else {
-			$mysql4 = "DELETE FROM logscanfull WHERE idutente = '$idutente' AND idoggetto = '$idx' and motivo not like 'Accoppiamento%' ";
+			$mysql4 = "DELETE FROM logscanfull WHERE idutente = '$idutente' AND idoggetto = '$idx' AND motivo != 'Enigma' and motivo not like 'Accoppiamento%' ";
 		}
 		mysqli_query($db, $mysql4);
 		foreach ($esito as $riga) {
@@ -509,6 +521,7 @@
 
 
 	$out = [
+		'idoggetto' => $idx,
 		'nomeoggetto' => $nomeoggetto,
 		'descrizione' => $descrizione,
 		'esito' => $esito,
@@ -517,6 +530,9 @@
 		'domanda' => $domanda,
 		'R1' => $R1,
 		'R2' => $R2,
+		'enigma' => $enigma,
+		'soluzione' => $soluzione,
+		'premio' => $premio
 	];
 
 	header("HTTP/1.1 200 OK");
