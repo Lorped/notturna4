@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonList, IonItemSliding, IonItem, IonAvatar, IonLabel, IonIcon, IonItemOptions, IonButton, IonFab, IonFabButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonList, IonItemSliding, IonItem, IonAvatar, IonLabel, IonIcon, IonItemOptions, IonButton, IonFab, IonFabButton } from '@ionic/angular';
 import { AuthserviceService } from '../services/authservice.service';
 import { RubricaItem, User, ToChange } from '../globals';
 import { addIcons } from 'ionicons';

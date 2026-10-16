@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonRow, IonCol } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonRow, IonCol } from '@ionic/angular';
 import { User, Userskill } from '../globals';
 import { TimesPipe } from '../pipes/times.pipe';
 

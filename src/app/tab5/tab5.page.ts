@@ -19,7 +19,7 @@ import {
   IonTitle,
   IonToast,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { pregiodifetto, User, Userskill } from '../globals';
 import { FeedService, FeedItem } from '../services/feed.service';
 import { Router } from '@angular/router';

@@ -13,7 +13,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { User, Userskill } from '../globals';
 import { TimesPipe } from '../pipes/times.pipe';
 // import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';

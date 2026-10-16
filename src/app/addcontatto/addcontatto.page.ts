@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonMenuButton, IonRow, IonCol, IonAvatar, IonItem, IonInput, IonCheckbox, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonBackButton, IonMenuButton, IonRow, IonCol, IonAvatar, IonItem, IonInput, IonCheckbox, IonButton } from '@ionic/angular';
 import { User } from '../globals';
 import { Router } from '@angular/router';
 import { AuthserviceService } from '../services/authservice.service';

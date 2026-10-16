@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonList, IonItem, IonLabel, IonNote } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonList, IonItem, IonLabel, IonNote } from '@ionic/angular';
 import { User, pregiodifetto } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 

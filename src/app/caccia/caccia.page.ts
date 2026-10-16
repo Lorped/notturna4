@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angul
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { pregiodifetto, User, Userskill } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
-import { IonRow, IonCol, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons,  IonMenuButton,  IonItem,   IonButton, IonText, IonLabel } from '@ionic/angular/standalone';
+import { IonRow, IonCol, IonContent, IonHeader, IonToolbar, IonTitle, IonButtons,  IonMenuButton,  IonItem,   IonButton, IonText, IonLabel } from '@ionic/angular';
 
 @Component({
   selector: 'app-caccia',

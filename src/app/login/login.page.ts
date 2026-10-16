@@ -15,7 +15,7 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 
 import { User , Userskill} from '../globals';
 import { AuthserviceService } from '../services/authservice.service';

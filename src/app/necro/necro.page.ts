@@ -9,7 +9,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { User, Userskill } from '../globals';
 import { EsitoPotere } from '../services/authservice.service';
 import { AuthserviceService } from '../services/authservice.service';

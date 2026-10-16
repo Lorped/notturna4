@@ -16,7 +16,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { User  } from '../globals';
 import { AuthserviceService } from '../services/authservice.service';
 import { SessionService } from '../services/session.service';

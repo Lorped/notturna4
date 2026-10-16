@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonItem, IonLabel, IonText, IonList, IonItemGroup, IonItemDivider } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonItem, IonLabel, IonText, IonList, IonItemGroup, IonItemDivider } from '@ionic/angular';
 import { User } from '../globals';
 import { AuthserviceService, FocusAttr } from '../services/authservice.service';
 

@@ -26,7 +26,7 @@ import {
   IonTitle,
   IonToolbar,
   IonInput,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
 
 
@@ -34,7 +34,7 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [
+  imports: [IonCardHeader, IonCard, IonHeader, 
     IonButton,
     IonButtons,
     IonCard,

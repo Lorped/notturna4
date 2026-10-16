@@ -17,7 +17,7 @@ import {
   IonToast,
   IonToggle,
   IonToolbar,
-} from '@ionic/angular/standalone';
+} from '@ionic/angular';
 import { Router } from '@angular/router';
 import { User } from '../globals';
 import { Browser } from '@capacitor/browser';
