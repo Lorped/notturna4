@@ -33,7 +33,7 @@ import {
   IonInput,
 } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
-
+import { GooglePlayServices, Status } from '@capawesome/capacitor-google-play-services';
 
 @Component({
   selector: 'app-tab3',
@@ -215,6 +215,26 @@ export class Tab3Page implements OnInit {
       const { available } =
         await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
       if (!available) {
+        const { status } = await GooglePlayServices.getStatus();
+
+        if (status !== Status.Success) {
+          try {
+            await GooglePlayServices.makeAvailable();
+          } catch (error) {
+            console.error('Errore durante l’attivazione di Google Play Services', error);
+            await this.presentErrorAlert(
+              'Google Play Services non disponibili',
+              error,
+              'Impossibile attivare Google Play Services su questo dispositivo.',
+            );
+            return;
+          }
+          //alert('Google Play Services is not available. Please install or update it.');
+          return;
+        }
+
+
+
         alert('Google Barcode Scanner module is not available. Installing it now.');
         try {
           await this.installGoogleBarcodeScannerModule();
