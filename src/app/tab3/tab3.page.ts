@@ -1,6 +1,11 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import type { PluginListenerHandle } from '@capacitor/core';
 import { User, Oggetto } from '../globals';
-import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import {
+  Barcode,
+  BarcodeScanner,
+  GoogleBarcodeScannerModuleInstallState,
+} from '@capacitor-mlkit/barcode-scanning';
 import { AuthserviceService } from '../services/authservice.service';
 import { MenopsRoutineService } from '../services/menops-routine.service';
 import {
@@ -103,6 +108,94 @@ export class Tab3Page implements OnInit {
     await alert.present();
   }
 
+  private async installGoogleBarcodeScannerModule(): Promise<void> {
+    let resolveInstallation!: () => void;
+    let rejectInstallation!: (reason: Error) => void;
+    let installationCompleted = false;
+    const installationFinished = new Promise<void>((resolve, reject) => {
+      resolveInstallation = resolve;
+      rejectInstallation = reject;
+    });
+    const listener: PluginListenerHandle = await BarcodeScanner.addListener(
+      'googleBarcodeScannerModuleInstallProgress',
+      ({ state }) => {
+        if (installationCompleted) {
+          return;
+        }
+
+        if (state === GoogleBarcodeScannerModuleInstallState.COMPLETED) {
+          installationCompleted = true;
+          void this.presentModuleInstalledAlert().then(
+            resolveInstallation,
+            rejectInstallation,
+          );
+        } else if (
+          state === GoogleBarcodeScannerModuleInstallState.FAILED ||
+          state === GoogleBarcodeScannerModuleInstallState.CANCELED
+        ) {
+          installationCompleted = true;
+          rejectInstallation(
+            new Error(`Google Barcode Scanner module installation ${state}.`),
+          );
+        }
+      },
+    );
+
+    try {
+      await BarcodeScanner.installGoogleBarcodeScannerModule();
+      await installationFinished;
+    } finally {
+      await listener.remove();
+    }
+  }
+
+  private async presentModuleInstalledAlert(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Installazione completata',
+      message: 'Il modulo Google Barcode Scanner è stato installato con successo.',
+      buttons: ['OK'],
+    });
+    await alert.present();
+  }
+
+  private async presentModuleInstallErrorAlert(error: unknown): Promise<void> {
+    await this.presentErrorAlert(
+      'Errore di installazione',
+      error,
+      'Impossibile installare il modulo Google Barcode Scanner.',
+    );
+  }
+
+  private async presentScanErrorAlert(error: unknown): Promise<void> {
+    await this.presentErrorAlert(
+      'Errore durante la scansione',
+      error,
+      'Impossibile completare la scansione del barcode.',
+    );
+  }
+
+  private async presentErrorAlert(
+    header: string,
+    error: unknown,
+    fallbackMessage: string,
+  ): Promise<void> {
+    const message =
+      error instanceof Error
+        ? error.message
+        : typeof error === 'object' &&
+            error !== null &&
+            'message' in error &&
+            typeof error.message === 'string'
+          ? error.message
+          : String(error);
+    const alert = await this.alertController.create({
+      header,
+      message: message || fallbackMessage,
+      buttons: ['OK'],
+    });
+    await alert.present();
+  }
+
   async openbarcode() {
     if (this.isScanning) {
       return;
@@ -122,10 +215,24 @@ export class Tab3Page implements OnInit {
       const { available } =
         await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
       if (!available) {
-        await BarcodeScanner.installGoogleBarcodeScannerModule();
+        alert('Google Barcode Scanner module is not available. Installing it now.');
+        try {
+          await this.installGoogleBarcodeScannerModule();
+        } catch (error) {
+          console.error('Errore durante l’installazione del modulo barcode', error);
+          await this.presentModuleInstallErrorAlert(error);
+          return;
+        }
       }
 
-      const { barcodes } = await BarcodeScanner.scan();
+      let barcodes: Barcode[];
+      try {
+        ({ barcodes } = await BarcodeScanner.scan());
+      } catch (error) {
+        console.error('Errore durante la scansione del barcode', error);
+        await this.presentScanErrorAlert(error);
+        return;
+      }
       this.barcodes = barcodes;
       if (barcodes.length === 0) {
         return;
