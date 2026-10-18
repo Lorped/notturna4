@@ -4,6 +4,10 @@ br {
     margin-top: -5px; /* change this to whatever height you want it */
 }
 
+.scanner-overlay {
+    text-align: center;
+}
+
 .selectable {
     user-select: text !important;
     -webkit-user-select: text !important;

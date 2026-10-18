@@ -110,4 +110,28 @@ hr {
     text-align: center;
 }
 
+// Con startScan() la fotocamera e' renderizzata dietro la WebView:
+// durante la scansione la pagina deve essere trasparente.
+body.barcode-scanner-active {
+    background: transparent;
+
+    ion-app,
+    ion-router-outlet,
+    ion-tabs,
+    .ion-page,
+    ion-content {
+        --background: transparent;
+        background: transparent;
+    }
+
+    ion-header,
+    ion-tab-bar {
+        visibility: hidden;
+    }
+
+    .scanner-overlay {
+        visibility: visible;
+    }
+}
+
 

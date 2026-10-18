@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import type { PluginListenerHandle } from '@capacitor/core';
 import { User, Oggetto } from '../globals';
@@ -72,6 +73,10 @@ export class Tab3Page implements OnInit {
   public barcodes: Barcode[] = [];
   public isPermissionGranted = false;
   public isScanning = false;
+  public usingGoogleBarcodeScannerModule = false;
+  public isCameraViewActive = false;
+  private resolveCameraScan?: (barcode: Barcode | undefined) => void;
+  private document = inject(DOCUMENT);
 
   isModalOpen = false;
   oggetto: Oggetto = new Oggetto();
@@ -125,10 +130,7 @@ export class Tab3Page implements OnInit {
 
         if (state === GoogleBarcodeScannerModuleInstallState.COMPLETED) {
           installationCompleted = true;
-          void this.presentModuleInstalledAlert().then(
-            resolveInstallation,
-            rejectInstallation,
-          );
+          resolveInstallation();
         } else if (
           state === GoogleBarcodeScannerModuleInstallState.FAILED ||
           state === GoogleBarcodeScannerModuleInstallState.CANCELED
@@ -149,21 +151,52 @@ export class Tab3Page implements OnInit {
     }
   }
 
-  private async presentModuleInstalledAlert(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'Installazione completata',
-      message: 'Il modulo Google Barcode Scanner è stato installato con successo.',
-      buttons: ['OK'],
-    });
-    await alert.present();
+  stopCameraScan() {
+    this.resolveCameraScan?.(undefined);
   }
 
-  private async presentModuleInstallErrorAlert(error: unknown): Promise<void> {
-    await this.presentErrorAlert(
-      'Errore di installazione',
-      error,
-      'Impossibile installare il modulo Google Barcode Scanner.',
-    );
+  private setCameraViewActive(active: boolean) {
+    this.isCameraViewActive = active;
+    this.document.body.classList.toggle('barcode-scanner-active', active);
+    this.changeDetectorRef.markForCheck();
+  }
+
+  private async startBarcodeScan(): Promise<Barcode | undefined> {
+    let rejectScan!: (reason: Error) => void;
+    const scanResult = new Promise<Barcode | undefined>((resolve, reject) => {
+      this.resolveCameraScan = resolve;
+      rejectScan = reject;
+    });
+    const resolveScan = this.resolveCameraScan!;
+    const listeners: PluginListenerHandle[] = [];
+    let scanningStarted = false;
+
+    try {
+      listeners.push(
+        await BarcodeScanner.addListener('barcodesScanned', ({ barcodes }) => {
+          const [barcode] = barcodes;
+          if (barcode) {
+            resolveScan(barcode);
+          }
+        }),
+      );
+      listeners.push(
+        await BarcodeScanner.addListener('scanError', ({ message }) => {
+          rejectScan(new Error(message));
+        }),
+      );
+      await BarcodeScanner.startScan();
+      scanningStarted = true;
+      this.setCameraViewActive(true);
+      return await scanResult;
+    } finally {
+      this.resolveCameraScan = undefined;
+      this.setCameraViewActive(false);
+      if (scanningStarted) {
+        await BarcodeScanner.stopScan();
+      }
+      await Promise.all(listeners.map((listener) => listener.remove()));
+    }
   }
 
   private async presentScanErrorAlert(error: unknown): Promise<void> {
@@ -214,6 +247,8 @@ export class Tab3Page implements OnInit {
 
       const { available } =
         await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
+      this.usingGoogleBarcodeScannerModule = available;
+
       if (!available) {
         const { status } = await GooglePlayServices.getStatus();
 
@@ -229,36 +264,37 @@ export class Tab3Page implements OnInit {
             );
             return;
           }
-          //alert('Google Play Services is not available. Please install or update it.');
-          return;
         }
 
 
 
-        alert('Google Barcode Scanner module is not available. Installing it now.');
         try {
           await this.installGoogleBarcodeScannerModule();
+          this.usingGoogleBarcodeScannerModule = true;
         } catch (error) {
           console.error('Errore durante l’installazione del modulo barcode', error);
-          await this.presentModuleInstallErrorAlert(error);
-          return;
+          this.usingGoogleBarcodeScannerModule = false;
         }
       }
 
-      let barcodes: Barcode[];
+      // this.usingGoogleBarcodeScannerModule = false; // SOLO PER TEST!!
+
+      let barcode: Barcode | undefined;
       try {
-        ({ barcodes } = await BarcodeScanner.scan());
+        barcode = this.usingGoogleBarcodeScannerModule
+          ? (await BarcodeScanner.scan()).barcodes[0]
+          : await this.startBarcodeScan();
       } catch (error) {
         console.error('Errore durante la scansione del barcode', error);
         await this.presentScanErrorAlert(error);
         return;
       }
-      this.barcodes = barcodes;
-      if (barcodes.length === 0) {
+      this.barcodes = barcode ? [barcode] : [];
+      if (!barcode) {
         return;
       }
 
-      this.oggetto.id = barcodes[0].rawValue ?? '';
+      this.oggetto.id = barcode.rawValue ?? '';
       if (this.oggetto.id.length > 12) {
         this.oggetto.id = this.oggetto.id.slice(-12);
       }
