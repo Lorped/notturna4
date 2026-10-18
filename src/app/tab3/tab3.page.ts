@@ -1,9 +1,10 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import type { PluginListenerHandle } from '@capacitor/core';
 import { User, Oggetto } from '../globals';
 import {
   Barcode,
+  BarcodeFormat,
   BarcodeScanner,
   GoogleBarcodeScannerModuleInstallState,
 } from '@capacitor-mlkit/barcode-scanning';
@@ -34,7 +35,7 @@ import {
   IonInput,
 } from '@ionic/angular';
 import { firstValueFrom } from 'rxjs';
-import { GooglePlayServices, Status } from '@capawesome/capacitor-google-play-services';
+//import { GooglePlayServices, Status } from '@capawesome/capacitor-google-play-services';
 
 @Component({
   selector: 'app-tab3',
@@ -64,7 +65,7 @@ import { GooglePlayServices, Status } from '@capawesome/capacitor-google-play-se
     IonInput,
   ],
 })
-export class Tab3Page implements OnInit {
+export class Tab3Page implements OnInit, OnDestroy {
 
   rispcorretta = 0;
   rispostaenigma = ''; // Risposta utente all'enigma
@@ -98,6 +99,23 @@ export class Tab3Page implements OnInit {
     this.menopsRoutine.ripristina(this.user);
   }
 
+  ngOnDestroy() {
+    this.stopCameraScan();
+  }
+
+  ionViewWillLeave() {
+    this.stopCameraScan();
+  }
+
+  private async presentServerErrorAlert(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Errore',
+      message: 'Impossibile recuperare le informazioni dell’oggetto. Riprova.',
+      buttons: ['OK'],
+    });
+    await alert.present();
+  }
+
 
   async requestPermissions(): Promise<boolean> {
     const { camera } = await BarcodeScanner.requestPermissions();
@@ -106,9 +124,19 @@ export class Tab3Page implements OnInit {
 
   async presentAlert(): Promise<void> {
     const alert = await this.alertController.create({
-      header: 'Permission denied',
-      message: 'Please grant camera permission to use the barcode scanner.',
-      buttons: ['OK'],
+      header: 'Permesso negato',
+      message: 'Per usare lo scanner concedi il permesso della fotocamera dalle impostazioni dell’app.',
+      buttons: [
+        { text: 'Annulla', role: 'cancel' },
+        {
+          text: 'Apri impostazioni',
+          handler: () => {
+            BarcodeScanner.openSettings().catch((error: unknown) =>
+              console.error('Impossibile aprire le impostazioni', error),
+            );
+          },
+        },
+      ],
     });
     await alert.present();
   }
@@ -162,12 +190,25 @@ export class Tab3Page implements OnInit {
   }
 
   private async startBarcodeScan(): Promise<Barcode | undefined> {
+    let settled = false;
+    let resolveScan!: (barcode: Barcode | undefined) => void;
     let rejectScan!: (reason: Error) => void;
     const scanResult = new Promise<Barcode | undefined>((resolve, reject) => {
-      this.resolveCameraScan = resolve;
-      rejectScan = reject;
+      // Gli eventi successivi al primo risultato vengono ignorati
+      resolveScan = (barcode) => {
+        if (!settled) {
+          settled = true;
+          resolve(barcode);
+        }
+      };
+      rejectScan = (reason) => {
+        if (!settled) {
+          settled = true;
+          reject(reason);
+        }
+      };
     });
-    const resolveScan = this.resolveCameraScan!;
+    this.resolveCameraScan = resolveScan;
     const listeners: PluginListenerHandle[] = [];
     let scanningStarted = false;
 
@@ -185,7 +226,7 @@ export class Tab3Page implements OnInit {
           rejectScan(new Error(message));
         }),
       );
-      await BarcodeScanner.startScan();
+      await BarcodeScanner.startScan({ formats: [BarcodeFormat.QrCode] });
       scanningStarted = true;
       this.setCameraViewActive(true);
       return await scanResult;
@@ -199,6 +240,7 @@ export class Tab3Page implements OnInit {
     }
   }
 
+  /*
   private async presentScanErrorAlert(error: unknown): Promise<void> {
     await this.presentErrorAlert(
       'Errore durante la scansione',
@@ -206,6 +248,7 @@ export class Tab3Page implements OnInit {
       'Impossibile completare la scansione del barcode.',
     );
   }
+  
 
   private async presentErrorAlert(
     header: string,
@@ -228,6 +271,7 @@ export class Tab3Page implements OnInit {
     });
     await alert.present();
   }
+  */
 
   async openbarcode() {
     if (this.isScanning) {
@@ -250,6 +294,10 @@ export class Tab3Page implements OnInit {
       this.usingGoogleBarcodeScannerModule = available;
 
       if (!available) {
+
+        
+        /***
+        // Check Google Play Services status
         const { status } = await GooglePlayServices.getStatus();
 
         if (status !== Status.Success) {
@@ -265,6 +313,7 @@ export class Tab3Page implements OnInit {
             return;
           }
         }
+        */
 
 
 
@@ -277,16 +326,17 @@ export class Tab3Page implements OnInit {
         }
       }
 
-      // this.usingGoogleBarcodeScannerModule = false; // SOLO PER TEST!!
+      // SOLO PER TEST!!
+      //this.usingGoogleBarcodeScannerModule = false; // SOLO PER TEST!!
 
       let barcode: Barcode | undefined;
       try {
         barcode = this.usingGoogleBarcodeScannerModule
-          ? (await BarcodeScanner.scan()).barcodes[0]
+          ? (await BarcodeScanner.scan({ formats: [BarcodeFormat.QrCode] })).barcodes[0]
           : await this.startBarcodeScan();
       } catch (error) {
         console.error('Errore durante la scansione del barcode', error);
-        await this.presentScanErrorAlert(error);
+        //await this.presentScanErrorAlert(error);
         return;
       }
       this.barcodes = barcode ? [barcode] : [];
@@ -299,9 +349,16 @@ export class Tab3Page implements OnInit {
         this.oggetto.id = this.oggetto.id.slice(-12);
       }
 
-      const data = await firstValueFrom(
-        this.authservice.barcode(this.user.idutente, this.oggetto.id)
-      );
+      let data: Oggetto;
+      try {
+        data = await firstValueFrom(
+          this.authservice.barcode(this.user.idutente, this.oggetto.id)
+        );
+      } catch (error) {
+        console.error('Errore durante la lettura dell’oggetto', error);
+        await this.presentServerErrorAlert();
+        return;
+      }
 
       this.oggetto.idoggetto = data.idoggetto;
       this.oggetto.nomeoggetto = data.nomeoggetto;
@@ -369,11 +426,16 @@ export class Tab3Page implements OnInit {
 
   async RispostaEnigma() {
     // Logica per gestire la risposta all'enigma
-    console.log('Risposta all\'enigma:', this.rispostaenigma);
+    // console.log('Risposta enigma:', this.rispostaenigma);
     if ( this.rispostaenigma.trim().toUpperCase() === this.oggetto.soluzione.trim().toUpperCase()) {
       
-      await this.authservice.writeenigma(this.user.idutente, this.oggetto.idoggetto).subscribe();
-      this.rispcorretta = 1; // Risposta corretta sblocco enigma su frontend
+      this.authservice.writeenigma(this.user.idutente, this.oggetto.idoggetto).subscribe({
+        next: () => {
+          this.rispcorretta = 1; // Risposta corretta sblocco enigma su frontend
+          this.changeDetectorRef.markForCheck();
+        },
+        error: (error: unknown) => console.error('Errore durante il salvataggio dell’enigma', error),
+      });
       this.authservice.msgtomaster(this.user.idutente,'Risolto enigma ' + this.oggetto.nomeoggetto).subscribe();
 
       

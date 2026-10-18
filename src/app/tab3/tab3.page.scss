@@ -8,6 +8,19 @@ br {
     text-align: center;
 }
 
+.scanner-viewfinder {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 60vw;
+    height: 60vw;
+    transform: translate(-50%, -50%);
+    border: 3px solid #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
 .selectable {
     user-select: text !important;
     -webkit-user-select: text !important;

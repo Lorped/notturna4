@@ -13,6 +13,7 @@
   @if (isCameraViewActive) {
     <div class="scanner-overlay">
       <ion-button color="danger" shape="round" (click)="stopCameraScan()">Annulla</ion-button>
+      <div class="scanner-viewfinder" aria-hidden="true"></div>
     </div>
   } @else {
 
