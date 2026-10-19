@@ -71,7 +71,7 @@
               "aot": false,
               "optimization": false,
               "extractLicenses": false,
-              "polyfills": "src/polyfills.ts"
+              "polyfills": ["src/polyfills.ts"]
             },
             "testing-ci": {
               "aot": false,
