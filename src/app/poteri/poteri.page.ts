@@ -156,12 +156,7 @@ export class PoteriPage implements OnInit {
 
   async showalert(pot: string, livellopot: number, tipo: string) {
 
-    let messaggio = '';
-    if (tipo == "T") {
-      messaggio = '[Tiro contrapposto: ' + this.esito.tiro + ']';
-    } else {
-      messaggio = '';
-    }
+    const messaggio = tipo == "T" ? '[Tiro contrapposto: ' + this.esito.tiro + ']' : '';
 
     const alert = await this.alertCtrl.create({
       header: pot,
