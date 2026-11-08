@@ -71,9 +71,10 @@
               "aot": false,
               "optimization": false,
               "extractLicenses": false,
-              "polyfills": ["src/polyfills.ts"]
+              "polyfills": []
             },
             "testing-ci": {
+              "polyfills": [],
               "aot": false,
               "optimization": false,
               "extractLicenses": false
@@ -108,7 +109,6 @@
             "tsConfig": "tsconfig.spec.json",
             "reporters": ["default"],
             "coverageReporters": ["html", "text-summary"],
-            "setupFiles": ["src/test.ts"],
             "buildTarget": ":build:testing",
             "runner": "vitest"
           },

@@ -30,7 +30,7 @@
 		<ion-row >
 			<ion-col >
 				<ion-item >		
-			  		<ion-input style="font-size:1.5em;"  type="text" placeholder="Nome del Contatto" name="contatto" [(ngModel)]="tochange.contatto" autofocus required ></ion-input>
+          <ion-input style="font-size:1.5em;" type="text" placeholder="Nome del Contatto" name="contatto" [ngModel]="contatto()" (ngModelChange)="contatto.set($event)" autofocus required></ion-input>
 				</ion-item>
 			</ion-col>
 		</ion-row>				
@@ -52,7 +52,7 @@
     <ion-row >
       <ion-col >	
         <ion-item >
-          <ion-input name="note" type="text" placeholder="Altre annotazioni" [(ngModel)]="tochange.note"></ion-input>
+          <ion-input name="note" type="text" placeholder="Altre annotazioni" [ngModel]="note()" (ngModelChange)="note.set($event)"></ion-input>
         </ion-item>
 			</ion-col>
 		</ion-row>
@@ -64,5 +64,3 @@
 	</form>
 				
 </ion-content>
-
-

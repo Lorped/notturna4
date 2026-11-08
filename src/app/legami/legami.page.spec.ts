@@ -5,11 +5,11 @@ describe('LegamiPage', () => {
   let component: LegamiPage;
   let fixture: ComponentFixture<LegamiPage>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     fixture = TestBed.createComponent(LegamiPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
