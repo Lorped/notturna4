@@ -42,6 +42,28 @@ if ($userId === false) {
     respond(['error' => 'Invalid userid'], 400);
 }
 
+$limit = null;
+if (array_key_exists('limit', $_GET)) {
+    $rawLimit = $_GET['limit'];
+    $limit = is_string($rawLimit)
+        ? filter_var($rawLimit, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 100]])
+        : false;
+    if ($limit === false) {
+        respond(['error' => 'Invalid limit'], 400);
+    }
+}
+
+$beforeId = null;
+if (array_key_exists('before', $_GET)) {
+    $rawBeforeId = $_GET['before'];
+    $beforeId = is_string($rawBeforeId)
+        ? filter_var($rawBeforeId, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])
+        : false;
+    if ($beforeId === false || $limit === null) {
+        respond(['error' => 'Invalid before'], 400);
+    }
+}
+
 try {
     require_once __DIR__ . '/db2.inc.php';
 
@@ -63,32 +85,47 @@ try {
         }
     }
 
-    if ($userId === -1) {
-        $statement = $db->prepare(
-            'SELECT nomepg, Ora, Testo FROM dadi ORDER BY ID DESC'
-        );
-    } elseif ($userId === 0) {
-        $statement = $db->prepare(
-            'SELECT nomepg, Ora, Testo FROM dadi WHERE Destinatario = -1 ORDER BY ID DESC'
-        );
-    } else {
-        $statement = $db->prepare(
-            'SELECT nomepg, Ora, Testo FROM dadi
-             WHERE Destinatario = -1
+    $fields = $limit === null ? 'nomepg, Ora, Testo' : 'ID, nomepg, Ora, Testo';
+    $sql = "SELECT $fields FROM dadi";
+    $conditions = [];
+    $types = '';
+    $params = [];
+
+    if ($userId === 0) {
+        $conditions[] = 'Destinatario = -1';
+    } elseif ($userId !== -1) {
+        $conditions[] = '(Destinatario = -1
                 OR Destinatario = ?
                 OR idutente = ?
                 OR (clan = ? AND cronaca = -1)
-                OR (clan = ? AND cronaca = ?)
-             ORDER BY ID DESC'
-        );
-        $statement->bind_param(
-            'iiiii',
+                OR (clan = ? AND cronaca = ?))';
+        $types = 'iiiii';
+        $params = [
             $userId,
             $userId,
             $clanId,
             $clanId,
             $chronicleId
-        );
+        ];
+    }
+    if ($beforeId !== null) {
+        $conditions[] = 'ID < ?';
+        $types .= 'i';
+        $params[] = $beforeId;
+    }
+    if ($conditions) {
+        $sql .= ' WHERE ' . implode(' AND ', $conditions);
+    }
+    $sql .= ' ORDER BY ID DESC';
+    if ($limit !== null) {
+        $sql .= ' LIMIT ?';
+        $types .= 'i';
+        $params[] = $limit;
+    }
+
+    $statement = $db->prepare($sql);
+    if ($types !== '') {
+        $statement->bind_param($types, ...$params);
     }
 
     $statement->execute();
@@ -97,12 +134,16 @@ try {
 
     while ($row = $result->fetch_assoc()) {
         $date = new DateTimeImmutable($row['Ora']);
-        $posts[] = [
+        $post = [
             'pg' => $row['nomepg'],
             'testo' => $row['Testo'] ?? '',
             'ora' => $date->format('H:i'),
             'data' => $date->format('d/m/Y'),
         ];
+        if ($limit !== null) {
+            $post['id'] = (int) $row['ID'];
+        }
+        $posts[] = $post;
     }
 
     $statement->close();
