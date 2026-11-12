@@ -51,5 +51,6 @@ $note = mysqli_real_escape_string($db, $request->note);
 	$Result = mysqli_query($db, $MySql);
 	if (mysqli_errno($db)) die ( mysqli_errno($db).": ".mysqli_error($db)."+". $MySql );
 
+	echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 
 ?>

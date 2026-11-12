@@ -47,6 +47,7 @@
 	master2user($destinatario,$messaggio, $db);
 
 
+	echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 
 
 

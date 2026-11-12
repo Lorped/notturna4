@@ -46,5 +46,6 @@ $note = mysqli_real_escape_string($db, $request->note);
 	$MySql = "UPDATE personaggio SET note='$note' WHERE idutente=$idutente  ";
 	$Result = mysqli_query($db, $MySql);
 
+	echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 
 ?>

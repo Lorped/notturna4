@@ -49,6 +49,6 @@ $descrX = mysqli_real_escape_string($db, $request->descrX);
 	$MySql = "UPDATE cond_oggetti SET tabcond=$tabcond , valcond=$valcond , descrX='$descrX' WHERE idcondizione=$idcondizione  ";
 	$Result = mysqli_query($db, $MySql);
 
-
+	echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 
 ?>

@@ -43,6 +43,7 @@
 	$valsentiero=$res['valsentiero'];
 
 	if ($bol> $PScorrenti+1 || $PScorrenti<1 || $valsentiero<5) {
+		echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 		exit(0);
 	}
 
@@ -58,6 +59,7 @@
 		user2master($idutente,$testo, $db );
 	}
 
+	echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 
 
 ?>

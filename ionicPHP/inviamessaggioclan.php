@@ -85,9 +85,7 @@
 	}
 	
 
-
-
-
+	echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 
 
 

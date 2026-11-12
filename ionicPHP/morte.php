@@ -69,5 +69,6 @@
 $Mysql="DELETE from legami WHERE target=$idutente  or domitor=$idutente";
 $Result=mysqli_query($db, $Mysql);
 
+echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 
 ?>

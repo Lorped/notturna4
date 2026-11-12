@@ -25,7 +25,7 @@ $diablerista=$_GET['diabl'];
 $vittima=$_GET['vittima'];
 
 
-  include ('db2.inc.php');  // NEW MYSQL //
+  require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
 
 
 		//controllo-aggiorno fdv
@@ -133,4 +133,5 @@ $vittima=$_GET['vittima'];
     $Mysql3="UPDATE personaggio SET notemaster='$xnote'  WHERE idutente=$diablerista";
     mysqli_query($db, $Mysql3);
 
+    echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 ?>

@@ -44,6 +44,7 @@ require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
 		$Mysql="UPDATE personaggio SET fdv=fdv-1 WHERE idutente= $idutente ";
 		mysqli_query($db, $Mysql);
 
+		echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 
 
 

@@ -36,5 +36,6 @@ require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
 
 	}
 
+	echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 
 ?>

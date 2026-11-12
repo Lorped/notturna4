@@ -49,6 +49,6 @@ $descrizione = mysqli_real_escape_string($db, $request->descrizione);
 	$MySql = "UPDATE oggetti SET  nomeoggetto='$nomeoggetto' , descrizione='$descrizione' WHERE idoggetto=$idoggetto  ";
 	$Result = mysqli_query($db, $MySql);
 
-
+	echo json_encode("OK", JSON_UNESCAPED_UNICODE);
 
 ?>
