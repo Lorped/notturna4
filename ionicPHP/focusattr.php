@@ -22,7 +22,7 @@
 	}
 
 
-	$id =  isset($_GET['id']) ? $_GET['id'] :"";
+	$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 	
 
 	require_once __DIR__ . '/db2.inc.php';  // NEW MYSQL //
@@ -30,125 +30,46 @@
  	$out = [];
 	
 	
-	if ($id != '') {
+	if ($id !== false && $id !== null && $id > 0) {
+        $mysql = "SELECT forza, destrezza, attutimento, carisma, persuasione,
+            saggezza, percezione, intelligenza, prontezza
+            FROM personaggio WHERE idutente = " . (int) $id;
+        $result = mysqli_query($db, $mysql);
+        $livelli = mysqli_fetch_assoc($result);
+        $attributi = [
+            'forza' => 'Forza',
+            'destrezza' => 'Destrezza',
+            'attutimento' => 'Attutimento',
+            'carisma' => 'Carisma',
+            'persuasione' => 'Persuasione',
+            'saggezza' => 'Saggezza',
+            'percezione' => 'Percezione',
+            'intelligenza' => 'Intelligenza',
+            'prontezza' => 'Prontezza'
+        ];
+        $bonusPerAttributo = array_fill_keys(array_keys($attributi), []);
 
-		$mysql="SELECT * from personaggio WHERE idutente = $id";
-		$result=mysqli_query($db,$mysql);
-		$res = mysqli_fetch_array($result,MYSQLI_ASSOC);
-	
-		$forza = $res['forza'];
-		$destrezza = $res['destrezza'];
-		$attutimento = $res['attutimento'];
-		$carisma = $res['carisma'];
-		$persuasione = $res['persuasione'];
-		$saggezza = $res['saggezza'];
-		$percezione = $res['percezione'];
-		$intelligenza = $res['intelligenza'];
-		$prontezza = $res['prontezza'];
-		
+        if ($livelli) {
+            $condizioni = [];
+            foreach (array_keys($attributi) as $nome) {
+                $condizioni[] = "(nomeattr = '$nome' AND livelloattr <= " . (int) $livelli[$nome] . ')';
+            }
 
+            $mysql = 'SELECT nomeattr, livelloattr, bonus FROM focusattr WHERE ' . implode(' OR ', $condizioni);
+            $result = mysqli_query($db, $mysql);
+            while ($res = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                $bonusPerAttributo[$res['nomeattr']][] = $res;
+            }
+        }
 
-		$bonus = [];
-		$mysql="SELECT * FROM `focusattr` WHERE focusattr.livelloattr <= $forza AND nomeattr = 'forza'";
-		$result=mysqli_query($db,$mysql);
-		while ( $res = mysqli_fetch_array($result,MYSQLI_ASSOC)   ) {
-			$bonus [] =$res;
-		}
-		$out[] = [
-			'attr'=> 'Forza',
-			'bonus'=> $bonus	
-		];
-
-		$bonus = [];
-		$mysql="SELECT * FROM `focusattr` WHERE focusattr.livelloattr <= $destrezza AND nomeattr = 'destrezza'";
-		$result=mysqli_query($db,$mysql);
-		while ( $res = mysqli_fetch_array($result,MYSQLI_ASSOC)   ) {
-			$bonus [] =$res;
-		}
-		$out[] = [
-			'attr'=> 'Destrezza',
-			'bonus'=> $bonus	
-		];
-
-		$bonus = [];
-		$mysql="SELECT * FROM `focusattr` WHERE focusattr.livelloattr <= $attutimento AND nomeattr = 'attutimento'";
-		$result=mysqli_query($db,$mysql);
-		while ( $res = mysqli_fetch_array($result,MYSQLI_ASSOC)   ) {
-			$bonus [] =$res;
-		}
-		$out[] = [
-			'attr'=> 'Attutimento',
-			'bonus'=> $bonus	
-		];
-
-		$bonus = [];
-		$mysql="SELECT * FROM `focusattr` WHERE focusattr.livelloattr <= $carisma AND nomeattr = 'carisma'";
-		$result=mysqli_query($db,$mysql);
-		while ( $res = mysqli_fetch_array($result,MYSQLI_ASSOC)   ) {
-			$bonus [] =$res;
-		}
-		$out[] = [
-			'attr'=> 'Carisma',
-			'bonus'=> $bonus	
-		];
-
-		$bonus = [];
-		$mysql="SELECT * FROM `focusattr` WHERE focusattr.livelloattr <= $persuasione AND nomeattr = 'persuasione'";
-		$result=mysqli_query($db,$mysql);
-		while ( $res = mysqli_fetch_array($result,MYSQLI_ASSOC)   ) {
-			$bonus [] =$res;
-		}
-		$out[] = [
-			'attr'=> 'Persuasione',
-			'bonus'=> $bonus	
-		];
-
-
-		$bonus = [];
-		$mysql="SELECT * FROM `focusattr` WHERE focusattr.livelloattr <= $saggezza AND nomeattr = 'saggezza'";
-		$result=mysqli_query($db,$mysql);
-		while ( $res = mysqli_fetch_array($result,MYSQLI_ASSOC)   ) {
-			$bonus [] =$res;
-		}
-		$out[] = [
-			'attr'=> 'Saggezza',
-			'bonus'=> $bonus	
-		];
-
-		$bonus = [];
-		$mysql="SELECT * FROM `focusattr` WHERE focusattr.livelloattr <= $percezione AND nomeattr = 'percezione'";
-		$result=mysqli_query($db,$mysql);
-		while ( $res = mysqli_fetch_array($result,MYSQLI_ASSOC)   ) {
-			$bonus [] =$res;
-		}
-		$out[] = [
-			'attr'=> 'Percezione',
-			'bonus'=> $bonus	
-		];
-
-		$bonus = [];
-		$mysql="SELECT * FROM `focusattr` WHERE focusattr.livelloattr <= $intelligenza AND nomeattr = 'intelligenza'";
-		$result=mysqli_query($db,$mysql);
-		while ( $res = mysqli_fetch_array($result,MYSQLI_ASSOC)   ) {
-			$bonus [] =$res;
-		}
-		$out[] = [
-			'attr'=> 'Intelligenza',
-			'bonus'=> $bonus	
-		];
-
-		$bonus = [];
-		$mysql="SELECT * FROM `focusattr` WHERE focusattr.livelloattr <= $prontezza AND nomeattr = 'prontezza'";
-		$result=mysqli_query($db,$mysql);
-		while ( $res = mysqli_fetch_array($result,MYSQLI_ASSOC)   ) {
-			$bonus [] =$res;
-		}
-		$out[] = [
-			'attr'=> 'Prontezza',
-			'bonus'=> $bonus	
-		];
-
+        foreach ($attributi as $nome => $etichetta) {
+            $out[] = [
+                'attr' => $etichetta,
+                'bonus' => $bonusPerAttributo[$nome]
+            ];
+        }
 	}
+
 	$output = json_encode ($out, JSON_UNESCAPED_UNICODE);
 
 	echo $output;

@@ -69,7 +69,7 @@
 		$chance =	$chance +5 ;
 	}
 
-	$QD="SELECT * from pregidifetti where idutente=$idutente and idpregio=16"; //Zanne perm
+	$QD="SELECT 1 from pregidifetti where idutente=$idutente and idpregio=16 LIMIT 1"; //Zanne perm
 	$RD=mysqli_query($db,$QD);
 	if ($pres=mysqli_fetch_array($RD)) {
 		$chance =	$chance +5 ;

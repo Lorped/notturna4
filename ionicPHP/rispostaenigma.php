@@ -30,7 +30,7 @@
 	$idutente=$_GET['id'];
 	$idoggetto=$_GET['idoggetto'];
 
-	$mysql3 = "SELECT * FROM oggetti WHERE idoggetto = '$idoggetto'";
+	$mysql3 = "SELECT premio FROM oggetti WHERE idoggetto = '$idoggetto'";
 	$result3 = mysqli_query($db, $mysql3);
 	$riga3 = mysqli_fetch_assoc($result3);
 	$premio = $riga3['premio'];
@@ -40,7 +40,7 @@
 	$mot = "Enigma";
 	$descr=$premio;
 
-	$mysql = "SELECT * FROM logscanfull WHERE idutente = '$idutente' AND idoggetto = '$idoggetto' AND motivo = 'Enigma'";
+	$mysql = "SELECT 1 FROM logscanfull WHERE idutente = '$idutente' AND idoggetto = '$idoggetto' AND motivo = 'Enigma' LIMIT 1";
 	$result = mysqli_query($db, $mysql);
 	if ( $res = mysqli_fetch_array($result) ) {
 		// Record exists, do nothing

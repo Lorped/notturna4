@@ -44,14 +44,14 @@
 
 
 	// check pregio
-	$Mysql2="SELECT * FROM pregidifetti  WHERE idutente=$idutente and idpregio=54";  //vero amore	
+	$Mysql2="SELECT 1 FROM pregidifetti WHERE idutente=$idutente and idpregio=54 LIMIT 1";  //vero amore
 	$Result2=mysqli_query ($db, $Mysql2);
 	if ($res2=mysqli_num_rows($Result2)) {
 		$fdv= $fdv + 1;
 	}
 
 	// check difetto
-	$Mysql2="SELECT * FROM pregidifetti  WHERE idutente=$idutente and idpregio=27";  //volontà debole	
+	$Mysql2="SELECT 1 FROM pregidifetti WHERE idutente=$idutente and idpregio=27 LIMIT 1";  //volontà debole
 	$Result2=mysqli_query ($db, $Mysql2);
 	if ($res2=mysqli_num_rows($Result2)) {
 		$fdv= $fdv - 2;

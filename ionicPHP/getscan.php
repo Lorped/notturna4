@@ -37,32 +37,38 @@
 		FROM logscanogg 
 		left join oggetti on oggetti.idoggetto = logscanogg.idoggetto
 		WHERE idutente = '$idutente' 
-		order by datascan desc ";
+		ORDER BY logscanogg.datascan DESC ";
 	$result = mysqli_query($db, $mysql);
-	while($res=mysqli_fetch_array($result)) {		
-		$idx=$res['idoggetto'];
-		$datascan=$res['datascan'];
-		$mysql2 = "SELECT * FROM oggetti WHERE idoggetto = '$idx' ";
-		$result2 = mysqli_query($db, $mysql2);
-		$res2=mysqli_fetch_array($result2);
-		$nomeoggetto=$res2['nomeoggetto'];
-		$descrizione=$res2['descrizione'];
+	$scans = [];
+	while ($res = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+		$scans[] = $res;
+	}
 
-		$esito = [];
-		$mysql3 = "SELECT motivo, descrizione FROM logscanfull WHERE idutente = '$idutente' AND idoggetto = '$idx' ";
+	$esitiPerOggetto = [];
+	if ($scans) {
+		$idOggetti = implode(',', array_unique(array_map(function ($scan) {
+			return (int) $scan['idoggetto'];
+		}, $scans)));
+		$mysql3 = "SELECT idoggetto, motivo, descrizione FROM logscanfull
+			WHERE idutente = '$idutente' AND idoggetto IN ($idOggetti)";
 		$result3 = mysqli_query($db, $mysql3);
-		while ( $res3=mysqli_fetch_array($result3,MYSQLI_ASSOC) ) {
-			$esito[] = $res3;
+		while ($res3 = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
+			$esitiPerOggetto[$res3['idoggetto']][] = [
+				'motivo' => $res3['motivo'],
+				'descrizione' => $res3['descrizione']
+			];
 		}
+	}
 
+	foreach ($scans as $res) {
+		$idx = $res['idoggetto'];
 		$xx = [
-			'nomeoggetto' => $nomeoggetto,
-			'descrizione' => $descrizione,
-			'datascan' => $datascan,
-			'esito' => $esito
+			'nomeoggetto' => $res['nomeoggetto'],
+			'descrizione' => $res['descrizione'],
+			'datascan' => $res['datascan'],
+			'esito' => $esitiPerOggetto[$idx] ?? []
 		];
 		$out[] = $xx;
-
 	}
 
 	

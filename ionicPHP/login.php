@@ -166,14 +166,12 @@ if (isset($postdata) && $username != "" && $password !="" ) {
 	mysqli_query($db, $MM);
 
   
-  $SCA="SELECT * from logscanogg where DATE_ADD( datascan , INTERVAL 7 DAY )<NOW()";
-  $Result = mysqli_query($db, $SCA);
-  while ( $res = mysqli_fetch_array($Result)   ) {
-    $idoggetto=$res['idoggetto'];
-    $idxutente=$res['idutente'];
-    $SCA2="DELETE FROM logscanfull WHERE idoggetto = '$idoggetto' and idutente = '$idxutente'";
-    mysqli_query($db, $SCA2);
-  }
+  $SCA="DELETE logscanfull FROM logscanfull
+    INNER JOIN logscanogg
+      ON logscanfull.idoggetto = logscanogg.idoggetto
+      AND logscanfull.idutente = logscanogg.idutente
+    WHERE DATE_ADD(logscanogg.datascan, INTERVAL 7 DAY) < NOW()";
+  mysqli_query($db, $SCA);
   $SCA3="DELETE FROM logscanogg where DATE_ADD( datascan , INTERVAL 7 DAY )<NOW()";
   mysqli_query($db, $SCA3);
 

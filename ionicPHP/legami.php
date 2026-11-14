@@ -62,12 +62,7 @@
 	$Mysql="UPDATE personaggio SET fdv=fdv-1 WHERE idutente= $domitor ";
 	mysqli_query($db, $Mysql);
 
-	$Mysql="SELECT * from personaggio  WHERE idutente=$domitor ";
-	$Result=mysqli_query ($db, $Mysql);
-	$res = mysqli_fetch_array($Result);
-
-
-	$Mysql="SELECT * from pregidifetti  WHERE idutente=$target and idpregio=51";
+	$Mysql="SELECT 1 from pregidifetti WHERE idutente=$target and idpregio=51 LIMIT 1";
 	$Result=mysqli_query ($db, $Mysql);
 	if ( $res = mysqli_fetch_array( $Result) ) {
 		/* invincolabile non faccio nulla*/

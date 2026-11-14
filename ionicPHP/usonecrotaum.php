@@ -75,10 +75,6 @@
 
 	user2master($idutente, $testo, $db);
 
-	$Mysql="SELECT * FROM personaggio  WHERE idutente=$idutente";
-	$Result = mysqli_query($db, $Mysql);
-	$res=mysqli_fetch_array($Result);
-
 	if ( $PScorrenti <= $frenesia ) {
 		$testo=$nomepg." è a rischio Frenesia";
 		master2master( $testo);

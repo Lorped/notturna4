@@ -56,12 +56,12 @@
 		$xp = $res['xp'];
 		$IDcronaca = $res['IDcronaca'];
 
-		$Mysql = "SELECT * FROM segreteria WHERE idutente ='$idutente'  ";
+		$Mysql = "SELECT saldo, eventi FROM segreteria WHERE idutente ='$idutente'  ";
 		$Result = mysqli_query($db,$Mysql);
 		if ( $res=mysqli_fetch_array($Result) ) {
 			// esiste un record 
 
-			$Mysql2 = "SELECT idutente, DATE_FORMAT( eventodata , '%d-%m-%Y alle  %H:%i' ) AS Ora  FROM segreteria WHERE idutente ='$idutente' AND date_add(eventodata, interval 12 HOUR) > now() ";
+			$Mysql2 = "SELECT DATE_FORMAT(eventodata, '%d-%m-%Y alle  %H:%i') AS Ora FROM segreteria WHERE idutente ='$idutente' AND date_add(eventodata, interval 12 HOUR) > now() ";
 			$Result2 = mysqli_query($db,$Mysql2);
 
 			if ($res2 = mysqli_fetch_array($Result2)) {
@@ -253,8 +253,8 @@
 			$newoggetto=$res9['IDoggetto1'];
 		}
 		// newoggetto è stato scansionato da poco ?
-		$MySql6 = "SELECT * FROM logscan WHERE
-        	IDoggetto = $newoggetto AND IDutente = $idutente AND DATE_ADD(logscan.data, INTERVAL 3 MINUTE) > NOW() ";
+		$MySql6 = "SELECT 1 FROM logscan WHERE
+			IDoggetto = $newoggetto AND IDutente = $idutente AND DATE_ADD(logscan.data, INTERVAL 3 MINUTE) > NOW() LIMIT 1";
       	$Result6 = mysqli_query($db, $MySql6);
       	if ( $res6 = mysqli_fetch_array($Result6) ) {
         	// ok paired
@@ -481,7 +481,7 @@
 	}));
 
 
-	$mysql = "SELECT * FROM logscanogg WHERE idutente = '$idutente' AND idoggetto = '$idx' ";
+	$mysql = "SELECT 1 FROM logscanogg WHERE idutente = '$idutente' AND idoggetto = '$idx' LIMIT 1";
 	$result = mysqli_query($db, $mysql);
 	if (mysqli_num_rows($result) == 0) {
 		$mysql2 = "INSERT INTO logscanogg  (idutente, idoggetto)
